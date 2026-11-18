@@ -171,11 +171,63 @@ Esperábamos que corregir ayudara (sesgo de confirmación). Mirando la curva de 
 
 ### Qué seguiríamos probando
 
+(Los puntos 1 y 2 ya se están probando: ver [Experimentos de seguimiento](#experimentos-de-seguimiento-1811). El 3 y el 5 se parecen a lo que estudia Inflacion_1.)
+
 1. Elegir el corte de forma más estable (por ejemplo, con el promedio de varias semillas en 201908, o maximizando la ganancia promedio en una ventana de cortes) y ver si el ranking se sostiene.
 2. Agregar la versión corregida como columnas nuevas, sin sacar las nominales, y dejar que el modelo elija.
 3. Corregir solo las variables de mercado y dejar en nominal las administradas (límites, comisión de mantenimiento).
 4. Repetir con 2020-2021, el resto del dataset de la Segunda Competencia: más meses de test, pandemia y otra dinámica de precios.
 5. IPC con un mes de rezago, que es el que estaría disponible en producción.
+
+## Experimentos de seguimiento (18/11)
+
+> **Estado (18/11, mediodía)**: S4 terminado. S1, S2 y S3 están corriendo; los resultados se agregan acá a la tarde.
+
+Se decidieron **después** de ver los resultados de arriba. Las reglas de cada uno se escribieron acá antes de correrlos, pero las ideas salieron de mirar 201910 (sobre todo las curvas de ganancia), así que una mejora que aparezca en esta sección es una hipótesis para confirmar en otro mes, no un resultado del experimento principal. Ninguno repite lo que estudia Inflacion_1 (un deflactor externo por grupo de variables, IPC del mes anterior).
+
+### S1. Corte estable
+
+El corte de cada familia salía de un solo modelo en 201908 (el mejor intento de la bayesiana), y es ruidoso: F3 eligió 3.500 y en octubre su curva sigue subiendo hasta los ~4.100. Ahora se entrenan las 20 semillas de cada familia con 201903-201906 (`scripts/07_validacion_semillas.py`), se promedian sus 20 curvas de ganancia en 201908 y el corte de la familia es el máximo de esa curva promedio. Ese corte se aplica a las mismas 20 semillas finales de 201910, que ya estaban. Cada familia se compara contra F0, también con su corte estable, con la misma regla de decisión que arriba.
+
+### S2. Ensamble del nominal con una corrección
+
+Hipótesis: la corrección no sirve para reemplazar al nominal, pero sí para complementarlo. En 201910 la mediana gana estimulando pocos clientes y el ranking estimulando muchos: ordenan distinto que el nominal. Para cada semilla se promedian las probabilidades de F0 y de otra familia (F0 + F1, F0 + F2, F0 + F3 y F0 + F4). **Control**: F0 con esa semilla más F0 con la semilla siguiente, para que la mejora no venga solo de promediar dos modelos. El corte de cada ensamble es su corte estable en 201908 (como en S1). Un ensamble supera al control si su ganancia media en 201910 le gana por más que el desvío entre semillas del control y el Wilcoxon pareado da p < 0,05.
+
+### S3. F4 proporciones
+
+Una tercera forma de sacarse de encima la inflación, que no usa índices externos (Inflacion_1) ni la distribución del mes (F2, F3): dividir un monto del cliente por otro monto del mismo cliente y mes. La inflación mueve igual al numerador y al denominador, y se cancela. F4 es F0 más 11 proporciones, cada una con sus lags y deltas (55 columnas más; `scripts/02b_proporciones.py`). A diferencia de F1-F3, agrega columnas: mide si sumar información libre de inflación ayuda. Mismo protocolo que las otras familias: bayesiana de 50 intentos, 20 semillas y la misma regla contra F0.
+
+| Proporción | Cuenta |
+|---|---|
+| saldo / sueldo | saldo total en cuentas / sueldo acreditado: cuántos sueldos tiene en la cuenta |
+| consumo con tarjetas / sueldo | consumo Visa + Master / sueldo |
+| préstamos / sueldo | préstamos personales, prendarios e hipotecarios / sueldo |
+| débitos / sueldo | débitos automáticos y pagos de servicios / sueldo |
+| extracciones / sueldo | extracciones en cajeros / sueldo |
+| uso del límite (Visa y Master) | saldo total de la tarjeta / límite de compra |
+| pago del saldo (Visa y Master) | pagos en pesos / saldo en pesos |
+| consumo en dólares (Visa) | consumo en dólares / consumo total |
+| dolarización | caja de ahorro, plazo fijo e inversiones en dólares / todo eso en pesos y en dólares |
+
+Quedaron afuera transferencias emitidas / recibidas (la de recibidas está rota de 201901 a 201905) y, dentro de los débitos, los de Visa (rotos en 201904). Las 11 proporciones tienen poco drift entre 201903-201908 y 201910: PSI de 0,001 a 0,043 (`output/proporciones_psi.csv`).
+
+### S4. ¿Dónde cortan los árboles? (análisis, sin regla de decisión)
+
+Los montos son la mitad de la importancia del modelo nominal y aun así corregirlos no ayuda. `scripts/09_donde_corta.py` mira dónde cortan los árboles del modelo final de F0 (semilla 100081, el mismo que predijo 201910) y qué pasa si a octubre se lo pasa a pesos del entrenamiento.
+
+![Dónde cortan los árboles los montos en pesos](output/donde_corta.png)
+
+- El 65% de la ganancia de los cortes sobre montos (nivel y lags) está en "no tiene" o en el 25% de montos más bajos entre los que tienen el producto: el modelo pregunta sobre todo si el cliente tiene poco o nada.
+- Con una inflación de +18% (del mes promedio del entrenamiento a octubre), cada corte cambiaría de rama, en promedio, al 1,4% de los clientes (al 2,0% con +27%, de marzo a octubre).
+- Prueba directa: al mismo modelo se le da octubre llevado a pesos del entrenamiento, cada monto con el IPC de su mes.
+
+| Octubre | Mismos clientes en los primeros 4.000 | Ganancia en 4.000 |
+|---|---|---|
+| nominal (como lo usa F0) | 100% | $293,7M |
+| montos deflactados, deltas nominales | 96,0% | $287,1M |
+| montos y deltas deflactados | 93,5% | $267,3M |
+
+Lectura: el modelo nominal es poco sensible al nivel de precios, porque lo que más usa son umbrales bajos que la inflación casi no mueve. Y lo poco que cambia, empeora: el modelo aprendió con la inflación adentro. Una explicación compatible: en el entrenamiento, con 2% a 4% de inflación por mes, un saldo nominal que no se mueve ya era una baja real, y así lo aprendió el modelo; deflactar los deltas al predecir hace que los clientes estables parezcan en caída. Es una sola semilla y la ganancia mira el test: es descriptivo.
 
 ## Cómo correrlo
 
@@ -183,20 +235,24 @@ Requiere [uv](https://docs.astral.sh/uv/) y el dataset `competencia_02_crudo.csv
 
 ```bash
 uv sync
-uv run python scripts/01_preparar_base.py        # 2019 + clase_ternaria            (~1 min)
-uv run python scripts/02_corregir_y_fe.py        # 4 familias: corrección + lags     (~1,5 min)
-uv run python scripts/00_diagnostico_inflacion.py  # gráficos de diagnóstico         (segundos)
-uv run python scripts/05_drift.py                # PSI y AUC adversarial             (~30 s)
-uv run python scripts/03_optimizar.py            # bayesiana, 4 x 50 intentos        (~7 h)
-uv run python scripts/04_entrenar_final.py       # 4 familias x 20 semillas          (~5 h)
-uv run python scripts/06_resumen.py              # tablas, tests y gráficos
+uv run python scripts/01_preparar_base.py             # 2019 + clase_ternaria                 (~1 min)
+uv run python scripts/02_corregir_y_fe.py             # F0-F3: corrección + lags y deltas     (~1,5 min)
+uv run python scripts/02b_proporciones.py             # F4: F0 + proporciones (seguimiento)   (~20 s)
+uv run python scripts/00_diagnostico_inflacion.py     # gráficos de diagnóstico               (segundos)
+uv run python scripts/05_drift.py                     # PSI y AUC adversarial de F0-F3        (~30 s)
+uv run python scripts/03_optimizar.py                 # bayesiana, 5 familias x 50 intentos   (~9 h)
+uv run python scripts/04_entrenar_final.py            # 5 familias x 20 semillas en 201910    (~6 h)
+uv run python scripts/06_resumen.py                   # tablas, tests y gráficos              (segundos)
+uv run python scripts/07_validacion_semillas.py       # 5 familias x 20 semillas en 201908    (~4 h)
+uv run python scripts/08_corte_estable_y_ensamble.py  # seguimiento S1 y S2                   (segundos)
+uv run python scripts/09_donde_corta.py               # seguimiento S4                        (~4 min)
 ```
 
-Tiempos medidos en una MacBook Pro M3 Pro (12 núcleos, 36 GB). La bayesiana tardó entre 1 h 45 min y 2 h por familia (de 12 segundos a 7 minutos por intento, unos 2 minutos el típico) y el reentreno final, de 3 a 5 minutos por semilla según la familia y ocupa ~7 GB de memoria (medido): entra en una máquina de 16 GB cerrando lo demás. Opciones útiles:
+Tiempos medidos en una MacBook Pro M3 Pro (12 núcleos, 36 GB). La bayesiana tardó entre 1 h 45 min y 2 h por familia (de 12 segundos a 7 minutos por intento, unos 2 minutos el típico) y ocupa ~7 GB de memoria (medido): entra en una máquina de 16 GB cerrando lo demás. El reentreno final tarda de 3 a 5 minutos por semilla según la familia, y el de validación (07), de 2 a 3. Opciones útiles:
 
-- `--metodos mediana ranking` en 02, 03, 04 y 05 para correr solo algunas familias.
-- `--semillas 100081 100103` en 04 para correr solo algunas semillas. Si una semilla ya tiene resultado, se saltea (`--forzar` para rehacerla).
-- 03 retoma solo si se corta (el estudio de Optuna queda en `data/optuna.db`).
+- `--metodos mediana ranking` para correr solo algunas familias (en 02 y 05, solo F0-F3).
+- `--semillas 100081 100103` en 04 y 07 para correr solo algunas semillas. Si una semilla ya tiene resultado, se saltea (`--forzar` para rehacerla).
+- 03 retoma solo si se corta (el estudio de Optuna queda en `data/optuna.db`) y saltea las familias que ya tienen su bayesiana completa.
 - `HILOS=6` limita los núcleos que usa LightGBM.
 
 ### Cómo repartir el trabajo sin romper la comparación
@@ -206,12 +262,15 @@ Todos con este mismo repo, las mismas versiones de librerías (`uv.lock`) y las 
 ## Qué hay en cada carpeta
 
 ```
-scripts/      00 a 06 (ver arriba), config.py (todas las constantes) y comun.py
+scripts/      00 a 09 (ver arriba), config.py (todas las constantes) y comun.py
 data/         crudo, base por mes, features por familia y estudio de Optuna (no se versiona)
 resultados/   bo__<familia>.json y bo__<familia>__intentos.csv (bayesiana);
-              final__<familia>__<semilla>.json y curva__<familia>__<semilla>.csv (test);
-              prediccion__*.parquet (probabilidades por cliente, no se versiona)
-output/       gráficos, tablas (resumen.md, resultados_por_semilla.csv, drift_*.csv, celdas_rotas.csv)
+              final__<familia>__<semilla>.json y curva__<familia>__<semilla>.csv (201910);
+              validacion__<familia>__<semilla>.json y curva_validacion__<familia>__<semilla>.csv (201908);
+              corte_estable_y_ensamble.csv (seguimiento S1 y S2);
+              prediccion*.parquet (probabilidades por cliente, no se versiona)
+output/       gráficos, tablas (resumen.md, corte_estable_y_ensamble.md, donde_corta.md,
+              resultados_por_semilla.csv, drift_*.csv, proporciones_psi.csv, celdas_rotas.csv)
               y logs/ de cada corrida
 ```
 

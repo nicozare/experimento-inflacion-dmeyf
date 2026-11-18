@@ -69,6 +69,13 @@ def proponer(trial: optuna.Trial) -> dict:
 
 def optimizar(metodo: str, n_trials: int) -> None:
     t0 = time.time()
+    # si la familia ya tiene su bayesiana completa, no se cargan los datos ni se reescribe el json
+    if ruta_bo(metodo).exists():
+        hechos = json.loads(ruta_bo(metodo).read_text(encoding="utf-8"))["intentos_completos"]
+        if hechos >= n_trials:
+            print(f"\n=== {metodo}: la bayesiana ya está completa ({hechos} intentos, {ruta_bo(metodo)}) ===",
+                  flush=True)
+            return
     feats = columnas_features(metodo, MES_VALIDACION)
     X_train, k_train = cargar_meses(metodo, MESES_ENTRENAMIENTO, feats)
     X_valid, k_valid = cargar_meses(metodo, [MES_VALIDACION], feats)

@@ -8,7 +8,11 @@ data/
 # predicciones por cliente: pesadas, quedan locales. Los resúmenes de
 # resultados (resultados/*.json y *.csv) y output/ SÍ se versionan: son las
 # salidas originales del experimento.
-resultados/prediccion__*.parquet
+resultados/prediccion*.parquet
 
 # uv.lock SÍ se versiona: fija las versiones de las librerías, para que todo
 # el grupo corra exactamente lo mismo.
+
+# un renglón por cada corte de los árboles (~25 MB): se regenera con
+# scripts/09_donde_corta.py en ~4 minutos. El resumen (donde_corta.md y .png) sí se versiona.
+output/donde_corta.csv

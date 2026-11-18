@@ -1,0 +1,12 @@
+proporcion,numerador,denominador,pct_con_dato_201910,psi_proporcion,psi_numerador_nominal
+prop_saldo_sueldo,mcuentas_saldo,mpayroll + mpayroll2,49.4,0.0089,0.0067
+prop_consumo_tarjetas_sueldo,mtarjeta_visa_consumo + mtarjeta_master_consumo,mpayroll + mpayroll2,49.4,0.0061,0.0321
+prop_prestamos_sueldo,mprestamos_personales + mprestamos_prendarios + mprestamos_hipotecarios,mpayroll + mpayroll2,49.4,0.0062,0.0054
+prop_debitos_sueldo,mcuenta_debitos_automaticos + mttarjeta_master_debitos_automaticos + mpagodeservicios + mpagomiscuentas,mpayroll + mpayroll2,49.4,0.001,0.0041
+prop_extracciones_sueldo,mextraccion_autoservicio + matm + matm_other,mpayroll + mpayroll2,49.4,0.0008,0.012
+prop_visa_uso_limite,Visa_msaldototal,Visa_mlimitecompra,96.1,0.0122,0.0245
+prop_master_uso_limite,Master_msaldototal,Master_mlimitecompra,87.6,0.0026,0.0059
+prop_visa_pago_saldo,Visa_mpagospesos,Visa_msaldopesos,86.0,0.0426,0.0119
+prop_master_pago_saldo,Master_mpagospesos,Master_msaldopesos,38.1,0.0175,0.0069
+prop_visa_consumo_dolares,Visa_mconsumosdolares,Visa_mconsumototal,81.2,0.0217,0.1296
+prop_dolarizacion,mcaja_ahorro_dolares + mplazo_fijo_dolares + minversion1_dolares,mcaja_ahorro + mcaja_ahorro_adicional + mcaja_ahorro_dolares + mplazo_fijo_pesos + mplazo_fijo_dolares + minversion1_pesos + minversion1_dolares + minversion2,95.0,0.0115,0.0219

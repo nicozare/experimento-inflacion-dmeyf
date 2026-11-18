@@ -1,0 +1,16 @@
+
+=== ninguna: entrena [201903, 201904, 201905, 201906] (506,871 filas), predice 201908, 715 árboles; 2 semillas pendientes ===
+  semilla 100081: ganancia 201908 $216.7M en 4,000 | AUC 0.9334 | 134 s | reproduce la bayesiana: sí
+  semilla 100103: ganancia 201908 $209.0M en 4,000 | AUC 0.9324 | 131 s
+
+=== ipc: entrena [201903, 201904, 201905, 201906] (506,871 filas), predice 201908, 612 árboles; 2 semillas pendientes ===
+  semilla 100081: ganancia 201908 $209.0M en 5,000 | AUC 0.9331 | 113 s | reproduce la bayesiana: sí
+  semilla 100103: ganancia 201908 $205.7M en 4,200 | AUC 0.9316 | 113 s
+
+=== mediana: entrena [201903, 201904, 201905, 201906] (506,871 filas), predice 201908, 1125 árboles; 2 semillas pendientes ===
+  semilla 100081: ganancia 201908 $208.4M en 3,900 | AUC 0.9323 | 143 s | reproduce la bayesiana: sí
+  semilla 100103: ganancia 201908 $210.7M en 3,500 | AUC 0.9316 | 143 s
+
+=== ranking: entrena [201903, 201904, 201905, 201906] (506,871 filas), predice 201908, 1223 árboles; 2 semillas pendientes ===
+  semilla 100081: ganancia 201908 $212.8M en 3,500 | AUC 0.9316 | 188 s | reproduce la bayesiana: sí
+  semilla 100103: ganancia 201908 $210.7M en 3,300 | AUC 0.9310 | 189 s

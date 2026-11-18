@@ -31,10 +31,12 @@ import numpy as np
 import pandas as pd
 from scipy.stats import wilcoxon
 
-from config import COSTO_ESTIMULO, GANANCIA_ACIERTO, MES_TEST, METODOS, NOMBRE_FAMILIA, OUTPUT_DIR, RESULTADOS_DIR
+from config import (COSTO_ESTIMULO, GANANCIA_ACIERTO, MES_TEST, METODOS, METODOS_CORRECCION, NOMBRE_FAMILIA, OUTPUT_DIR,
+                    RESULTADOS_DIR)
 
 # Paleta categórica de referencia (orden fijo; color = familia en todos los gráficos)
-COLOR = {"ninguna": "#2a78d6", "ipc": "#eb6834", "mediana": "#1baf7a", "ranking": "#eda100"}
+COLOR = {"ninguna": "#2a78d6", "ipc": "#eb6834", "mediana": "#1baf7a", "ranking": "#eda100",
+         "proporciones": "#e87ba4"}
 FONDO, TINTA, TINTA_2, GRILLA = "#fcfcfb", "#0b0b0b", "#52514e", "#e4e3df"
 
 plt.rcParams.update({
@@ -170,7 +172,7 @@ def grafico_drift() -> None:
         return
     d = pd.read_csv(ruta)
     fig, ax = plt.subplots(figsize=(11, 5.2))
-    for i, metodo in enumerate(METODOS):
+    for i, metodo in enumerate(METODOS_CORRECCION):
         s = d[d.metodo == metodo]
         jitter = np.random.default_rng(i).uniform(-0.15, 0.15, len(s))
         normal, adm = ~s.administrada.to_numpy(), s.administrada.to_numpy()
@@ -187,8 +189,8 @@ def grafico_drift() -> None:
     ax.text(0.1, -0.72, "moderado 0,1 ", fontsize=10, color=TINTA_2, ha="right")
     ax.text(0.25, -0.72, " 0,25 fuerte", fontsize=10, color=TINTA_2, ha="left")
     ax.set_xscale("log")
-    ax.set_yticks(range(len(METODOS)), [NOMBRE_FAMILIA[m] for m in METODOS])
-    ax.set_ylim(len(METODOS) - 0.5, -0.9)
+    ax.set_yticks(range(len(METODOS_CORRECCION)), [NOMBRE_FAMILIA[m] for m in METODOS_CORRECCION])
+    ax.set_ylim(len(METODOS_CORRECCION) - 0.5, -0.9)
     ax.grid(axis="y", visible=False)
     ax.set_xlabel("PSI de cada variable en pesos: 201903-201908 contra 201910 (escala log; < 0,0001 se muestra en 0,0001)")
     ax.set_title("¿Cuánto se movió cada variable en pesos entre entrenamiento y test?", pad=28)

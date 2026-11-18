@@ -54,6 +54,15 @@ todo el grupo corra las mismas versiones de librerías.
 3. División de tareas propuesta en el plan de Valentín (a confirmar por el
    grupo): Valentín baseline y pipeline común; Ana F1 y F2; Nicolás F3 y
    la medición del drift. Con este repo el pipeline común ya existe.
+4. Seguimiento (18/11, después de ver que ninguna corrección le gana a F0):
+   el usuario pidió ideas que no pisen a Inflacion_1 (que hace un deflactor
+   externo por grupo de variables y prueba el IPC del mes anterior; su tutor
+   les pidió que el "no" quede muy bien probado) y eligió las tres que se le
+   propusieron: S1 corte estable y S2 ensamble F0 + corrección contra F0 + F0
+   (07 y 08), S3 F4 proporciones del propio cliente (02b; agrega columnas, no
+   reemplaza) y S4 dónde cortan los árboles (09). Las reglas de S1-S3 se
+   escribieron en el README antes de correrlos; las ideas salieron de mirar
+   201910, y el README lo aclara.
 
 ## Cosas no obvias encontradas
 
@@ -82,6 +91,16 @@ todo el grupo corra las mismas versiones de librerías.
   con `set -euo pipefail`.
 - **Ganancia**: +1.072.500 por cada BAJA+2 estimulado y -27.500 por cada
   estímulo a un no BAJA+2 (misma convención que `entrega_competencia_01`).
+- **Reproducir un modelo exacto**: el `lgb.Dataset` se arma ANTES de entrenar
+  y sin la semilla (`params_dataset` + `.construct()`, como en 03, 04 y 07).
+  Si se deja que `lgb.train` lo arme, toma la semilla del modelo para elegir
+  los bins y sale otro modelo (pasó en la primera versión de 09).
+- **F4 y celdas rotas**: `mtransferencias_recibidas` está rota de 201901 a
+  201905 y `mttarjeta_visa_debitos_automaticos` en 201904; por eso no entran en
+  `config.PROPORCIONES`.
+- **No editar un script de bash mientras corre**: bash lo lee de a pedazos.
+  Las cadenas largas viven en el scratchpad; para cambiar algo, esperar a que
+  termine o pararla.
 
 ## Estado
 

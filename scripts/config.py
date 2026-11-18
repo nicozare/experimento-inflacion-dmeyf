@@ -62,8 +62,42 @@ MES_TEST = 201910                # el último mes que se procesa; 201911 y 20191
 #   mediana  F2: divididas por la mediana del mes (deflactor endógeno)
 #   ranking  F3: posición del cliente dentro del mes, con el cero fijo
 # ---------------------------------------------------------------------------
-METODOS = ["ninguna", "ipc", "mediana", "ranking"]
-NOMBRE_FAMILIA = {"ninguna": "F0 nominal", "ipc": "F1 IPC", "mediana": "F2 mediana", "ranking": "F3 ranking"}
+METODOS_CORRECCION = ["ninguna", "ipc", "mediana", "ranking"]
+
+# Experimento de seguimiento (18/11), decidido después de ver los resultados de F0-F3:
+#   proporciones  F4: F0 + proporciones entre montos del mismo cliente y mes
+#                 (scripts/02b_proporciones.py). No corrige: AGREGA columnas
+#                 en las que la inflación se cancela sola (numerador y
+#                 denominador están en pesos del mismo mes).
+METODOS = METODOS_CORRECCION + ["proporciones"]
+NOMBRE_FAMILIA = {"ninguna": "F0 nominal", "ipc": "F1 IPC", "mediana": "F2 mediana", "ranking": "F3 ranking",
+                  "proporciones": "F4 proporciones"}
+
+# F4: nombre -> (columnas que se suman arriba, columnas que se suman abajo).
+# Si el denominador es 0 o nulo, la proporción queda nula. Los nulos de cada
+# suma cuentan como 0 (salvo que todos sean nulos).
+SUELDO = ["mpayroll", "mpayroll2"]
+PROPORCIONES = {
+    # el sueldo como escala del propio cliente
+    "prop_saldo_sueldo": (["mcuentas_saldo"], SUELDO),
+    "prop_consumo_tarjetas_sueldo": (["mtarjeta_visa_consumo", "mtarjeta_master_consumo"], SUELDO),
+    "prop_prestamos_sueldo": (["mprestamos_personales", "mprestamos_prendarios", "mprestamos_hipotecarios"], SUELDO),
+    # (sin mttarjeta_visa_debitos_automaticos: celda rota en 201904)
+    "prop_debitos_sueldo": (["mcuenta_debitos_automaticos", "mttarjeta_master_debitos_automaticos",
+                             "mpagodeservicios", "mpagomiscuentas"], SUELDO),
+    "prop_extracciones_sueldo": (["mextraccion_autoservicio", "matm", "matm_other"], SUELDO),
+    # tarjetas: uso del límite, cuánto del saldo se paga y peso del consumo en dólares
+    "prop_visa_uso_limite": (["Visa_msaldototal"], ["Visa_mlimitecompra"]),
+    "prop_master_uso_limite": (["Master_msaldototal"], ["Master_mlimitecompra"]),
+    "prop_visa_pago_saldo": (["Visa_mpagospesos"], ["Visa_msaldopesos"]),
+    "prop_master_pago_saldo": (["Master_mpagospesos"], ["Master_msaldopesos"]),
+    "prop_visa_consumo_dolares": (["Visa_mconsumosdolares"], ["Visa_mconsumototal"]),
+    # composición del patrimonio. (Transferencias emitidas / recibidas quedó
+    # afuera: mtransferencias_recibidas está rota de 201901 a 201905.)
+    "prop_dolarizacion": (["mcaja_ahorro_dolares", "mplazo_fijo_dolares", "minversion1_dolares"],
+                          ["mcaja_ahorro", "mcaja_ahorro_adicional", "mcaja_ahorro_dolares", "mplazo_fijo_pesos",
+                           "mplazo_fijo_dolares", "minversion1_pesos", "minversion1_dolares", "minversion2"]),
+}
 
 # Variables en pesos: las 73 que el diccionario de datos marca con unidad
 # "pesos", que son exactamente las que empiezan con m, Visa_m o Master_m

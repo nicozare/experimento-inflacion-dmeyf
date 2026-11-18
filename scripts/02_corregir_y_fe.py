@@ -1,6 +1,6 @@
 """Aplica la corrección de inflación y arma lags y deltas, para cada familia.
 
-Las 4 familias (config.METODOS) difieren SOLO en cómo se corrigen las 73
+Las 4 familias (config.METODOS_CORRECCION) difieren SOLO en cómo se corrigen las 73
 variables en pesos antes de los lags/deltas. El valor corregido reemplaza al
 original (misma columna, mismo nombre): no se agregan columnas, así la única
 diferencia con el baseline es la corrección. Cantidades, fechas, días, edad
@@ -46,7 +46,7 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 
 from comun import COLUMNAS_CLAVE, es_monetaria, meses_disponibles, vaciar_carpeta
-from config import IPC, MES_REFERENCIA_IPC, METODOS, OUTPUT_DIR, ruta_base, ruta_fe
+from config import IPC, MES_REFERENCIA_IPC, METODOS_CORRECCION, OUTPUT_DIR, ruta_base, ruta_fe
 
 
 def cume_dist(v: np.ndarray) -> np.ndarray:
@@ -155,7 +155,7 @@ def procesar_metodo(metodo: str, meses: list[int]) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("--metodos", nargs="+", default=METODOS, choices=METODOS)
+    parser.add_argument("--metodos", nargs="+", default=METODOS_CORRECCION, choices=METODOS_CORRECCION)
     args = parser.parse_args()
     meses = meses_disponibles()
     if not meses:

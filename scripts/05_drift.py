@@ -42,7 +42,7 @@ import pandas as pd
 import pyarrow.parquet as pq
 
 from comun import COLUMNAS_CLAVE, auc, es_monetaria
-from config import MES_TEST, MESES_ENTRENAMIENTO_FINAL, METODOS, OUTPUT_DIR, PARAMS_FIJOS, SEMILLA_BO, ruta_fe
+from config import MES_TEST, MESES_ENTRENAMIENTO_FINAL, METODOS_CORRECCION, OUTPUT_DIR, PARAMS_FIJOS, SEMILLA_BO, ruta_fe
 
 FILAS_POR_LADO = 50_000
 EPS = 1e-6
@@ -110,7 +110,7 @@ def auc_adversarial(ref: pd.DataFrame, test: pd.DataFrame, cols: list[str]) -> f
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("--metodos", nargs="+", default=METODOS, choices=METODOS)
+    parser.add_argument("--metodos", nargs="+", default=METODOS_CORRECCION, choices=METODOS_CORRECCION)
     args = parser.parse_args()
     cols = variables_sanas()
     print(f"Variables en pesos sin celdas rotas en {MESES_ENTRENAMIENTO_FINAL[0]}-{MES_TEST}: {len(cols)}", flush=True)
