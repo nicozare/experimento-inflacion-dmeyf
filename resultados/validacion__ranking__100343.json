@@ -1,0 +1,11 @@
+{
+  "metodo": "ranking",
+  "semilla": 100343,
+  "auc_validacion": 0.9312119257072624,
+  "ganancia_maxima_validacion": 209550000,
+  "corte_ganancia_maxima_validacion": 2900,
+  "arboles": 1223,
+  "segundos": 188.6,
+  "lightgbm": "4.7.0",
+  "maquina": "Darwin arm64"
+}

@@ -1,0 +1,80 @@
+
+=== ninguna: entrena [201903, 201904, 201905, 201906] (506,871 filas), predice 201908, 715 árboles; 18 semillas pendientes ===
+  semilla 100129: ganancia 201908 $211.2M en 4,200 | AUC 0.9322 | 133 s
+  semilla 100151: ganancia 201908 $210.7M en 3,700 | AUC 0.9325 | 131 s
+  semilla 100169: ganancia 201908 $215.1M en 3,500 | AUC 0.9331 | 130 s
+  semilla 100183: ganancia 201908 $210.7M en 3,500 | AUC 0.9331 | 127 s
+  semilla 100189: ganancia 201908 $209.6M en 4,700 | AUC 0.9320 | 127 s
+  semilla 100193: ganancia 201908 $213.4M en 3,600 | AUC 0.9323 | 127 s
+  semilla 100207: ganancia 201908 $207.9M en 3,400 | AUC 0.9323 | 127 s
+  semilla 100213: ganancia 201908 $210.7M en 4,500 | AUC 0.9326 | 127 s
+  semilla 100237: ganancia 201908 $215.6M en 4,000 | AUC 0.9325 | 127 s
+  semilla 100267: ganancia 201908 $207.3M en 3,300 | AUC 0.9321 | 127 s
+  semilla 100271: ganancia 201908 $210.1M en 4,200 | AUC 0.9327 | 127 s
+  semilla 100279: ganancia 201908 $212.3M en 3,800 | AUC 0.9323 | 127 s
+  semilla 100291: ganancia 201908 $210.7M en 4,500 | AUC 0.9331 | 126 s
+  semilla 100297: ganancia 201908 $212.3M en 5,200 | AUC 0.9324 | 128 s
+  semilla 100313: ganancia 201908 $210.1M en 3,600 | AUC 0.9331 | 127 s
+  semilla 100333: ganancia 201908 $209.6M en 3,700 | AUC 0.9332 | 127 s
+  semilla 100343: ganancia 201908 $211.8M en 4,300 | AUC 0.9329 | 128 s
+  semilla 100357: ganancia 201908 $212.3M en 3,400 | AUC 0.9324 | 127 s
+
+=== ipc: entrena [201903, 201904, 201905, 201906] (506,871 filas), predice 201908, 612 árboles; 18 semillas pendientes ===
+  semilla 100129: ganancia 201908 $209.0M en 5,600 | AUC 0.9312 | 113 s
+  semilla 100151: ganancia 201908 $207.3M en 4,500 | AUC 0.9322 | 112 s
+  semilla 100169: ganancia 201908 $207.3M en 4,100 | AUC 0.9316 | 112 s
+  semilla 100183: ganancia 201908 $201.8M en 5,100 | AUC 0.9324 | 121 s
+  semilla 100189: ganancia 201908 $207.9M en 4,800 | AUC 0.9320 | 118 s
+  semilla 100193: ganancia 201908 $208.4M en 4,300 | AUC 0.9319 | 117 s
+  semilla 100207: ganancia 201908 $209.6M en 4,900 | AUC 0.9319 | 114 s
+  semilla 100213: ganancia 201908 $206.8M en 4,600 | AUC 0.9314 | 151 s
+  semilla 100237: ganancia 201908 $209.0M en 4,800 | AUC 0.9314 | 112 s
+  semilla 100267: ganancia 201908 $209.6M en 4,300 | AUC 0.9315 | 112 s
+  semilla 100271: ganancia 201908 $206.2M en 3,500 | AUC 0.9315 | 114 s
+  semilla 100279: ganancia 201908 $208.4M en 4,500 | AUC 0.9325 | 115 s
+  semilla 100291: ganancia 201908 $206.8M en 4,600 | AUC 0.9321 | 113 s
+  semilla 100297: ganancia 201908 $205.2M en 5,100 | AUC 0.9318 | 112 s
+  semilla 100313: ganancia 201908 $204.6M en 3,600 | AUC 0.9319 | 113 s
+  semilla 100333: ganancia 201908 $207.9M en 4,600 | AUC 0.9314 | 112 s
+  semilla 100343: ganancia 201908 $206.2M en 4,900 | AUC 0.9325 | 112 s
+  semilla 100357: ganancia 201908 $209.6M en 4,100 | AUC 0.9313 | 112 s
+
+=== mediana: entrena [201903, 201904, 201905, 201906] (506,871 filas), predice 201908, 1125 árboles; 18 semillas pendientes ===
+  semilla 100129: ganancia 201908 $210.1M en 4,000 | AUC 0.9321 | 143 s
+  semilla 100151: ganancia 201908 $209.0M en 3,800 | AUC 0.9318 | 143 s
+  semilla 100169: ganancia 201908 $206.2M en 4,300 | AUC 0.9319 | 142 s
+  semilla 100183: ganancia 201908 $207.9M en 4,000 | AUC 0.9322 | 143 s
+  semilla 100189: ganancia 201908 $209.0M en 3,400 | AUC 0.9317 | 143 s
+  semilla 100193: ganancia 201908 $210.7M en 4,100 | AUC 0.9316 | 143 s
+  semilla 100207: ganancia 201908 $211.8M en 3,900 | AUC 0.9318 | 143 s
+  semilla 100213: ganancia 201908 $213.4M en 4,400 | AUC 0.9320 | 143 s
+  semilla 100237: ganancia 201908 $208.4M en 3,700 | AUC 0.9318 | 143 s
+  semilla 100267: ganancia 201908 $209.0M en 3,800 | AUC 0.9323 | 143 s
+  semilla 100271: ganancia 201908 $209.6M en 3,900 | AUC 0.9317 | 143 s
+  semilla 100279: ganancia 201908 $207.3M en 4,300 | AUC 0.9318 | 143 s
+  semilla 100291: ganancia 201908 $206.2M en 3,500 | AUC 0.9318 | 143 s
+  semilla 100297: ganancia 201908 $210.1M en 4,400 | AUC 0.9318 | 142 s
+  semilla 100313: ganancia 201908 $209.6M en 3,900 | AUC 0.9317 | 144 s
+  semilla 100333: ganancia 201908 $210.7M en 3,900 | AUC 0.9318 | 142 s
+  semilla 100343: ganancia 201908 $211.2M en 4,400 | AUC 0.9315 | 143 s
+  semilla 100357: ganancia 201908 $212.8M en 3,900 | AUC 0.9318 | 143 s
+
+=== ranking: entrena [201903, 201904, 201905, 201906] (506,871 filas), predice 201908, 1223 árboles; 18 semillas pendientes ===
+  semilla 100129: ganancia 201908 $209.0M en 3,000 | AUC 0.9311 | 188 s
+  semilla 100151: ganancia 201908 $211.8M en 3,900 | AUC 0.9309 | 189 s
+  semilla 100169: ganancia 201908 $211.2M en 3,000 | AUC 0.9309 | 189 s
+  semilla 100183: ganancia 201908 $211.2M en 3,800 | AUC 0.9310 | 189 s
+  semilla 100189: ganancia 201908 $208.4M en 3,300 | AUC 0.9313 | 196 s
+  semilla 100193: ganancia 201908 $212.8M en 3,500 | AUC 0.9315 | 188 s
+  semilla 100207: ganancia 201908 $212.3M en 3,400 | AUC 0.9315 | 188 s
+  semilla 100213: ganancia 201908 $212.8M en 3,100 | AUC 0.9314 | 188 s
+  semilla 100237: ganancia 201908 $211.8M en 3,500 | AUC 0.9311 | 187 s
+  semilla 100267: ganancia 201908 $211.8M en 4,700 | AUC 0.9309 | 190 s
+  semilla 100271: ganancia 201908 $210.7M en 3,700 | AUC 0.9313 | 189 s
+  semilla 100279: ganancia 201908 $209.6M en 3,900 | AUC 0.9314 | 189 s
+  semilla 100291: ganancia 201908 $209.6M en 3,100 | AUC 0.9316 | 188 s
+  semilla 100297: ganancia 201908 $213.9M en 3,500 | AUC 0.9315 | 188 s
+  semilla 100313: ganancia 201908 $209.6M en 3,300 | AUC 0.9314 | 187 s
+  semilla 100333: ganancia 201908 $211.2M en 3,400 | AUC 0.9316 | 189 s
+  semilla 100343: ganancia 201908 $209.6M en 2,900 | AUC 0.9312 | 189 s
+  semilla 100357: ganancia 201908 $208.4M en 3,300 | AUC 0.9312 | 188 s

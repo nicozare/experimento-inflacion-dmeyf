@@ -1,0 +1,11 @@
+{
+  "metodo": "mediana",
+  "semilla": 100343,
+  "auc_validacion": 0.9315460220370285,
+  "ganancia_maxima_validacion": 211200000,
+  "corte_ganancia_maxima_validacion": 4400,
+  "arboles": 1125,
+  "segundos": 143.2,
+  "lightgbm": "4.7.0",
+  "maquina": "Darwin arm64"
+}

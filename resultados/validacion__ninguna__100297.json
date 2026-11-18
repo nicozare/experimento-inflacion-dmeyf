@@ -1,0 +1,11 @@
+{
+  "metodo": "ninguna",
+  "semilla": 100297,
+  "auc_validacion": 0.9324344522000833,
+  "ganancia_maxima_validacion": 212300000,
+  "corte_ganancia_maxima_validacion": 5200,
+  "arboles": 715,
+  "segundos": 127.6,
+  "lightgbm": "4.7.0",
+  "maquina": "Darwin arm64"
+}

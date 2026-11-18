@@ -156,7 +156,7 @@ Lectura:
 - **Octubre de 2019 no es un mes cualquiera**: la devaluación post-PASO cambió el comportamiento en dólares, y eso no es inflación.
 - **2019 no tiene la pandemia**: el shock de 2020 queda afuera.
 - **Mismos árboles al pasar de 4 a 6 meses de entrenamiento**: el reentreno usa la cantidad de árboles que encontró el early stopping con 4 meses.
-- **El corte sale de un solo modelo en 201908** (el mejor intento de la bayesiana): es ruidoso, y en F3 cayó lejos del mejor corte de octubre.
+- **El corte se elige en 201908, y el mejor corte cambia de un mes a otro**: aun con el promedio de 20 semillas (S1), F3 elige 3.500, lejos del mejor corte de octubre.
 
 ## Conclusiones
 
@@ -171,7 +171,7 @@ Esperábamos que corregir ayudara (sesgo de confirmación). Mirando la curva de 
 
 ### Qué seguiríamos probando
 
-(Los puntos 1 y 2 ya se están probando: ver [Experimentos de seguimiento](#experimentos-de-seguimiento-1811). El 3 y el 5 se parecen a lo que estudia Inflacion_1.)
+(El punto 1 ya se probó como S1, y una variante del 2 (ensamble en vez de columnas nuevas) como S2: ver [Experimentos de seguimiento](#experimentos-de-seguimiento-1811). El 3 y el 5 se parecen a lo que estudia Inflacion_1.)
 
 1. Elegir el corte de forma más estable (por ejemplo, con el promedio de varias semillas en 201908, o maximizando la ganancia promedio en una ventana de cortes) y ver si el ranking se sostiene.
 2. Agregar la versión corregida como columnas nuevas, sin sacar las nominales, y dejar que el modelo elija.
@@ -181,7 +181,7 @@ Esperábamos que corregir ayudara (sesgo de confirmación). Mirando la curva de 
 
 ## Experimentos de seguimiento (18/11)
 
-> **Estado (18/11, mediodía)**: S4 terminado. S1, S2 y S3 están corriendo; los resultados se agregan acá a la tarde.
+> **Estado (18/11, 13 h)**: S1, S2 y S4 terminados. S3 (F4 proporciones) está corriendo: bayesiana, 20 semillas finales y 20 en validación. Su resultado, y el de F0 + F4 en S2, se agregan acá a la tarde (entre las 17 y las 18).
 
 Se decidieron **después** de ver los resultados de arriba. Las reglas de cada uno se escribieron acá antes de correrlos, pero las ideas salieron de mirar 201910 (sobre todo las curvas de ganancia), así que una mejora que aparezca en esta sección es una hipótesis para confirmar en otro mes, no un resultado del experimento principal. Ninguno repite lo que estudia Inflacion_1 (un deflactor externo por grupo de variables, IPC del mes anterior).
 
@@ -189,9 +189,39 @@ Se decidieron **después** de ver los resultados de arriba. Las reglas de cada u
 
 El corte de cada familia salía de un solo modelo en 201908 (el mejor intento de la bayesiana), y es ruidoso: F3 eligió 3.500 y en octubre su curva sigue subiendo hasta los ~4.100. Ahora se entrenan las 20 semillas de cada familia con 201903-201906 (`scripts/07_validacion_semillas.py`), se promedian sus 20 curvas de ganancia en 201908 y el corte de la familia es el máximo de esa curva promedio. Ese corte se aplica a las mismas 20 semillas finales de 201910, que ya estaban. Cada familia se compara contra F0, también con su corte estable, con la misma regla de decisión que arriba.
 
+**Resultado: no cambia la conclusión.** Ninguna corrección supera a F0 (`output/corte_estable_y_ensamble.md`).
+
+![Corte de cada semilla en 201908 contra el corte estable](output/cortes_validacion.png)
+
+| Familia | Corte de la bayesiana | Corte estable | Ganancia 201910 con el corte estable | Dif. vs F0 | Gana en | p Wilcoxon |
+|---|---|---|---|---|---|---|
+| F0 nominal | 4.000 | 4.300 | $287,9M ± $2,0M | | | |
+| F1 IPC | 5.000 | 4.800 | $279,8M ± $3,4M | -$8,1M | 0/20 | < 0,001 |
+| F2 mediana | 3.900 | 3.900 | $287,6M ± $2,1M | -$0,2M | 9/20 | 0,706 |
+| F3 ranking | 3.500 | 3.500 | $282,9M ± $3,0M | -$5,0M | 2/20 | < 0,001 |
+
+- **La mediana queda empatada con F0, pero no porque mejore**: es F0 la que baja $1,1M, porque su corte estable (4.300) rinde menos en octubre que el de la bayesiana (4.000). F1 y F3 siguen perdiendo.
+- **En F3, el corte corto no fue mala suerte de un modelo**: el promedio de las 20 semillas también elige 3.500 en 201908. Agosto le pide a F3 menos clientes que octubre. El problema no es el ruido del corte, sino que el mejor corte cambia de un mes a otro, y eso un corte estable no lo arregla.
+- Lo que sí confirma es que el corte de un solo modelo es ruidoso: el de cada semilla va de 3.300 a 5.200 en F0 y de 2.900 a 4.700 en F3.
+
 ### S2. Ensamble del nominal con una corrección
 
 Hipótesis: la corrección no sirve para reemplazar al nominal, pero sí para complementarlo. En 201910 la mediana gana estimulando pocos clientes y el ranking estimulando muchos: ordenan distinto que el nominal. Para cada semilla se promedian las probabilidades de F0 y de otra familia (F0 + F1, F0 + F2, F0 + F3 y F0 + F4). **Control**: F0 con esa semilla más F0 con la semilla siguiente, para que la mejora no venga solo de promediar dos modelos. El corte de cada ensamble es su corte estable en 201908 (como en S1). Un ensamble supera al control si su ganancia media en 201910 le gana por más que el desvío entre semillas del control y el Wilcoxon pareado da p < 0,05.
+
+**Resultado: no. Sumar una corrección rinde menos que sumar otra semilla de F0.**
+
+![Ensamble con una corrección contra F0 + F0](output/ensamble_vs_control.png)
+
+| Ensamble | Corte estable | Ganancia 201910 | Dif. vs control | Gana en | p Wilcoxon |
+|---|---|---|---|---|---|
+| F0 + F0 (control) | 4.100 | $290,2M ± $1,6M | | | |
+| F0 + F1 IPC | 4.600 | $283,8M ± $3,1M | -$6,4M | 0/20 | < 0,001 |
+| F0 + F2 mediana | 3.400 | $285,0M ± $2,1M | -$5,2M | 0/20 | < 0,001 |
+| F0 + F3 ranking | 4.900 | $284,4M ± $1,9M | -$5,8M | 0/20 | < 0,001 |
+
+- El control le gana a F0 solo por $2,3M: promediar dos modelos ya ayuda. Los tres ensambles con una corrección pierden contra el control en las 20 semillas, y también contra F0 solo (de -$2,9M a -$4,1M).
+- Exploratorio (mirando 201910): si todos estimularan la misma cantidad de clientes, F0 + F2 ordena casi igual que el control (a $1,1M o menos en cualquier corte entre 3.900 y 4.900) y F0 + F3 algo mejor desde los 4.100 (por ejemplo, $287,7M contra $285,2M con 4.600). La pérdida viene del corte que cada ensamble eligió en agosto: 3.400 para F0 + F2 y 4.900 para F0 + F3, contra 4.100 del control. F0 + F1, en cambio, queda por debajo del control en toda la zona del máximo (de 3.900 a 4.600).
+- Lo que se repite en S1 y S2: las diferencias entre familias en octubre son del mismo tamaño que lo que se pierde por elegir el corte en agosto.
 
 ### S3. F4 proporciones
 

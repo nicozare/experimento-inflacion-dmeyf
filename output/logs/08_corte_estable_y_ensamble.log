@@ -1,0 +1,24 @@
+# Corte estable y ensamble (generado por scripts/08_corte_estable_y_ensamble.py)
+
+Experimentos de seguimiento S1 y S2 (reglas en el README). Ganancia en 201910; ± es el desvío entre semillas.
+
+## S1. Corte estable (máximo de la curva promedio de las semillas en 201908)
+
+| familia | semillas | corte de la bayesiana | corte estable | cortes por semilla (mín. a máx.) | ganancia con el corte de la bayesiana | ganancia con el corte estable | dif. vs F0 | gana en | p Wilcoxon | ¿supera a F0? |
+|---|---|---|---|---|---|---|---|---|---|---|
+| F0 nominal | 20 | 4.000 | 4.300 | 3.300 a 5.200 | $289,0M | $287,9M ± $2,0M |  |  |  |  |
+| F1 IPC | 20 | 5.000 | 4.800 | 3.500 a 5.600 | $279,6M | $279,8M ± $3,4M | -$8,1M | 0/20 | < 0,001 | no |
+| F2 mediana | 20 | 3.900 | 3.900 | 3.400 a 4.400 | $287,6M | $287,6M ± $2,1M | -$0,2M | 9/20 | 0,706 | no |
+| F3 ranking | 20 | 3.500 | 3.500 | 2.900 a 4.700 | $282,9M | $282,9M ± $3,0M | -$5,0M | 2/20 | < 0,001 | no |
+
+## S2. Ensamble F0 + otra familia (promedio de probabilidades, misma semilla)
+
+Control: F0 con la misma semilla + F0 con la semilla siguiente. "dif. vs F0 solo": contra F0 con su corte estable (S1).
+
+| ensamble | semillas | corte estable | ganancia 201908 en su corte | ganancia 201910 | dif. vs control | gana en | p Wilcoxon | ¿supera al control? | dif. vs F0 solo |
+|---|---|---|---|---|---|---|---|---|---|
+| F0 + F0 (otra semilla) | 20 | 4.100 | $209,1M | $290,2M ± $1,6M |  |  |  |  | $2,3M |
+| F0 + F1 IPC | 20 | 4.600 | $209,6M | $283,8M ± $3,1M | -$6,4M | 0/20 | < 0,001 | no | -$4,1M |
+| F0 + F2 mediana | 20 | 3.400 | $208,3M | $285,0M ± $2,1M | -$5,2M | 0/20 | < 0,001 | no | -$2,9M |
+| F0 + F3 ranking | 20 | 4.900 | $209,5M | $284,4M ± $1,9M | -$5,8M | 0/20 | < 0,001 | no | -$3,5M |
+

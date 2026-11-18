@@ -1,0 +1,11 @@
+{
+  "metodo": "ipc",
+  "semilla": 100207,
+  "auc_validacion": 0.9319305743290233,
+  "ganancia_maxima_validacion": 209550000,
+  "corte_ganancia_maxima_validacion": 4900,
+  "arboles": 612,
+  "segundos": 114.2,
+  "lightgbm": "4.7.0",
+  "maquina": "Darwin arm64"
+}
