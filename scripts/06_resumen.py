@@ -47,7 +47,18 @@ plt.rcParams.update({
 
 
 def millones(x: float) -> str:
-    return f"${x / 1e6:,.1f}M".replace(",", "X").replace(".", ",").replace("X", ".")
+    signo = "-" if x < 0 else ""
+    return signo + f"${abs(x) / 1e6:,.1f}M".replace(",", "X").replace(".", ",").replace("X", ".")
+
+
+def decimal(x: float, n: int) -> str:
+    return f"{x:.{n}f}".replace(".", ",")
+
+
+def formato_p(p: float) -> str:
+    if np.isnan(p):
+        return ""
+    return "< 0,001" if p < 0.001 else decimal(p, 3)
 
 
 def miles(n: int) -> str:
@@ -84,27 +95,31 @@ def tabla_md(df: pd.DataFrame) -> str:
 
 
 def grafico_curvas(curvas: pd.DataFrame, bo: dict) -> None:
-    fig, ax = plt.subplots(figsize=(11, 6.2))
+    # Zoom en la zona del máximo: con la curva entera (500 a 20.000) las diferencias
+    # entre familias no se ven. Las curvas completas están en resultados/curva__*.csv.
+    desde, hasta = 2_000, 8_000
+    fig, ax = plt.subplots(figsize=(11, 6.6))
     for metodo in METODOS:
         c = curvas[curvas.metodo == metodo]
         if c.empty:
             continue
-        g = c.groupby("corte")["ganancia"].agg(["mean", "std"]) / 1e6
+        g = (c.groupby("corte")["ganancia"].agg(["mean", "std"]) / 1e6).loc[desde:hasta]
         ax.fill_between(g.index, g["mean"] - g["std"], g["mean"] + g["std"], color=COLOR[metodo], alpha=0.12, lw=0)
         ax.plot(g.index, g["mean"], color=COLOR[metodo], lw=2.2, label=NOMBRE_FAMILIA[metodo])
+        mejor = g["mean"].idxmax()
+        ax.plot([mejor], [g.loc[mejor, "mean"]], "o", ms=10, mfc=FONDO, mec=COLOR[metodo], mew=2.2, zorder=5)
         corte = bo.get(metodo, {}).get("corte_validacion")
         if corte in g.index:
-            ax.plot([corte], [g.loc[corte, "mean"]], "o", ms=9, color=COLOR[metodo], mec=FONDO, mew=2, zorder=5)
-        fin = g.index.max()
-        ax.annotate(NOMBRE_FAMILIA[metodo], (fin, g.loc[fin, "mean"]), xytext=(6, 0), textcoords="offset points",
-                    va="center", fontsize=12, color=TINTA)
-    ax.set_title(f"Ganancia en {MES_TEST} según cuántos clientes se estimulan")
-    ax.set_xlabel("Clientes estimulados (los de mayor probabilidad)")
+            ax.plot([corte], [g.loc[corte, "mean"]], "o", ms=10, color=COLOR[metodo], mec=FONDO, mew=2, zorder=6)
+    ax.xaxis.set_major_formatter(plt.FuncFormatter(lambda v, _: miles(int(v))))
+    ax.set_title(f"Ganancia en {MES_TEST} según cuántos clientes se estimulan", pad=50)
+    ax.text(0, 1.025, f"Media de {curvas.semilla.nunique()} semillas por familia; la banda es ±1 desvío.\n"
+            "Punto lleno = corte elegido en validación (201908). Anillo = mejor corte de la curva, que solo se conoce "
+            "mirando el test.",
+            transform=ax.transAxes, fontsize=11, color=TINTA_2, va="bottom")
+    ax.set_xlabel("Clientes estimulados, los de mayor probabilidad (zona del máximo)")
     ax.set_ylabel("Ganancia (millones de $)")
-    ax.text(0, 1.01, f"Media de {curvas.semilla.nunique()} semillas por familia; banda = ±1 desvío; "
-            "punto = corte elegido en validación (201908)", transform=ax.transAxes, fontsize=11, color=TINTA_2)
     ax.legend(loc="lower center", ncol=4, bbox_to_anchor=(0.5, -0.27))
-    ax.set_xlim(right=curvas.corte.max() * 1.13)
     fig.tight_layout()
     fig.savefig(OUTPUT_DIR / "curvas_ganancia_201910.png", dpi=160)
     plt.close(fig)
@@ -122,16 +137,27 @@ def grafico_diferencias(finales: pd.DataFrame) -> None:
         ax.scatter(dif, i + jitter, s=60, color=COLOR[metodo], edgecolor=FONDO, linewidth=1.5, zorder=3)
         ax.plot([dif.mean()] * 2, [i - 0.3, i + 0.3], color=TINTA, lw=2.5, zorder=4)
         r = comparar(finales, metodo, "ninguna", "ganancia_corte_validacion")
-        p_txt = "" if np.isnan(r["p_wilcoxon"]) else " · p = " + f"{r['p_wilcoxon']:.3f}".replace(".", ",")
+        p = r["p_wilcoxon"]
+        p_txt = "" if np.isnan(p) else " · p < 0,001" if p < 0.001 else f" · p = {decimal(p, 3)}"
         ax.annotate(f"media {millones(r['dif_media'])} · gana en {r['gana_en']}/{r['semillas']}{p_txt}",
                     (1.0, i), xycoords=("axes fraction", "data"), xytext=(8, 0), textcoords="offset points",
                     va="center", fontsize=11, color=TINTA_2)
+    # Umbral de la regla de decisión: la media tiene que superar 1 desvío de F0
+    umbral = base.std() / 1e6
+    izq, der = ax.get_xlim()
+    der = max(der, umbral + 1)
+    ax.axvspan(umbral, der, color=TINTA, alpha=0.06, lw=0, zorder=0)
+    ax.set_xlim(izq, der)
+    ax.xaxis.set_major_formatter(plt.FuncFormatter(lambda v, _: f"{v:g}".replace(".", ",").replace("-", "−")))
     ax.axvline(0, color=TINTA_2, lw=1.2, ls="--")
     ax.set_yticks(range(len(otros)), [NOMBRE_FAMILIA[m] for m in otros])
     ax.invert_yaxis()
     ax.grid(axis="y", visible=False)
-    ax.set_xlabel("Diferencia de ganancia contra F0 en la misma semilla (millones de $)")
-    ax.set_title(f"¿Cuánto le gana cada corrección al baseline nominal? ({MES_TEST})")
+    ax.set_xlabel("Ganancia de la familia menos la de F0, con la misma semilla (millones de $)")
+    ax.set_title(f"Diferencia contra F0 nominal, semilla por semilla ({MES_TEST})", pad=50)
+    ax.text(0, 1.025, "Cada punto es una semilla; la raya negra es la media.\n"
+            f"Zona gris: para superar a F0, la media tiene que pasar 1 desvío de F0 ({millones(umbral * 1e6)}).",
+            transform=ax.transAxes, fontsize=11, color=TINTA_2, va="bottom")
     fig.tight_layout()
     fig.subplots_adjust(right=0.68)
     fig.savefig(OUTPUT_DIR / "diferencia_vs_baseline.png", dpi=160)
@@ -177,18 +203,20 @@ def main() -> None:
     bo, finales, curvas = cargar()
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     partes = ["# Resumen del experimento (generado por scripts/06_resumen.py)\n",
-              f"Ganancia: +{miles(GANANCIA_ACIERTO)} por BAJA+2 estimulado, -{miles(COSTO_ESTIMULO)} por estímulo.\n"]
+              f"Ganancia: +{miles(GANANCIA_ACIERTO)} por cada BAJA+2 estimulado, -{miles(COSTO_ESTIMULO)} por cada "
+              "estímulo a un cliente que no es BAJA+2.\n"]
 
     if bo:
         filas = []
         for m in METODOS:
             if m in bo:
                 b, h = bo[m], bo[m]["hiperparametros"]
-                filas.append({"familia": NOMBRE_FAMILIA[m], "AUC 201908": f"{b['auc_validacion']:.4f}",
-                              "árboles": b["best_iteration"], "num_leaves": h["num_leaves"],
-                              "learning_rate": f"{h['learning_rate']:.4f}", "min_data_in_leaf": h["min_data_in_leaf"],
-                              "feature_fraction": f"{h['feature_fraction']:.2f}",
-                              "bagging_fraction": f"{h['bagging_fraction']:.2f}",
+                filas.append({"familia": NOMBRE_FAMILIA[m], "AUC 201908": decimal(b["auc_validacion"], 4),
+                              "árboles": miles(b["best_iteration"]), "num_leaves": h["num_leaves"],
+                              "learning_rate": decimal(h["learning_rate"], 4),
+                              "min_data_in_leaf": miles(h["min_data_in_leaf"]),
+                              "feature_fraction": decimal(h["feature_fraction"], 2),
+                              "bagging_fraction": decimal(h["bagging_fraction"], 2),
                               "corte (201908)": miles(b["corte_validacion"]),
                               "ganancia 201908": millones(b["ganancia_validacion"]),
                               "intentos": b["intentos_completos"]})
@@ -206,12 +234,12 @@ def main() -> None:
                                                       f"{millones(f.ganancia_corte_validacion.std())}",
                     "ganancia máxima (optimista)": f"{millones(f.ganancia_maxima.mean())} ± "
                                                    f"{millones(f.ganancia_maxima.std())}",
-                    "AUC 201910": f"{f.auc_test.mean():.4f} ± {f.auc_test.std():.4f}"}
+                    "AUC 201910": f"{decimal(f.auc_test.mean(), 4)} ± {decimal(f.auc_test.std(), 4)}"}
             if m != "ninguna" and (finales.metodo == "ninguna").any():
                 r = comparar(finales, m, "ninguna", "ganancia_corte_validacion")
                 supera = r["dif_media"] > r["desvio_contra"] and r["p_wilcoxon"] < 0.05
                 fila.update({"dif. vs F0": millones(r["dif_media"]), "gana en": f"{r['gana_en']}/{r['semillas']}",
-                             "p Wilcoxon": f"{r['p_wilcoxon']:.4f}", "¿supera a F0?": "sí" if supera else "no"})
+                             "p Wilcoxon": formato_p(r["p_wilcoxon"]), "¿supera a F0?": "sí" if supera else "no"})
             filas.append(fila)
         partes += [f"## Test {MES_TEST} (reentreno 201903-201908, misma semilla en las 4 familias)\n",
                    tabla_md(pd.DataFrame(filas).fillna("")), ""]
@@ -222,21 +250,38 @@ def main() -> None:
                 r = comparar(finales, m, "ipc", "ganancia_corte_validacion")
                 empata = r["dif_media"] >= 0 or not (r["p_wilcoxon"] < 0.05)
                 filas.append({"familia": NOMBRE_FAMILIA[m], "dif. vs F1 IPC": millones(r["dif_media"]),
-                              "gana en": f"{r['gana_en']}/{r['semillas']}", "p Wilcoxon": f"{r['p_wilcoxon']:.4f}",
+                              "gana en": f"{r['gana_en']}/{r['semillas']}", "p Wilcoxon": formato_p(r["p_wilcoxon"]),
                               "¿empata o le gana al IPC?": "sí" if empata else "no"})
         if filas:
             partes += ["## Corrección interna contra IPC\n", tabla_md(pd.DataFrame(filas)), ""]
+
+        # Exploratorio, NO es parte de la regla de decisión: qué pasaría si las 4
+        # familias estimularan la misma cantidad de clientes.
+        cortes_fijos = [3_000, 3_500, 4_000, 4_500, 5_000, 6_000]
+        medias = (curvas[curvas.corte.isin(cortes_fijos)].groupby(["metodo", "corte"])["ganancia"].mean()
+                  .unstack())
+        filas = [{"familia": NOMBRE_FAMILIA[m], **{miles(c): millones(medias.loc[m, c]) for c in cortes_fijos}}
+                 for m in METODOS if m in medias.index]
+        partes += ["## Sensibilidad al corte (exploratorio, no es parte de la regla de decisión)\n",
+                   f"Ganancia media en {MES_TEST} si las 4 familias estimularan la misma cantidad de clientes.\n",
+                   tabla_md(pd.DataFrame(filas)), ""]
         grafico_curvas(curvas, bo)
         grafico_diferencias(finales)
 
     ruta_drift = OUTPUT_DIR / "drift_resumen.csv"
     if ruta_drift.exists():
         d = pd.read_csv(ruta_drift)
-        d["familia"] = d.metodo.map(NOMBRE_FAMILIA)
-        cols = ["familia", "psi_mediana", "psi_mediana_no_administradas", "psi_mediana_administradas",
-                "pct_psi_mayor_0_10", "auc_adversarial_continuas", "auc_adversarial_todas"]
-        partes += ["## Drift de las variables en pesos (201903-201908 contra 201910)\n",
-                   tabla_md(d[cols].round(3)), ""]
+        tres = lambda v: decimal(v, 3)  # noqa: E731
+        tabla = pd.DataFrame({
+            "familia": d.metodo.map(NOMBRE_FAMILIA),
+            "PSI mediano (todas)": d.psi_mediana.map(tres),
+            "PSI mediano, variables de mercado": d.psi_mediana_no_administradas.map(tres),
+            "PSI mediano, límites y comisión": d.psi_mediana_administradas.map(tres),
+            "variables con PSI > 0,1": d.pct_psi_mayor_0_10.map(lambda v: f"{v:.0f}%"),
+            "AUC adversarial (continuas)": d.auc_adversarial_continuas.map(tres),
+            "AUC adversarial (todas)": d.auc_adversarial_todas.map(tres),
+        })
+        partes += ["## Drift de las variables en pesos (201903-201908 contra 201910)\n", tabla_md(tabla), ""]
         grafico_drift()
 
     (OUTPUT_DIR / "resumen.md").write_text("\n".join(partes), encoding="utf-8")

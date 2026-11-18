@@ -1,0 +1,48 @@
+
+=== ninguna: entrena [201903, 201904, 201905, 201906, 201907, 201908] (768,499 filas), 715 árboles, corte de validación 4,000; 10 semillas pendientes ===
+  semilla 100237: ganancia $289.3M en 4,000 | máxima $290.4M en 4,200 | AUC 0.9359 | 202 s
+  semilla 100267: ganancia $287.1M en 4,000 | máxima $289.3M en 4,600 | AUC 0.9359 | 200 s
+  semilla 100271: ganancia $292.6M en 4,000 | máxima $293.1M en 3,700 | AUC 0.9364 | 199 s
+  semilla 100279: ganancia $287.1M en 4,000 | máxima $289.3M en 4,400 | AUC 0.9358 | 199 s
+  semilla 100291: ganancia $286.0M en 4,000 | máxima $292.1M en 3,700 | AUC 0.9369 | 199 s
+  semilla 100297: ganancia $290.4M en 4,000 | máxima $290.9M en 3,900 | AUC 0.9364 | 200 s
+  semilla 100313: ganancia $289.3M en 4,000 | máxima $290.9M en 4,100 | AUC 0.9362 | 200 s
+  semilla 100333: ganancia $291.5M en 4,000 | máxima $291.5M en 4,000 | AUC 0.9365 | 199 s
+  semilla 100343: ganancia $291.5M en 4,000 | máxima $291.5M en 3,800 | AUC 0.9359 | 202 s
+  semilla 100357: ganancia $287.1M en 4,000 | máxima $288.8M en 3,900 | AUC 0.9368 | 199 s
+
+=== ipc: entrena [201903, 201904, 201905, 201906, 201907, 201908] (768,499 filas), 612 árboles, corte de validación 5,000; 10 semillas pendientes ===
+  semilla 100237: ganancia $278.3M en 5,000 | máxima $279.9M en 5,300 | AUC 0.9361 | 175 s
+  semilla 100267: ganancia $276.1M en 5,000 | máxima $281.1M en 4,500 | AUC 0.9358 | 175 s
+  semilla 100271: ganancia $281.6M en 5,000 | máxima $283.8M en 4,800 | AUC 0.9358 | 174 s
+  semilla 100279: ganancia $282.7M en 5,000 | máxima $288.2M en 4,200 | AUC 0.9364 | 174 s
+  semilla 100291: ganancia $281.6M en 5,000 | máxima $283.2M en 5,100 | AUC 0.9359 | 175 s
+  semilla 100297: ganancia $282.7M en 5,000 | máxima $284.9M en 4,600 | AUC 0.9367 | 175 s
+  semilla 100313: ganancia $283.8M en 5,000 | máxima $284.9M en 4,400 | AUC 0.9361 | 175 s
+  semilla 100333: ganancia $280.5M en 5,000 | máxima $282.1M en 3,500 | AUC 0.9369 | 175 s
+  semilla 100343: ganancia $276.1M en 5,000 | máxima $282.1M en 3,900 | AUC 0.9361 | 175 s
+  semilla 100357: ganancia $276.1M en 5,000 | máxima $282.7M en 5,400 | AUC 0.9363 | 174 s
+
+=== mediana: entrena [201903, 201904, 201905, 201906, 201907, 201908] (768,499 filas), 1125 árboles, corte de validación 3,900; 10 semillas pendientes ===
+  semilla 100237: ganancia $287.6M en 3,900 | máxima $289.9M en 4,300 | AUC 0.9373 | 226 s
+  semilla 100267: ganancia $284.4M en 3,900 | máxima $287.1M en 3,800 | AUC 0.9374 | 226 s
+  semilla 100271: ganancia $288.8M en 3,900 | máxima $289.9M en 4,100 | AUC 0.9376 | 226 s
+  semilla 100279: ganancia $288.8M en 3,900 | máxima $290.4M en 3,800 | AUC 0.9375 | 227 s
+  semilla 100291: ganancia $287.6M en 3,900 | máxima $289.3M en 3,800 | AUC 0.9375 | 227 s
+  semilla 100297: ganancia $290.9M en 3,900 | máxima $290.9M en 3,900 | AUC 0.9378 | 227 s
+  semilla 100313: ganancia $289.9M en 3,900 | máxima $289.9M en 3,900 | AUC 0.9378 | 227 s
+  semilla 100333: ganancia $286.6M en 3,900 | máxima $287.1M en 3,800 | AUC 0.9378 | 226 s
+  semilla 100343: ganancia $287.6M en 3,900 | máxima $289.9M en 3,700 | AUC 0.9374 | 230 s
+  semilla 100357: ganancia $292.1M en 3,900 | máxima $292.1M en 3,900 | AUC 0.9378 | 229 s
+
+=== ranking: entrena [201903, 201904, 201905, 201906, 201907, 201908] (768,499 filas), 1223 árboles, corte de validación 3,500; 10 semillas pendientes ===
+  semilla 100237: ganancia $281.1M en 3,500 | máxima $292.1M en 3,900 | AUC 0.9365 | 296 s
+  semilla 100267: ganancia $278.9M en 3,500 | máxima $288.8M en 4,500 | AUC 0.9368 | 299 s
+  semilla 100271: ganancia $283.2M en 3,500 | máxima $292.1M en 4,500 | AUC 0.9364 | 301 s
+  semilla 100279: ganancia $281.1M en 3,500 | máxima $291.5M en 3,800 | AUC 0.9371 | 300 s
+  semilla 100291: ganancia $284.4M en 3,500 | máxima $292.1M en 4,900 | AUC 0.9367 | 299 s
+  semilla 100297: ganancia $290.9M en 3,500 | máxima $290.9M en 3,500 | AUC 0.9367 | 300 s
+  semilla 100313: ganancia $282.1M en 3,500 | máxima $287.1M en 4,800 | AUC 0.9366 | 298 s
+  semilla 100333: ganancia $283.2M en 3,500 | máxima $292.6M en 4,000 | AUC 0.9364 | 300 s
+  semilla 100343: ganancia $278.9M en 3,500 | máxima $292.6M en 4,000 | AUC 0.9364 | 301 s
+  semilla 100357: ganancia $283.2M en 3,500 | máxima $291.5M en 4,400 | AUC 0.9364 | 300 s

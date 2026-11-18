@@ -47,7 +47,7 @@ De las 62 variables en pesos sin meses rotos, la mitad se movió entre 0% y +34%
 | Validación | 201908, con AUC: ordena la bayesiana y hace el early stopping |
 | Test | 201910, con ganancia, solo para comparar. Se reentrena con 201903-201908 |
 | Bayesiana | `num_leaves`, `learning_rate`, `min_data_in_leaf`, `feature_fraction`, `bagging_fraction`; `bagging_freq` = 1; el resto en el default de LightGBM |
-| Ganancia | +1.072.500 por BAJA+2 estimulado, -27.500 por estímulo |
+| Ganancia | +1.072.500 por cada BAJA+2 estimulado, -27.500 por cada estímulo a un cliente que no es BAJA+2 |
 
 ### Las 4 familias
 
@@ -108,9 +108,43 @@ Lectura:
 - **Las variables que el banco fija por escalones** (límites de compra y de financiación, comisión de mantenimiento) no se mueven mes a mes con la inflación. Deflactarlas con IPC les inventa una caída real todos los meses hasta el próximo escalón (PSI de 0,03 a 1,01). El ranking también las empeora, por los empates. **La mediana es la única que las deja como estaban**: su mediana cae justo sobre un escalón.
 - **El AUC adversarial no baja con ninguna corrección.** Con todas las variables, IPC y ranking llegan a 1,000, pero es un artefacto: en las variables con pocos valores distintos (límites), cada mes queda con un valor exacto propio después de corregir, y el clasificador reconoce el mes por esa "huella". Aun usando solo variables continuas, octubre sigue siendo distinguible (0,81 a 0,87). Lo explican cambios de comportamiento que no son inflación: consumo y pagos en dólares con tarjeta, venta de dólares, débitos automáticos, extracciones. Octubre de 2019 es post-PASO (devaluación de agosto, cepo de septiembre), y ninguna corrección del nivel de precios saca eso.
 
-### (b) ¿Sube la ganancia?
+### (b) ¿Sube la ganancia? No: ninguna corrección le gana al nominal
 
-*Pendiente: se completa cuando termine la corrida (`output/resumen.md` tiene las tablas, generado por `scripts/06_resumen.py`).*
+**En validación (201908) las cuatro familias ya venían parejas.** La bayesiana terminó con AUC entre 0,9316 y 0,9334, con el nominal arriba: los 5 mejores intentos de F0 superan al mejor de F2 y al mejor de F3. La ganancia en 201908 del mejor intento es ruidosa: entre los 5 mejores intentos de una misma familia varía hasta $8M.
+
+| Familia | AUC 201908 | Árboles | Corte elegido en 201908 | Ganancia 201908 |
+|---|---|---|---|---|
+| F0 nominal | 0,9334 | 715 | 4.000 | $216,7M |
+| F1 IPC | 0,9331 | 612 | 5.000 | $209,0M |
+| F2 mediana | 0,9323 | 1.125 | 3.900 | $208,4M |
+| F3 ranking | 0,9316 | 1.223 | 3.500 | $212,8M |
+
+**En el test (201910), con la regla fijada antes de mirarlo, ninguna corrección supera al nominal.** Reentreno con 201903-201908, las mismas semillas en las 4 familias y el corte que eligió cada una en 201908:
+
+| Familia | Ganancia 201910 (20 semillas) | Contra F0 | Semillas en que le gana a F0 | Wilcoxon p | AUC 201910 | Ganancia máxima (optimista) |
+|---|---|---|---|---|---|---|
+| F0 nominal | $289,0M ± $2,2M | | | | 0,9364 | $290,5M |
+| F1 IPC | $279,6M ± $3,4M | -$9,5M | 0 de 20 | < 0,001 | 0,9362 | $283,2M |
+| F2 mediana | $287,6M ± $2,1M | -$1,4M | 7 de 20 | 0,034 | 0,9376 | $289,7M |
+| F3 ranking | $282,9M ± $3,0M | -$6,2M | 2 de 20 | < 0,001 | 0,9366 | $291,2M |
+
+El ± es el desvío entre semillas. La "ganancia máxima" elige el mejor corte de cada semilla mirando el test: solo sirve de referencia. Las tablas completas están en `output/resumen.md` y cada semilla en `output/resultados_por_semilla.csv`.
+
+![Diferencia contra F0, semilla por semilla](output/diferencia_vs_baseline.png)
+
+![Curvas de ganancia en 201910](output/curvas_ganancia_201910.png)
+
+Lectura:
+
+- **El IPC es la peor opción.** Pierde contra el nominal en las 20 semillas y en todos los cortes de la zona del máximo. Es coherente con (a): un solo índice para variables que se mueven distinto, y caídas reales inventadas en los límites y comisiones que el banco ajusta por escalones.
+- **La mediana es la que menos pierde**: -$1,4M, menos que el desvío entre semillas de F0, y le gana en 7 de las 20 semillas. Es casi un empate, aunque el Wilcoxon da la diferencia como significativa (p = 0,034). Tiene el mejor AUC de las cuatro, pero ordenar mejor a todos los clientes (el AUC cuenta también a los BAJA+1) no se traduce en más ganancia entre los primeros 4.000, que es donde se decide.
+- **El ranking pierde por el corte más que por el orden.** Su validación eligió estimular 3.500 clientes, pero en octubre su curva es la más alta a partir de los ~4.100. Si las cuatro familias estimularan la misma cantidad de clientes, con 4.000 F3 empata con F0 ($288,9M contra $289,0M) y con 4.500, 5.000 o 6.000 le gana por $2,5M a $4,2M (tabla exploratoria en `output/resumen.md`). Elegir el corte mirando el test es justamente lo que la regla prohíbe: queda como hipótesis para probar, no como resultado.
+- **La segunda parte de la hipótesis sí se cumple**: mediana y ranking le ganan al IPC (F2 por $8,1M, en 20 de 20 semillas; F3 por $3,3M, en 15 de 20; las dos con Wilcoxon p < 0,01).
+
+**¿Por qué bajar el drift no sube la ganancia?** El experimento no lo separa, pero hay dos explicaciones compatibles con los datos:
+
+1. El cambio de octubre que más pesa no es de precios: el AUC adversarial no bajó con ninguna corrección (comportamiento en dólares post-PASO).
+2. Un árbol no cambia si una variable se transforma de forma monótona dentro de un mes: la corrección solo cambia cómo se comparan meses distintos. Y puede que buena parte de la señal esté en variables que la inflación no toca (cantidades, flags, antigüedad).
 
 ## Limitaciones
 
@@ -122,6 +156,26 @@ Lectura:
 - **Octubre de 2019 no es un mes cualquiera**: la devaluación post-PASO cambió el comportamiento en dólares, y eso no es inflación.
 - **2019 no tiene la pandemia**: el shock de 2020 queda afuera.
 - **Mismos árboles al pasar de 4 a 6 meses de entrenamiento**: el reentreno usa la cantidad de árboles que encontró el early stopping con 4 meses.
+- **El corte sale de un solo modelo en 201908** (el mejor intento de la bayesiana): es ruidoso, y en F3 cayó lejos del mejor corte de octubre.
+
+## Conclusiones
+
+- **En 2019, con el baseline de la cátedra, corregir la inflación de las variables en pesos no sube la ganancia.** Con la regla fijada antes de mirar el test, el nominal le gana a las tres correcciones. La hipótesis principal no se sostiene.
+- **Si se corrige, que no sea con el IPC**: es la peor de las tres en ganancia y la que más distorsiona las variables que el banco ajusta por escalones. Las correcciones con datos del propio mes le ganan, y además no dependen del INDEC.
+- **Bajar el drift no alcanza**: las tres correcciones bajan el PSI de la variable típica, pero el cambio de octubre que no es de precios sigue ahí, y la ganancia no sube. Medir el drift por separado de la ganancia evitó dar por hecho que menos drift es mejor modelo.
+- **El corte pesa tanto como la corrección**: con 4.500 clientes o más, el ranking queda arriba del nominal (análisis exploratorio, mirando el test).
+
+### Lo que el diseño nos cuidó de creer
+
+Esperábamos que corregir ayudara (sesgo de confirmación). Mirando la curva de octubre es fácil encontrar un corte en el que el ranking "gana". La regla de decisión y el corte, fijados antes de mirar el test, evitaron declarar ese resultado.
+
+### Qué seguiríamos probando
+
+1. Elegir el corte de forma más estable (por ejemplo, con el promedio de varias semillas en 201908, o maximizando la ganancia promedio en una ventana de cortes) y ver si el ranking se sostiene.
+2. Agregar la versión corregida como columnas nuevas, sin sacar las nominales, y dejar que el modelo elija.
+3. Corregir solo las variables de mercado y dejar en nominal las administradas (límites, comisión de mantenimiento).
+4. Repetir con 2020-2021, el resto del dataset de la Segunda Competencia: más meses de test, pandemia y otra dinámica de precios.
+5. IPC con un mes de rezago, que es el que estaría disponible en producción.
 
 ## Cómo correrlo
 
@@ -133,12 +187,12 @@ uv run python scripts/01_preparar_base.py        # 2019 + clase_ternaria        
 uv run python scripts/02_corregir_y_fe.py        # 4 familias: corrección + lags     (~1,5 min)
 uv run python scripts/00_diagnostico_inflacion.py  # gráficos de diagnóstico         (segundos)
 uv run python scripts/05_drift.py                # PSI y AUC adversarial             (~30 s)
-uv run python scripts/03_optimizar.py            # bayesiana, 4 x 50 intentos        (horas)
-uv run python scripts/04_entrenar_final.py       # 4 familias x 20 semillas          (horas)
+uv run python scripts/03_optimizar.py            # bayesiana, 4 x 50 intentos        (~7 h)
+uv run python scripts/04_entrenar_final.py       # 4 familias x 20 semillas          (~5 h)
 uv run python scripts/06_resumen.py              # tablas, tests y gráficos
 ```
 
-Tiempos medidos en una MacBook Pro M3 Pro (12 núcleos, 36 GB). La bayesiana ocupa ~7 GB de memoria (medido): entra en una máquina de 16 GB cerrando lo demás. Opciones útiles:
+Tiempos medidos en una MacBook Pro M3 Pro (12 núcleos, 36 GB). La bayesiana tardó entre 1 h 45 min y 2 h por familia (de 12 segundos a 7 minutos por intento, unos 2 minutos el típico) y el reentreno final, de 3 a 5 minutos por semilla según la familia y ocupa ~7 GB de memoria (medido): entra en una máquina de 16 GB cerrando lo demás. Opciones útiles:
 
 - `--metodos mediana ranking` en 02, 03, 04 y 05 para correr solo algunas familias.
 - `--semillas 100081 100103` en 04 para correr solo algunas semillas. Si una semilla ya tiene resultado, se saltea (`--forzar` para rehacerla).
@@ -157,7 +211,8 @@ data/         crudo, base por mes, features por familia y estudio de Optuna (no 
 resultados/   bo__<familia>.json y bo__<familia>__intentos.csv (bayesiana);
               final__<familia>__<semilla>.json y curva__<familia>__<semilla>.csv (test);
               prediccion__*.parquet (probabilidades por cliente, no se versiona)
-output/       gráficos, tablas (resumen.md, drift_*.csv, celdas_rotas.csv) y logs/ de cada corrida
+output/       gráficos, tablas (resumen.md, resultados_por_semilla.csv, drift_*.csv, celdas_rotas.csv)
+              y logs/ de cada corrida
 ```
 
 ## Qué se reutilizó

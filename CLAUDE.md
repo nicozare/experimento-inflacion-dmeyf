@@ -75,7 +75,22 @@ todo el grupo corra las mismas versiones de librerías.
 - **IPC**: serie oficial bajada de la API de datos.gob.ar
   (`148.3_INIVELNAL_DICI_M_26`), cargada a mano en `config.IPC`.
 
+- **Encadenar corridas**: la terminal de Claude Code es zsh, que no separa una
+  variable con espacios en varios argumentos (`--semillas $LISTA` llegó como un
+  solo string y 04 falló), y `python ... | tee log` devuelve el código de `tee`,
+  así que el `&&` siguiente corrió igual. Para cadenas largas: script de bash
+  con `set -euo pipefail`.
+- **Ganancia**: +1.072.500 por cada BAJA+2 estimulado y -27.500 por cada
+  estímulo a un no BAJA+2 (misma convención que `entrega_competencia_01`).
+
 ## Estado
 
-Ver la sección de resultados del README y `output/resumen.md`. Las corridas
-largas (03 y 04) dejan su log en `output/logs/`.
+Corrida completa el 18/11/2026 (bayesiana 17/11 20:46 a 18/11 04:02; reentreno
+de 4 familias x 20 semillas 04:04 a 09:04), en la MacBook Pro M3 Pro del
+usuario. Resultado: ninguna corrección supera a F0 con la regla fijada de
+antemano (F1 IPC -$9,5M, F2 mediana -$1,4M, F3 ranking -$6,2M); mediana y
+ranking le ganan al IPC. F3 tiene la mejor curva a partir de ~4.100 clientes
+pero su corte de validación (3.500) quedó corto: eso es exploratorio. Detalle
+en la sección de resultados del README y en `output/resumen.md`; logs en
+`output/logs/` (`04_entrenar_final_10.log` y `_20.log` son las dos mitades
+del semillerío).

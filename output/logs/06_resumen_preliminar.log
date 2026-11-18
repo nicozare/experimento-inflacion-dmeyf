@@ -1,0 +1,38 @@
+# Resumen del experimento (generado por scripts/06_resumen.py)
+
+Ganancia: +1.072.500 por BAJA+2 estimulado, -27.500 por estímulo.
+
+## Optimización bayesiana (validación 201908)
+
+| familia | AUC 201908 | árboles | num_leaves | learning_rate | min_data_in_leaf | feature_fraction | bagging_fraction | corte (201908) | ganancia 201908 | intentos |
+|---|---|---|---|---|---|---|---|---|---|---|
+| F0 nominal | 0.9334 | 715 | 432 | 0.0083 | 1917 | 0.78 | 0.87 | 4.000 | $216,7M | 50 |
+| F1 IPC | 0.9331 | 612 | 366 | 0.0099 | 1457 | 0.50 | 0.79 | 5.000 | $209,0M | 50 |
+| F2 mediana | 0.9323 | 1125 | 322 | 0.0051 | 2642 | 0.32 | 0.96 | 3.900 | $208,4M | 50 |
+| F3 ranking | 0.9316 | 1223 | 567 | 0.0053 | 2717 | 0.64 | 0.91 | 3.500 | $212,8M | 50 |
+
+## Test 201910 (reentreno 201903-201908, misma semilla en las 4 familias)
+
+| familia | semillas | ganancia (corte de validación) | ganancia máxima (optimista) | AUC 201910 | dif. vs F0 | gana en | p Wilcoxon | ¿supera a F0? |
+|---|---|---|---|---|---|---|---|---|
+| F0 nominal | 10 | $288,9M ± $2,2M | $290,3M ± $2,4M | 0.9364 ± 0.0004 |  |  |  |  |
+| F1 IPC | 10 | $279,2M ± $3,9M | $283,1M ± $2,7M | 0.9362 ± 0.0004 | $-9,7M | 0/10 | 0.0020 | no |
+| F2 mediana | 10 | $286,9M ± $1,7M | $289,7M ± $1,6M | 0.9377 ± 0.0001 | $-2,0M | 2/10 | 0.0215 | no |
+| F3 ranking | 10 | $283,0M ± $2,7M | $291,2M ± $1,6M | 0.9367 ± 0.0003 | $-5,8M | 1/10 | 0.0039 | no |
+
+## Corrección interna contra IPC
+
+| familia | dif. vs F1 IPC | gana en | p Wilcoxon | ¿empata o le gana al IPC? |
+|---|---|---|---|---|
+| F2 mediana | $7,7M | 10/10 | 0.0020 | sí |
+| F3 ranking | $3,9M | 7/10 | 0.0605 | sí |
+
+## Drift de las variables en pesos (201903-201908 contra 201910)
+
+| familia | psi_mediana | psi_mediana_no_administradas | psi_mediana_administradas | pct_psi_mayor_0_10 | auc_adversarial_continuas | auc_adversarial_todas |
+|---|---|---|---|---|---|---|
+| F0 nominal | 0.008 | 0.006 | 0.031 | 6.452 | 0.81 | 0.892 |
+| F1 IPC | 0.004 | 0.003 | 1.014 | 12.903 | 0.874 | 1.0 |
+| F2 mediana | 0.002 | 0.002 | 0.039 | 4.839 | 0.854 | 0.921 |
+| F3 ranking | 0.001 | 0.001 | 0.33 | 11.29 | 0.867 | 1.0 |
+
