@@ -161,10 +161,10 @@ Lectura:
 ## Conclusiones
 
 - **En 2019, con el baseline de la cátedra, corregir la inflación de las variables en pesos no sube la ganancia.** Con la regla fijada antes de mirar el test, el nominal le gana a las tres correcciones. La hipótesis principal no se sostiene.
-- **Si se corrige, que no sea con el IPC**: es la peor de las tres en ganancia y la que más distorsiona las variables que el banco ajusta por escalones. Las correcciones con datos del propio mes le ganan, y además no dependen del INDEC.
+- **Si se corrige, que no sea con el IPC**: es la peor de las tres en ganancia y la que más distorsiona las variables que el banco ajusta por escalones. Las correcciones con datos del propio mes le ganan, y además no dependen del INDEC. Ojo: con el azar de los clientes del mes (S6), solo resiste que el IPC pierde contra el nominal; que la mediana le gane al IPC no llega a ser robusto.
 - **Bajar el drift no alcanza**: las tres correcciones bajan el PSI de la variable típica, pero el cambio de octubre que no es de precios sigue ahí, y la ganancia no sube. Medir el drift por separado de la ganancia evitó dar por hecho que menos drift es mejor modelo.
 - **El corte pesa tanto como la corrección**: con 4.500 clientes o más, el ranking queda arriba del nominal (análisis exploratorio, mirando el test). En los seguimientos pasa lo mismo: el mejor corte de agosto no es el de octubre, ni siquiera promediando 20 semillas, y eso mueve la ganancia tanto como la diferencia entre familias.
-- **Lo único que mejoró algo no corrige: agrega.** F4 suma proporciones del propio cliente, que no tienen inflación, sin sacar las variables nominales. Tiene la mejor curva de octubre en toda la zona del máximo y supera a F0 con el corte estable (+$2,8M, 17 de 20 semillas), aunque con el corte de la bayesiana empata. Es un seguimiento decidido después de mirar 201910: hay que confirmarlo en otro mes, y separar si la mejora viene de sacar la inflación o de la información nueva (ver S3).
+- **Lo único que mejoró algo no corrige: agrega.** F4 suma proporciones del propio cliente, que no tienen inflación, sin sacar las variables nominales. Tiene la mejor curva de octubre en toda la zona del máximo y supera a F0 con el corte estable (+$2,8M, 17 de 20 semillas), aunque con el corte de la bayesiana empata. Es un seguimiento decidido después de mirar 201910, y con el azar de los clientes del mes no resiste por poco (S6): hay que confirmarlo en otro mes (S5) y separar si la mejora viene de sacar la inflación o de la información nueva (S8).
 
 ### Lo que el diseño nos cuidó de creer
 
@@ -285,7 +285,7 @@ Lectura: el modelo nominal es poco sensible al nivel de precios, porque lo que m
 
 ## Segunda tanda de seguimientos (18/11, a la noche)
 
-> **Estado (18/11, 18 h)**: reglas escritas antes de correr. S5 y el control de S8 (F5) corren esta noche; S6, S7 y el resto de S8, después.
+> **Estado (18/11, 18 h)**: reglas escritas antes de correr. S6, S7 y las partes 1 y 2 de S8 terminados. S5 (201909) y la parte 3 de S8 (F5) corren desde las 17 h y terminan de madrugada.
 
 Salen de la primera tanda, sobre todo de F4. Como antes, las reglas se escriben acá antes de correr, y nada repite lo de Inflacion_1.
 
@@ -309,11 +309,49 @@ Las 20 semillas miden el azar del modelo con los clientes de 201910 fijos. Pero 
 
 **Regla**: una diferencia es robusta al azar de los clientes si su intervalo del 95% no incluye el 0 (`scripts/10_bootstrap_clientes.py`).
 
+**Resultado: casi ninguna diferencia es robusta.** El azar de qué clientes caen en octubre pesa entre 2 y 7 veces más que el de las semillas: el error estándar de la diferencia es de $1,6M a $5,8M por los clientes, y de $0,6M a $1,0M por las semillas (`output/bootstrap_clientes.md`).
+
+![Diferencia contra F0 con el azar de los clientes de 201910](output/bootstrap_clientes.png)
+
+| Comparación | Corte | Diferencia | Intervalo del 95% | ¿Robusta? |
+|---|---|---|---|---|
+| F1 IPC vs F0 | bayesiana | -$9,5M | -$17,8M a -$0,4M | sí |
+| F1 IPC vs F0 | estable | -$8,1M | -$15,4M a $0,2M | no |
+| F2 mediana vs F0 | bayesiana | -$1,4M | -$8,9M a $6,3M | no |
+| F2 mediana vs F0 | estable | -$0,2M | -$8,7M a $7,7M | no |
+| F3 ranking vs F0 | bayesiana | -$6,2M | -$14,6M a $2,8M | no |
+| F3 ranking vs F0 | estable | -$5,0M | -$15,4M a $4,9M | no |
+| F4 proporciones vs F0 | bayesiana | -$0,4M | -$5,1M a $5,9M | no |
+| F4 proporciones vs F0 | estable | +$2,8M | -$0,3M a $6,1M | no (por poco: 96% de los remuestreos dan a favor de F4) |
+| F2 mediana vs F1 IPC | bayesiana | +$8,1M | -$0,7M a $16,7M | no (96% a favor de F2) |
+| F3 ranking vs F1 IPC | bayesiana | +$3,3M | -$9,1M a $13,9M | no |
+
+- **Lo único que resiste es que el IPC pierde contra el nominal**, con el corte de la bayesiana.
+- **El "sí" de F4 con el corte estable no resiste por poco.** Es la diferencia con menos ruido de todas ($1,6M), porque con cortes parecidos (4.200 y 4.300) F4 y F0 eligen casi a los mismos clientes.
+- **El Wilcoxon por semillas responde otra pregunta**: si, con estos clientes, la diferencia es más que ruido de semilla. Para decir que una familia es mejor en general, la vara que importa es la de los clientes, y con un solo mes de test casi nada la pasa. Por eso S5 (201909) es la prueba que falta.
+- El intervalo no incluye el azar de las semillas, que es mucho menor: con él, los intervalos serían apenas más anchos.
+
 ### S7. ¿Cuánta inflación hace falta para que corregir convenga? (prueba de estrés, sin regla de decisión)
 
 Con 2019, entre el entrenamiento y octubre hay ~18% de inflación, y corregir no conviene. Se infla artificialmente octubre: todos los montos en pesos (nivel, lags y deltas) se multiplican por 1,1; 1,25; 1,5; 2 y 3, como si el test estuviera más lejos del entrenamiento. Se mide cuánto pierden F0 y F4, con 5 semillas y el corte de la bayesiana de cada una.
 
 Con una inflación pareja, F2 y F3 no cambian por construcción (la mediana y el ranking del mes la absorben), y F1 tampoco si el IPC la mide. Por eso, el punto en que F0 cae por debajo de cada una dice desde cuánta inflación conviene corregir. El supuesto fuerte es la inflación pareja para todas las variables: en la realidad no lo es, y los límites van por escalones (`scripts/11_estres_inflacion.py`).
+
+**Resultado: el nominal resiste bastante, y corregir conviene recién con más inflación que la de 2019** (`output/estres_inflacion.md`).
+
+![¿Desde cuánta inflación conviene corregir?](output/estres_inflacion.png)
+
+| Inflación total entre el entrenamiento y el test | +18% (2019) | +30% | +47% | +77% | +136% | +254% |
+|---|---|---|---|---|---|---|
+| F0 nominal | $289,0M | $287,0M | $285,5M | $283,5M | $281,8M | $276,3M |
+| F4 proporciones | $288,6M | $287,3M | $286,6M | $286,4M | $287,3M | $279,6M |
+| Clientes elegidos por F0 que siguen siendo los mismos | 100% | 97% | 94% | 91% | 87% | 83% |
+
+- **F0 pierde de a poco.** Con los montos de octubre multiplicados por 3 (+254% contra el entrenamiento) pierde $12,7M (4%), y el 83% de los clientes que elige siguen siendo los mismos. Coincide con S4: el modelo corta sobre todo en "no tiene" y en montos bajos, que la inflación mueve poco.
+- **Desde cuánta inflación conviene corregir** (primer cruce, con F1 a F3 fijos en su ganancia de 2019): la mediana, desde ~+26% (apenas más que en 2019, porque ya estaba casi empatada); el ranking, desde ~+99%; y el IPC, desde ~+183%, y solo si midiera bien esa inflación.
+- **Para tener una idea**: con una inflación como la de 2023 (211% en el año, unos 10% por mes) y esta misma ventana (el mes promedio del entrenamiento queda 4 meses y medio antes del test), entre el entrenamiento y el test habría más de +50%, y ahí la mediana ya convendría.
+- **F4 aguanta más que F0**: hasta +136% casi no pierde, porque sus proporciones no cambian, y queda cerca de la mediana en todo ese rango.
+- **Es orientativo**: las pérdidas de F0 son del mismo orden que el ruido de los clientes del mes (S6), la inflación real no es pareja entre variables y los límites van por escalones.
 
 ### S8. ¿Por qué funciona F4?
 
@@ -327,6 +365,20 @@ Con una inflación pareja, F2 y F3 no cambian por construcción (la mediana y el
 
 F5 también se compara contra F0 con la regla de siempre.
 
+**Resultado de las partes 1 y 2** (la 3, F5, corre esta noche; detalle en `output/por_que_f4.md`):
+
+![¿Qué proporciones usa el modelo de F4?](output/importancia_f4.png)
+
+- **Las proporciones pesan poco, pero el modelo las usa.** Las 11 juntas son el 8,9% de la ganancia de los cortes del modelo de F4; los montos en pesos son el 44,1% y el resto de las variables, el 46,9%. La que más usa es la dolarización (puesto 11 entre las 163 variables), seguida de saldo / sueldo y pago del saldo Visa.
+- **Los que se van casi no cobran el sueldo en el banco.** De los 4.000 clientes que eligen F0 y F4, solo ~137 cobran el sueldo ahí, aunque son la mitad de los clientes del mes.
+
+| Segmento (corte de 4.000, 20 semillas) | % de los clientes del mes | Elegidos por F0 / F4 | BAJA+2 que agarra F0 / F4 | F4 menos F0 | F4 gana en |
+|---|---|---|---|---|---|
+| cobra el sueldo en el banco | 49% | 137 / 138 | 12,6 / 13,1 | +$0,5M | 12/20 |
+| no cobra el sueldo en el banco | 51% | 3.863 / 3.862 | 350,1 / 351,7 | +$1,7M | 15/20 |
+
+- **La ventaja de F4 viene sobre todo de los que no cobran el sueldo en el banco** (+$1,7M de los +$2,2M). Ahí las 5 proporciones contra el sueldo no existen: lo que suma son las de tarjetas y la dolarización. Encaja con la importancia, porque la dolarización es la proporción que más usa el modelo.
+
 ## Cómo correrlo
 
 Requiere [uv](https://docs.astral.sh/uv/) y el dataset `competencia_02_crudo.csv.gz` en `data/` (o la variable de entorno `CRUDO` apuntando a él).
@@ -336,14 +388,25 @@ uv sync
 uv run python scripts/01_preparar_base.py             # 2019 + clase_ternaria                 (~1 min)
 uv run python scripts/02_corregir_y_fe.py             # F0-F3: corrección + lags y deltas     (~1,5 min)
 uv run python scripts/02b_proporciones.py             # F4: F0 + proporciones (seguimiento)   (~20 s)
+uv run python scripts/02b_proporciones.py --operacion diferencia   # F5: control de F4 (S8)   (~20 s)
 uv run python scripts/00_diagnostico_inflacion.py     # gráficos de diagnóstico               (segundos)
 uv run python scripts/05_drift.py                     # PSI y AUC adversarial de F0-F3        (~30 s)
-uv run python scripts/03_optimizar.py                 # bayesiana, 5 familias x 50 intentos   (~9 h)
-uv run python scripts/04_entrenar_final.py            # 5 familias x 20 semillas en 201910    (~6 h)
+uv run python scripts/03_optimizar.py                 # bayesiana, 6 familias x 50 intentos   (~11 h)
+uv run python scripts/04_entrenar_final.py            # 6 familias x 20 semillas en 201910    (~7 h)
 uv run python scripts/06_resumen.py                   # tablas, tests y gráficos              (segundos)
-uv run python scripts/07_validacion_semillas.py       # 5 familias x 20 semillas en 201908    (~4 h)
+uv run python scripts/07_validacion_semillas.py       # 6 familias x 20 semillas en 201908    (~4,5 h)
 uv run python scripts/08_corte_estable_y_ensamble.py  # seguimiento S1 y S2                   (segundos)
 uv run python scripts/09_donde_corta.py               # seguimiento S4                        (~4 min)
+uv run python scripts/10_bootstrap_clientes.py        # seguimiento S6                        (~15 s)
+uv run python scripts/11_estres_inflacion.py          # seguimiento S7                        (~40 min)
+uv run python scripts/12_por_que_f4.py                # seguimiento S8 (usa los modelos de 11) (segundos)
+
+# S5: el mismo protocolo un mes antes, solo F0 y F4 (resultados en resultados/test_201909/)
+VENTANA=201909 uv run python scripts/03_optimizar.py --metodos ninguna proporciones
+VENTANA=201909 uv run python scripts/04_entrenar_final.py --metodos ninguna proporciones
+VENTANA=201909 uv run python scripts/07_validacion_semillas.py --metodos ninguna proporciones
+VENTANA=201909 uv run python scripts/08_corte_estable_y_ensamble.py
+VENTANA=201909 uv run python scripts/06_resumen.py
 ```
 
 Tiempos medidos en una MacBook Pro M3 Pro (12 núcleos, 36 GB). La bayesiana tardó entre 1 h 45 min y 2 h 5 min por familia (de 12 segundos a 7 minutos por intento, unos 2 minutos el típico) y ocupa ~7 GB de memoria (medido): entra en una máquina de 16 GB cerrando lo demás. El reentreno final tarda de 2,5 a 5 minutos por semilla según la familia, y el de validación (07), de 1,5 a 3. Opciones útiles:
@@ -360,16 +423,17 @@ Todos con este mismo repo, las mismas versiones de librerías (`uv.lock`) y las 
 ## Qué hay en cada carpeta
 
 ```
-scripts/      00 a 09 (ver arriba), config.py (todas las constantes) y comun.py
-data/         crudo, base por mes, features por familia y estudio de Optuna (no se versiona)
+scripts/      00 a 12 (ver arriba), config.py (todas las constantes) y comun.py
+data/         crudo, base por mes, features por familia, estudio de Optuna y modelos de 11 (no se versiona)
 resultados/   bo__<familia>.json y bo__<familia>__intentos.csv (bayesiana);
               final__<familia>__<semilla>.json y curva__<familia>__<semilla>.csv (201910);
               validacion__<familia>__<semilla>.json y curva_validacion__<familia>__<semilla>.csv (201908);
-              corte_estable_y_ensamble.csv (seguimiento S1 y S2);
+              corte_estable_y_ensamble.csv (S1 y S2), bootstrap_clientes.csv (S6), estres_inflacion.csv (S7);
+              test_201909/ (S5, la misma estructura con 201909 como test);
               prediccion*.parquet (probabilidades por cliente, no se versiona)
-output/       gráficos, tablas (resumen.md, corte_estable_y_ensamble.md, donde_corta.md,
-              resultados_por_semilla.csv, drift_*.csv, proporciones_psi.csv, celdas_rotas.csv)
-              y logs/ de cada corrida
+output/       gráficos, tablas (resumen.md, corte_estable_y_ensamble.md, donde_corta.md, bootstrap_clientes.md,
+              estres_inflacion.md, por_que_f4.md, resultados_por_semilla.csv, drift_*.csv, proporciones_psi.csv,
+              diferencias_psi.csv, celdas_rotas.csv), test_201909/ (S5) y logs/ de cada corrida
 ```
 
 ## Qué se reutilizó

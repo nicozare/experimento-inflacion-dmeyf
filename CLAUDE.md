@@ -140,3 +140,19 @@ bayesiana, finales y 07 de F4; 08 y 06):
 `06_resumen.py` hace los gráficos principales solo con F0-F3 (el experimento
 preregistrado) y F4 en uno aparte (`curvas_f4_201910.png`); las tablas de 06 y
 los gráficos de 08 incluyen a F4.
+
+Segunda tanda (18/11 a la tarde; el usuario eligió las cuatro propuestas y las
+reglas se escribieron en el README antes de correr):
+
+- S6 bootstrap de clientes (10): el azar de los clientes del mes pesa 2 a 7
+  veces más que el de las semillas; solo resiste que F1 pierde contra F0 (corte
+  de la bayesiana). El "sí" de F4 con corte estable no resiste por poco.
+- S7 estrés de inflación (11): F0 pierde de a poco (-$12,7M con montos x3); la
+  mediana convendría desde ~+26% de inflación total, el ranking desde ~+99%,
+  el IPC desde ~+183%. 11 guarda los modelos en `data/modelos/` (5 semillas
+  de F0 y F4; con k = 1 reproducen 04).
+- S8 partes 1 y 2 (12): las proporciones son el 8,9% de la ganancia de los
+  cortes; la ventaja de F4 viene de los clientes que no cobran el sueldo en el
+  banco (los que se van casi no lo cobran ahí).
+- S5 (F0 y F4 con 201909 como test) y S8 parte 3 (F5 diferencias) corren en
+  la cadena `cadena_segunda_tanda.sh` del scratchpad, desde las 16:54.

@@ -1,0 +1,47 @@
+
+=== ninguna: 365 de 760 columnas en pesos se inflan; corte 4.000 ===
+  ninguna semilla 100103: entrenado (282 s)
+  ninguna semilla 100129: entrenado (298 s)
+  ninguna semilla 100151: entrenado (305 s)
+  ninguna semilla 100169: entrenado (289 s)
+  ninguna semilla 100081: x1,00 $293,7M | x1,10 $288,2M | x1,25 $283,8M | x1,50 $283,8M | x2,00 $284,9M | x3,00 $279,4M
+  ninguna semilla 100103: x1,00 $287,1M | x1,10 $286,0M | x1,25 $283,8M | x1,50 $282,7M | x2,00 $281,6M | x3,00 $278,3M
+  ninguna semilla 100129: x1,00 $288,2M | x1,10 $284,9M | x1,25 $286,0M | x1,50 $282,7M | x2,00 $282,7M | x3,00 $273,9M
+  ninguna semilla 100151: x1,00 $289,3M | x1,10 $289,3M | x1,25 $289,3M | x1,50 $288,2M | x2,00 $281,6M | x3,00 $279,4M
+  ninguna semilla 100169: x1,00 $290,4M | x1,10 $290,4M | x1,25 $288,2M | x1,50 $283,8M | x2,00 $281,6M | x3,00 $273,9M
+
+=== proporciones: 365 de 815 columnas en pesos se inflan; corte 4.500 ===
+  proporciones semilla 100103: entrenado (236 s)
+  proporciones semilla 100129: entrenado (251 s)
+  proporciones semilla 100151: entrenado (275 s)
+  proporciones semilla 100169: entrenado (262 s)
+  proporciones semilla 100081: x1,00 $287,6M | x1,10 $289,9M | x1,25 $286,6M | x1,50 $286,6M | x2,00 $284,4M | x3,00 $282,1M
+  proporciones semilla 100103: x1,00 $292,1M | x1,10 $287,6M | x1,25 $287,6M | x1,50 $288,8M | x2,00 $287,6M | x3,00 $276,6M
+  proporciones semilla 100129: x1,00 $286,6M | x1,10 $287,6M | x1,25 $286,6M | x1,50 $289,9M | x2,00 $288,8M | x3,00 $283,2M
+  proporciones semilla 100151: x1,00 $289,9M | x1,10 $285,4M | x1,25 $283,2M | x1,50 $281,1M | x2,00 $289,9M | x3,00 $281,1M
+  proporciones semilla 100169: x1,00 $290,9M | x1,10 $289,9M | x1,25 $293,1M | x1,50 $289,9M | x2,00 $289,9M | x3,00 $278,9M
+
+control: con k = 1 se recupera la ganancia de 04 en las 5 semillas de F0 y F4
+# Prueba de estrés de inflación (generado por scripts/11_estres_inflacion.py)
+
+Seguimiento S7 (README). Montos en pesos de 201910 multiplicados por k (nivel, lags y deltas). Entre paréntesis en cada columna, la inflación total entre el mes promedio del entrenamiento y el test (hoy +18%). Ganancia en el corte de la bayesiana: la pérdida medida en 5 semillas, sumada a la media de las 20; entre paréntesis en cada celda, qué parte de los clientes elegidos son los mismos que sin inflar.
+
+| familia | x1,00 (+18%) | x1,10 (+30%) | x1,25 (+47%) | x1,50 (+77%) | x2,00 (+136%) | x3,00 (+254%) |
+|---|---|---|---|---|---|---|
+| F0 nominal | $289,0M (100%) | $287,0M (97%) | $285,5M (94%) | $283,5M (91%) | $281,8M (87%) | $276,3M (83%) |
+| F4 proporciones | $288,6M (100%) | $287,3M (97%) | $286,6M (94%) | $286,4M (91%) | $287,3M (88%) | $279,6M (83%) |
+
+## Desde cuánta inflación conviene corregir
+
+Con una inflación pareja, F1 (si el IPC la mide), F2 y F3 no cambian: su ganancia es la de las 20 semillas. "Desde" es el primer cruce, interpolando entre los factores probados.
+
+| familia | queda por debajo de | su ganancia (no cambia) | desde una inflación total de |
+|---|---|---|---|
+| F0 nominal | F1 IPC | $279,6M | +183% |
+| F0 nominal | F2 mediana | $287,6M | +26% |
+| F0 nominal | F3 ranking | $282,9M | +99% |
+| F4 proporciones | F1 IPC | $279,6M | no en este rango |
+| F4 proporciones | F2 mediana | $287,6M | +26% |
+| F4 proporciones | F3 ranking | $282,9M | +203% |
+
+-> output/estres_inflacion.md, .png y resultados/estres_inflacion.csv (2411 s)

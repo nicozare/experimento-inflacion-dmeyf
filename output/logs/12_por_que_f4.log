@@ -1,0 +1,38 @@
+# Por qué funciona F4 (generado por scripts/12_por_que_f4.py)
+
+Seguimiento S8, partes 1 y 2 (README). Sin regla de decisión.
+
+## 1. Qué usa el modelo
+
+Parte de la ganancia de los cortes de los modelos finales de F4, por grupo de variables (cada variable junta su nivel, lags y deltas):
+
+| grupo | % |
+|---|---|
+| el resto (cantidades, flags, fechas, edad...) | 46,9% |
+| montos en pesos | 44,1% |
+| proporciones (F4) | 8,9% |
+
+Por proporción:
+
+| proporción | % de la ganancia de los cortes | puesto entre todas las variables |
+|---|---|---|
+| dolarización | 2,4% | 11 |
+| saldo / sueldo | 1,3% | 15 |
+| pago del saldo Visa | 1,3% | 16 |
+| consumo con tarjetas / sueldo | 0,9% | 22 |
+| uso del límite Visa | 0,8% | 27 |
+| extracciones / sueldo | 0,6% | 34 |
+| préstamos / sueldo | 0,5% | 44 |
+| consumo en dólares Visa | 0,4% | 47 |
+| uso del límite Master | 0,3% | 54 |
+| pago del saldo Master | 0,2% | 64 |
+| débitos / sueldo | 0,2% | 67 |
+
+## 2. Dónde gana (mismo corte para las dos: 4.000 clientes, 20 semillas)
+
+| segmento | % de los clientes del mes | elegidos por F0 | elegidos por F4 | BAJA+2 que agarra F0 | BAJA+2 que agarra F4 | ganancia F4 menos F0 | F4 gana en |
+|---|---|---|---|---|---|---|---|
+| cobra el sueldo en el banco | 49% | 137 | 138 | 12,6 | 13,1 | $0,5M | 12/20 |
+| no cobra el sueldo en el banco | 51% | 3.863 | 3.862 | 350,1 | 351,7 | $1,7M | 15/20 |
+
+-> output/por_que_f4.md y output/importancia_f4.png
