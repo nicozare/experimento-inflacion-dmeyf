@@ -1,0 +1,7 @@
+Variables en pesos sin celdas rotas en 201903-201910: 62
+  continuas (>= 1,000 valores distintos por mes): 46; administradas: ['mcomisiones_mantenimiento', 'Master_mfinanciacion_limite', 'Master_mlimitecompra', 'Visa_mfinanciacion_limite', 'Visa_mlimitecompra']
+  ninguna : PSI mediana 0.008 (administradas 0.031) | 6% con PSI > 0,1 | AUC adversarial todas 0.892, continuas 0.810
+  ipc     : PSI mediana 0.004 (administradas 1.014) | 13% con PSI > 0,1 | AUC adversarial todas 1.000, continuas 0.874
+  mediana : PSI mediana 0.002 (administradas 0.039) | 5% con PSI > 0,1 | AUC adversarial todas 0.921, continuas 0.854
+  ranking : PSI mediana 0.001 (administradas 0.330) | 11% con PSI > 0,1 | AUC adversarial todas 1.000, continuas 0.867
+-> /Users/nicolaszarewsky/dmeyf/experimento_inflacion/output/drift_resumen.csv

@@ -1,0 +1,14 @@
+
+=== ninguna: entrena [201903, 201904, 201905, 201906] (506,871 filas), valida 201908 (131,775 filas), 760 features ===
+  intentos ya hechos: 0, faltan: 50
+  intento   0: AUC 0.92240 |  163 árboles | ganancia 201908 $197.4M en 3,300 | 14 s
+  intento   1: AUC 0.92360 |  166 árboles | ganancia 201908 $190.3M en 5,200 | 27 s
+  intento   2: AUC 0.91452 |   23 árboles | ganancia 201908 $177.7M en 3,700 | 57 s
+  intento   3: AUC 0.91609 |   27 árboles | ganancia 201908 $189.2M en 4,800 | 22 s
+  intento   4: AUC 0.93130 | 1750 árboles | ganancia 201908 $210.1M en 3,800 | 177 s
+  intento   5: AUC 0.92614 |   37 árboles | ganancia 201908 $201.8M en 2,900 | 60 s
+  intento   6: AUC 0.91289 |   60 árboles | ganancia 201908 $154.0M en 3,200 | 14 s
+  intento   7: AUC 0.92932 |  531 árboles | ganancia 201908 $205.2M en 3,500 | 55 s
+  intento   8: AUC 0.92475 |   44 árboles | ganancia 201908 $200.2M en 3,800 | 21 s
+  intento   9: AUC 0.92092 |   30 árboles | ganancia 201908 $198.0M en 3,400 | 18 s
+  intento  10: AUC 0.92976 |  898 árboles | ganancia 201908 $203.5M en 5,600 | 252 s

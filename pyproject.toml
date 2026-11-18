@@ -1,0 +1,15 @@
+[project]
+name = "experimento-inflacion"
+version = "0.1.0"
+description = "Experimento colaborativo DMEyF 2026 (Inflacion_2): corrección de inflación de las variables en pesos (nominal, IPC, mediana del mes, ranking del mes) sobre el baseline de la cátedra en 2019"
+requires-python = ">=3.11"
+dependencies = [
+    "duckdb>=1.5.5",
+    "lightgbm>=4.7.0",
+    "matplotlib>=3.11.1",
+    "numpy>=2.4.6",
+    "optuna>=5.1.0",
+    "pandas>=3.0.5",
+    "pyarrow>=25.0.1",
+    "scipy>=1.16.0",
+]
