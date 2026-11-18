@@ -26,7 +26,12 @@ Como `entrega_competencia_01/`, no importa nada de `scripts/` ni del resto de
 `dmeyf/`: tiene su `pyproject.toml`, su `config.py` y busca el dataset en
 `data/` (en esta máquina, `data/competencia_02_crudo.csv.gz` es un symlink a
 `../../competencia_02_crudo.csv.gz`). Así los compañeros lo pueden clonar y
-correr solos. No es (todavía) un repo git.
+correr solos.
+
+Es un repo git propio, público en GitHub (lo pidió el usuario para que lo vea el
+grupo): https://github.com/nicozare/experimento-inflacion-dmeyf. `uv.lock` se
+versiona a propósito (a diferencia de los intentos de la competencia 1) para que
+todo el grupo corra las mismas versiones de librerías.
 
 ## Historial de diseño
 
