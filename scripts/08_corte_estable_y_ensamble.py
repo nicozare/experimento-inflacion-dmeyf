@@ -194,7 +194,7 @@ def grafico_ensambles(tabla: pd.DataFrame, info: dict) -> None:
     ax.invert_yaxis()
     ax.grid(axis="y", visible=False)
     ax.set_xlabel("Ganancia del ensamble menos la del control, con la misma semilla (millones de $)")
-    ax.set_title(f"Ensamble con una corrección contra F0 + F0 ({MES_TEST})", pad=50)
+    ax.set_title(f"Ensamble de F0 con otra familia contra F0 + F0 ({MES_TEST})", pad=50)
     ax.text(0, 1.025, "Cada punto es una semilla; la raya negra es la media. Cada ensamble usa su corte estable.\n"
             f"Zona gris: para superar al control, la media tiene que pasar 1 desvío del control "
             f"({millones(umbral * 1e6)}).", transform=ax.transAxes, fontsize=11, color=TINTA_2, va="bottom")

@@ -10,8 +10,9 @@ Ganancia: +1.072.500 por cada BAJA+2 estimulado, -27.500 por cada estímulo a un
 | F1 IPC | 0,9331 | 612 | 366 | 0,0099 | 1.457 | 0,50 | 0,79 | 5.000 | $209,0M | 50 |
 | F2 mediana | 0,9323 | 1.125 | 322 | 0,0051 | 2.642 | 0,32 | 0,96 | 3.900 | $208,4M | 50 |
 | F3 ranking | 0,9316 | 1.223 | 567 | 0,0053 | 2.717 | 0,64 | 0,91 | 3.500 | $212,8M | 50 |
+| F4 proporciones | 0,9332 | 603 | 251 | 0,0116 | 2.492 | 0,65 | 0,90 | 4.500 | $212,8M | 50 |
 
-## Test 201910 (reentreno 201903-201908, misma semilla en las 4 familias)
+## Test 201910 (reentreno 201903-201908, mismas semillas en todas las familias)
 
 | familia | semillas | ganancia (corte de validación) | ganancia máxima (optimista) | AUC 201910 | dif. vs F0 | gana en | p Wilcoxon | ¿supera a F0? |
 |---|---|---|---|---|---|---|---|---|
@@ -19,6 +20,7 @@ Ganancia: +1.072.500 por cada BAJA+2 estimulado, -27.500 por cada estímulo a un
 | F1 IPC | 20 | $279,6M ± $3,4M | $283,2M ± $2,4M | 0,9362 ± 0,0004 | -$9,5M | 0/20 | < 0,001 | no |
 | F2 mediana | 20 | $287,6M ± $2,1M | $289,7M ± $1,5M | 0,9376 ± 0,0002 | -$1,4M | 7/20 | 0,034 | no |
 | F3 ranking | 20 | $282,9M ± $3,0M | $291,2M ± $1,6M | 0,9366 ± 0,0003 | -$6,2M | 2/20 | < 0,001 | no |
+| F4 proporciones | 20 | $288,6M ± $2,1M | $293,0M ± $2,1M | 0,9360 ± 0,0003 | -$0,4M | 11/20 | 0,626 | no |
 
 ## Corrección interna contra IPC
 
@@ -29,7 +31,7 @@ Ganancia: +1.072.500 por cada BAJA+2 estimulado, -27.500 por cada estímulo a un
 
 ## Sensibilidad al corte (exploratorio, no es parte de la regla de decisión)
 
-Ganancia media en 201910 si las 4 familias estimularan la misma cantidad de clientes.
+Ganancia media en 201910 si todas las familias estimularan la misma cantidad de clientes.
 
 | familia | 3.000 | 3.500 | 4.000 | 4.500 | 5.000 | 6.000 |
 |---|---|---|---|---|---|---|
@@ -37,6 +39,7 @@ Ganancia media en 201910 si las 4 familias estimularan la misma cantidad de clie
 | F1 IPC | $274,7M | $276,8M | $279,2M | $280,4M | $279,6M | $276,2M |
 | F2 mediana | $279,8M | $286,0M | $287,2M | $285,3M | $281,3M | $279,2M |
 | F3 ranking | $275,6M | $282,9M | $288,9M | $288,5M | $286,6M | $282,9M |
+| F4 proporciones | $281,5M | $289,1M | $291,3M | $288,6M | $286,5M | $282,4M |
 
 ## Drift de las variables en pesos (201903-201908 contra 201910)
 

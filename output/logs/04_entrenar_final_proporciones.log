@@ -1,0 +1,22 @@
+
+=== proporciones: entrena [201903, 201904, 201905, 201906, 201907, 201908] (768,499 filas), 603 árboles, corte de validación 4,500; 20 semillas pendientes ===
+  semilla 100081: ganancia $287.6M en 4,500 | máxima $293.7M en 4,000 | AUC 0.9358 | 168 s
+  semilla 100103: ganancia $292.1M en 4,500 | máxima $295.9M en 4,200 | AUC 0.9358 | 168 s
+  semilla 100129: ganancia $286.6M en 4,500 | máxima $292.1M en 4,700 | AUC 0.9365 | 168 s
+  semilla 100151: ganancia $289.9M en 4,500 | máxima $290.9M en 4,100 | AUC 0.9358 | 167 s
+  semilla 100169: ganancia $290.9M en 4,500 | máxima $293.1M en 4,100 | AUC 0.9360 | 164 s
+  semilla 100183: ganancia $285.4M en 4,500 | máxima $287.6M en 5,100 | AUC 0.9360 | 168 s
+  semilla 100189: ganancia $292.1M en 4,500 | máxima $294.2M en 4,100 | AUC 0.9358 | 169 s
+  semilla 100193: ganancia $286.6M en 4,500 | máxima $293.1M en 4,100 | AUC 0.9359 | 168 s
+  semilla 100207: ganancia $290.9M en 4,500 | máxima $290.9M en 4,500 | AUC 0.9359 | 168 s
+  semilla 100213: ganancia $290.9M en 4,500 | máxima $293.7M en 3,600 | AUC 0.9361 | 168 s
+  semilla 100237: ganancia $289.9M en 4,500 | máxima $291.5M en 4,400 | AUC 0.9358 | 168 s
+  semilla 100267: ganancia $288.8M en 4,500 | máxima $292.1M en 4,100 | AUC 0.9361 | 168 s
+  semilla 100271: ganancia $289.9M en 4,500 | máxima $293.7M en 4,000 | AUC 0.9363 | 168 s
+  semilla 100279: ganancia $287.6M en 4,500 | máxima $290.9M en 3,700 | AUC 0.9368 | 169 s
+  semilla 100291: ganancia $287.6M en 4,500 | máxima $292.6M en 3,600 | AUC 0.9363 | 168 s
+  semilla 100297: ganancia $288.8M en 4,500 | máxima $294.8M en 3,600 | AUC 0.9364 | 168 s
+  semilla 100313: ganancia $287.6M en 4,500 | máxima $293.7M en 3,800 | AUC 0.9361 | 168 s
+  semilla 100333: ganancia $285.4M en 4,500 | máxima $292.1M en 3,900 | AUC 0.9355 | 169 s
+  semilla 100343: ganancia $285.4M en 4,500 | máxima $295.9M en 3,800 | AUC 0.9359 | 170 s
+  semilla 100357: ganancia $287.6M en 4,500 | máxima $297.0M en 3,800 | AUC 0.9360 | 168 s

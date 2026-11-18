@@ -1,4 +1,4 @@
-"""Junta los resultados de las 4 familias: tablas, tests y gráficos para el video.
+"""Junta los resultados de todas las familias: tablas, tests y gráficos para el video.
 
 Lee resultados/bo__*.json (bayesiana), resultados/final__*.json y
 resultados/curva__*.csv (semillerío en 201910) y output/drift_*.csv (05).
@@ -96,12 +96,12 @@ def tabla_md(df: pd.DataFrame) -> str:
     return "\n".join(filas)
 
 
-def grafico_curvas(curvas: pd.DataFrame, bo: dict) -> None:
+def grafico_curvas(curvas: pd.DataFrame, bo: dict, metodos: list[str], archivo: str, titulo: str) -> None:
     # Zoom en la zona del máximo: con la curva entera (500 a 20.000) las diferencias
     # entre familias no se ven. Las curvas completas están en resultados/curva__*.csv.
     desde, hasta = 2_000, 8_000
     fig, ax = plt.subplots(figsize=(11, 6.6))
-    for metodo in METODOS:
+    for metodo in metodos:
         c = curvas[curvas.metodo == metodo]
         if c.empty:
             continue
@@ -114,22 +114,22 @@ def grafico_curvas(curvas: pd.DataFrame, bo: dict) -> None:
         if corte in g.index:
             ax.plot([corte], [g.loc[corte, "mean"]], "o", ms=10, color=COLOR[metodo], mec=FONDO, mew=2, zorder=6)
     ax.xaxis.set_major_formatter(plt.FuncFormatter(lambda v, _: miles(int(v))))
-    ax.set_title(f"Ganancia en {MES_TEST} según cuántos clientes se estimulan", pad=50)
+    ax.set_title(titulo, pad=50)
     ax.text(0, 1.025, f"Media de {curvas.semilla.nunique()} semillas por familia; la banda es ±1 desvío.\n"
             "Punto lleno = corte elegido en validación (201908). Anillo = mejor corte de la curva, que solo se conoce "
             "mirando el test.",
             transform=ax.transAxes, fontsize=11, color=TINTA_2, va="bottom")
     ax.set_xlabel("Clientes estimulados, los de mayor probabilidad (zona del máximo)")
     ax.set_ylabel("Ganancia (millones de $)")
-    ax.legend(loc="lower center", ncol=4, bbox_to_anchor=(0.5, -0.27))
+    ax.legend(loc="lower center", ncol=len(ax.get_legend_handles_labels()[1]), bbox_to_anchor=(0.5, -0.27))
     fig.tight_layout()
-    fig.savefig(OUTPUT_DIR / "curvas_ganancia_201910.png", dpi=160)
+    fig.savefig(OUTPUT_DIR / archivo, dpi=160)
     plt.close(fig)
 
 
-def grafico_diferencias(finales: pd.DataFrame) -> None:
+def grafico_diferencias(finales: pd.DataFrame, metodos: list[str]) -> None:
     base = finales[finales.metodo == "ninguna"].set_index("semilla")["ganancia_corte_validacion"]
-    otros = [m for m in METODOS if m != "ninguna" and (finales.metodo == m).any()]
+    otros = [m for m in metodos if m != "ninguna" and (finales.metodo == m).any()]
     fig, ax = plt.subplots(figsize=(11, 1.6 + 1.3 * len(otros)))
     for i, metodo in enumerate(otros):
         s = finales[finales.metodo == metodo].set_index("semilla")["ganancia_corte_validacion"]
@@ -243,7 +243,7 @@ def main() -> None:
                 fila.update({"dif. vs F0": millones(r["dif_media"]), "gana en": f"{r['gana_en']}/{r['semillas']}",
                              "p Wilcoxon": formato_p(r["p_wilcoxon"]), "¿supera a F0?": "sí" if supera else "no"})
             filas.append(fila)
-        partes += [f"## Test {MES_TEST} (reentreno 201903-201908, misma semilla en las 4 familias)\n",
+        partes += [f"## Test {MES_TEST} (reentreno 201903-201908, mismas semillas en todas las familias)\n",
                    tabla_md(pd.DataFrame(filas).fillna("")), ""]
 
         filas = []
@@ -257,18 +257,24 @@ def main() -> None:
         if filas:
             partes += ["## Corrección interna contra IPC\n", tabla_md(pd.DataFrame(filas)), ""]
 
-        # Exploratorio, NO es parte de la regla de decisión: qué pasaría si las 4
-        # familias estimularan la misma cantidad de clientes.
+        # Exploratorio, NO es parte de la regla de decisión: qué pasaría si todas
+        # las familias estimularan la misma cantidad de clientes.
         cortes_fijos = [3_000, 3_500, 4_000, 4_500, 5_000, 6_000]
         medias = (curvas[curvas.corte.isin(cortes_fijos)].groupby(["metodo", "corte"])["ganancia"].mean()
                   .unstack())
         filas = [{"familia": NOMBRE_FAMILIA[m], **{miles(c): millones(medias.loc[m, c]) for c in cortes_fijos}}
                  for m in METODOS if m in medias.index]
         partes += ["## Sensibilidad al corte (exploratorio, no es parte de la regla de decisión)\n",
-                   f"Ganancia media en {MES_TEST} si las 4 familias estimularan la misma cantidad de clientes.\n",
+                   f"Ganancia media en {MES_TEST} si todas las familias estimularan la misma cantidad de clientes.\n",
                    tabla_md(pd.DataFrame(filas)), ""]
-        grafico_curvas(curvas, bo)
-        grafico_diferencias(finales)
+        # Los gráficos principales son los del experimento preregistrado (F0-F3); F4 es un seguimiento
+        # (S3, agrega columnas en vez de corregir) y va en su propio gráfico contra F0.
+        grafico_curvas(curvas, bo, METODOS_CORRECCION, "curvas_ganancia_201910.png",
+                       f"Ganancia en {MES_TEST} según cuántos clientes se estimulan")
+        grafico_diferencias(finales, METODOS_CORRECCION)
+        if (curvas.metodo == "proporciones").any():
+            grafico_curvas(curvas, bo, ["ninguna", "proporciones"], "curvas_f4_201910.png",
+                           f"F4 proporciones contra F0 nominal en {MES_TEST}")
 
     ruta_drift = OUTPUT_DIR / "drift_resumen.csv"
     if ruta_drift.exists():

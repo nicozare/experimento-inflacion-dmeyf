@@ -10,6 +10,7 @@ Experimentos de seguimiento S1 y S2 (reglas en el README). Ganancia en 201910; �
 | F1 IPC | 20 | 5.000 | 4.800 | 3.500 a 5.600 | $279,6M | $279,8M ± $3,4M | -$8,1M | 0/20 | < 0,001 | no |
 | F2 mediana | 20 | 3.900 | 3.900 | 3.400 a 4.400 | $287,6M | $287,6M ± $2,1M | -$0,2M | 9/20 | 0,706 | no |
 | F3 ranking | 20 | 3.500 | 3.500 | 2.900 a 4.700 | $282,9M | $282,9M ± $3,0M | -$5,0M | 2/20 | < 0,001 | no |
+| F4 proporciones | 20 | 4.500 | 4.200 | 3.100 a 5.000 | $288,6M | $290,7M ± $2,6M | $2,8M | 17/20 | 0,002 | sí |
 
 ## S2. Ensamble F0 + otra familia (promedio de probabilidades, misma semilla)
 
@@ -21,3 +22,4 @@ Control: F0 con la misma semilla + F0 con la semilla siguiente. "dif. vs F0 solo
 | F0 + F1 IPC | 20 | 4.600 | $209,6M | $283,8M ± $3,1M | -$6,4M | 0/20 | < 0,001 | no | -$4,1M |
 | F0 + F2 mediana | 20 | 3.400 | $208,3M | $285,0M ± $2,1M | -$5,2M | 0/20 | < 0,001 | no | -$2,9M |
 | F0 + F3 ranking | 20 | 4.900 | $209,5M | $284,4M ± $1,9M | -$5,8M | 0/20 | < 0,001 | no | -$3,5M |
+| F0 + F4 proporciones | 20 | 4.300 | $207,9M | $289,8M ± $1,5M | -$0,4M | 6/20 | 0,182 | no | $1,9M |

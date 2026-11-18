@@ -113,3 +113,20 @@ pero su corte de validación (3.500) quedó corto: eso es exploratorio. Detalle
 en la sección de resultados del README y en `output/resumen.md`; logs en
 `output/logs/` (`04_entrenar_final_10.log` y `_20.log` son las dos mitades
 del semillerío).
+
+Seguimientos terminados el 18/11 (cadena de 09:39 a 16:26: 07 de F0-F3;
+bayesiana, finales y 07 de F4; 08 y 06):
+
+- S1 corte estable: ninguna corrección supera a F0; F3 vuelve a elegir 3.500
+  (el mejor corte cambia de agosto a octubre, no es ruido de un modelo).
+- S2 ensambles: ninguno supera al control F0 + F0; F0 + F4 empata.
+- S3 F4 proporciones: empata con el corte de la bayesiana (-$0,4M) y supera a
+  F0 con el corte estable (+$2,8M, 17/20, p = 0,002). El "sí" depende en parte
+  del corte de F0, y F4 agrega columnas (no aísla la inflación). Propuesto y
+  sin confirmar por el usuario: repetir F0 y F4 con 201909 como test.
+- S4: el modelo nominal corta sobre todo en "no tiene" y montos bajos;
+  deflactar octubre al predecir empeora la ganancia.
+
+`06_resumen.py` hace los gráficos principales solo con F0-F3 (el experimento
+preregistrado) y F4 en uno aparte (`curvas_f4_201910.png`); las tablas de 06 y
+los gráficos de 08 incluyen a F4.

@@ -1,0 +1,22 @@
+
+=== proporciones: entrena [201903, 201904, 201905, 201906] (506,871 filas), predice 201908, 603 árboles; 20 semillas pendientes ===
+  semilla 100081: ganancia 201908 $212.8M en 4,500 | AUC 0.9332 | 106 s | reproduce la bayesiana: sí
+  semilla 100103: ganancia 201908 $206.8M en 3,600 | AUC 0.9327 | 109 s
+  semilla 100129: ganancia 201908 $212.8M en 4,100 | AUC 0.9315 | 107 s
+  semilla 100151: ganancia 201908 $208.4M en 3,100 | AUC 0.9323 | 106 s
+  semilla 100169: ganancia 201908 $206.8M en 4,400 | AUC 0.9317 | 104 s
+  semilla 100183: ganancia 201908 $206.2M en 4,100 | AUC 0.9323 | 106 s
+  semilla 100189: ganancia 201908 $213.4M en 3,800 | AUC 0.9318 | 106 s
+  semilla 100193: ganancia 201908 $206.8M en 3,200 | AUC 0.9321 | 106 s
+  semilla 100207: ganancia 201908 $210.7M en 4,100 | AUC 0.9322 | 105 s
+  semilla 100213: ganancia 201908 $206.8M en 4,200 | AUC 0.9318 | 105 s
+  semilla 100237: ganancia 201908 $207.9M en 4,600 | AUC 0.9327 | 105 s
+  semilla 100267: ganancia 201908 $209.6M en 4,500 | AUC 0.9323 | 105 s
+  semilla 100271: ganancia 201908 $208.4M en 4,900 | AUC 0.9321 | 106 s
+  semilla 100279: ganancia 201908 $209.6M en 3,700 | AUC 0.9320 | 105 s
+  semilla 100291: ganancia 201908 $207.9M en 4,200 | AUC 0.9315 | 105 s
+  semilla 100297: ganancia 201908 $212.3M en 3,200 | AUC 0.9317 | 105 s
+  semilla 100313: ganancia 201908 $206.2M en 3,500 | AUC 0.9314 | 105 s
+  semilla 100333: ganancia 201908 $208.4M en 3,700 | AUC 0.9318 | 105 s
+  semilla 100343: ganancia 201908 $207.9M en 3,400 | AUC 0.9316 | 105 s
+  semilla 100357: ganancia 201908 $207.9M en 5,000 | AUC 0.9329 | 105 s
