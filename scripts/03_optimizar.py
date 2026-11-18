@@ -52,6 +52,7 @@ from config import (
     OPTUNA_DB,
     PARAMS_FIJOS,
     RESULTADOS_DIR,
+    SUFIJO_VENTANA,
     SEMILLA_BO,
 )
 
@@ -104,13 +105,13 @@ def optimizar(metodo: str, n_trials: int) -> None:
         trial.set_user_attr("ganancia_validacion", int(g.max()))
         trial.set_user_attr("segundos", round(time.time() - inicio, 1))
         print(f"  intento {trial.number:3d}: AUC {auc:.5f} | {modelo.best_iteration:4d} árboles | "
-              f"ganancia 201908 ${g.max() / 1e6:,.1f}M en {cortes[np.argmax(g)]:,} | {time.time() - inicio:.0f} s",
+              f"ganancia {MES_VALIDACION} ${g.max() / 1e6:,.1f}M en {cortes[np.argmax(g)]:,} | {time.time() - inicio:.0f} s",
               flush=True)
         return auc
 
     OPTUNA_DB.parent.mkdir(parents=True, exist_ok=True)
     estudio = optuna.create_study(
-        study_name=f"bo_{metodo}", storage=f"sqlite:///{OPTUNA_DB.as_posix()}", load_if_exists=True,
+        study_name=f"bo_{metodo}{SUFIJO_VENTANA}", storage=f"sqlite:///{OPTUNA_DB.as_posix()}", load_if_exists=True,
         direction="maximize", sampler=optuna.samplers.TPESampler(seed=SEMILLA_BO),
     )
     hechos = len([t for t in estudio.trials if t.state == optuna.trial.TrialState.COMPLETE])

@@ -25,6 +25,7 @@ import pandas as pd
 
 from comun import vaciar_carpeta
 from config import (
+    exigir_ventana_principal,
     BASE_DIR,
     CORREGIR_CELDAS_ROTAS,
     DATA_DIR,
@@ -63,6 +64,7 @@ def detectar_celdas_rotas(con: duckdb.DuckDBPyConnection, numericas: list[str]) 
 
 
 def main() -> None:
+    exigir_ventana_principal("01_preparar_base.py")
     t0 = time.time()
     tmp = DATA_DIR / "duckdb_tmp"
     tmp.mkdir(parents=True, exist_ok=True)

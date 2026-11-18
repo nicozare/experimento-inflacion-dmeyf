@@ -84,7 +84,7 @@ def validar_familia(metodo: str, semillas: list[int], forzar: bool) -> None:
             igual = (abs(metricas["auc_validacion"] - bo["auc_validacion"]) < 1e-5
                      and metricas["corte_ganancia_maxima_validacion"] == bo["corte_validacion"])
             control = " | reproduce la bayesiana: " + ("sí" if igual else "NO (revisar)")
-        print(f"  semilla {semilla}: ganancia 201908 ${metricas['ganancia_maxima_validacion'] / 1e6:,.1f}M en "
+        print(f"  semilla {semilla}: ganancia {MES_VALIDACION} ${metricas['ganancia_maxima_validacion'] / 1e6:,.1f}M en "
               f"{metricas['corte_ganancia_maxima_validacion']:,} | AUC {metricas['auc_validacion']:.4f} | "
               f"{metricas['segundos']:.0f} s{control}", flush=True)
 

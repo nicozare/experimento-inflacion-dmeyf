@@ -174,7 +174,7 @@ Con F4 pasa lo contrario: de las dos reglas fijadas de antemano, una dice que s�
 
 ### Qué seguiríamos probando
 
-(El punto 1 ya se probó como S1, y una variante del 2 (ensamble en vez de columnas nuevas) como S2: ver [Experimentos de seguimiento](#experimentos-de-seguimiento-1811). El 3 y el 5 se parecen a lo que estudia Inflacion_1. El 6 y el 7 salen de S3.)
+(El punto 1 ya se probó como S1, y una variante del 2 (ensamble en vez de columnas nuevas) como S2: ver [Experimentos de seguimiento](#experimentos-de-seguimiento-1811). El 3 y el 5 se parecen a lo que estudia Inflacion_1. El 6 y el 7 salen de S3 y se están probando como S5 y S8: ver [Segunda tanda de seguimientos](#segunda-tanda-de-seguimientos-1811-a-la-noche).)
 
 1. Elegir el corte de forma más estable (por ejemplo, con el promedio de varias semillas en 201908, o maximizando la ganancia promedio en una ventana de cortes) y ver si el ranking se sostiene.
 2. Agregar la versión corregida como columnas nuevas, sin sacar las nominales, y dejar que el modelo elija.
@@ -182,7 +182,7 @@ Con F4 pasa lo contrario: de las dos reglas fijadas de antemano, una dice que s�
 4. Repetir con 2020-2021, el resto del dataset de la Segunda Competencia: más meses de test, pandemia y otra dinámica de precios.
 5. IPC con un mes de rezago, que es el que estaría disponible en producción.
 6. Confirmar F4 contra F0 en otro mes: 201909 como test (entrena 201903-201905, valida 201907, reentrena 201903-201907), con bayesiana nueva y las dos reglas de corte.
-7. Separar en F4 la inflación de la información: repetirlo con proporciones que sí arrastran inflación (por ejemplo, el monto de este mes sobre el sueldo de dos meses antes). Si rinde igual, la mejora viene de la información nueva y no de sacar la inflación.
+7. Separar en F4 la inflación de la información: repetirlo con los mismos pares de montos restados en vez de divididos, que sí arrastran la inflación. Si rinde igual, la mejora viene de la información nueva y no de sacar la inflación.
 
 ## Experimentos de seguimiento (18/11)
 
@@ -282,6 +282,50 @@ Los montos son la mitad de la importancia del modelo nominal y aun así corregir
 | montos y deltas deflactados | 93,5% | $267,3M |
 
 Lectura: el modelo nominal es poco sensible al nivel de precios, porque lo que más usa son umbrales bajos que la inflación casi no mueve. Y lo poco que cambia, empeora: el modelo aprendió con la inflación adentro. Una explicación compatible: en el entrenamiento, con 2% a 4% de inflación por mes, un saldo nominal que no se mueve ya era una baja real, y así lo aprendió el modelo; deflactar los deltas al predecir hace que los clientes estables parezcan en caída. Es una sola semilla y la ganancia mira el test: es descriptivo.
+
+## Segunda tanda de seguimientos (18/11, a la noche)
+
+> **Estado (18/11, 18 h)**: reglas escritas antes de correr. S5 y el control de S8 (F5) corren esta noche; S6, S7 y el resto de S8, después.
+
+Salen de la primera tanda, sobre todo de F4. Como antes, las reglas se escriben acá antes de correr, y nada repite lo de Inflacion_1.
+
+### S5. ¿Se confirma F4 en otro mes? (201909)
+
+La mejora de F4 salió de mirar 201910 y depende del corte. Se repite el protocolo completo un mes antes, solo con F0 y F4:
+- entrena 201903-201905 y valida 201907, con una bayesiana nueva de 50 intentos por familia, early stopping y corte;
+- reentrena 201903-201907 y testea 201909, con las mismas 20 semillas;
+- entrena además las 20 semillas en 201907, para el corte estable (S1).
+
+Es `VENTANA=201909` en los scripts 03, 04, 06, 07 y 08. Los resultados van a `resultados/test_201909/` y `output/test_201909/`, y los estudios de Optuna llevan el sufijo `_201909`. La inflación entre el entrenamiento y el test es parecida a la de 201910 (+16% contra +18%), y ni 201907 ni 201909 tienen celdas rotas.
+
+**Regla**: F4 confirma su mejora si en 201909 supera a F0 con las dos reglas de corte (la de la bayesiana y la estable), con la regla de siempre: diferencia media mayor que el desvío de F0 y Wilcoxon p < 0,05. Si supera con una sola, sigue mixto como en 201910. Si no supera con ninguna, no se confirma.
+
+### S6. ¿Cuánto pesa el azar de los clientes del mes? (bootstrap)
+
+Las 20 semillas miden el azar del modelo con los clientes de 201910 fijos. Pero qué clientes caen en el mes también es azar: con otros clientes parecidos, la ganancia sería otra.
+- Se remuestrean con reposición los clientes de 201910, 1.000 veces. Cada remuestreo es el mismo para todas las familias y semillas.
+- En cada remuestreo se recalcula la ganancia de cada semilla en su corte y se promedia entre semillas.
+- Para cada familia sale el intervalo del 95% de su diferencia contra F0, con el corte de la bayesiana y con el corte estable.
+
+**Regla**: una diferencia es robusta al azar de los clientes si su intervalo del 95% no incluye el 0 (`scripts/10_bootstrap_clientes.py`).
+
+### S7. ¿Cuánta inflación hace falta para que corregir convenga? (prueba de estrés, sin regla de decisión)
+
+Con 2019, entre el entrenamiento y octubre hay ~18% de inflación, y corregir no conviene. Se infla artificialmente octubre: todos los montos en pesos (nivel, lags y deltas) se multiplican por 1,1; 1,25; 1,5; 2 y 3, como si el test estuviera más lejos del entrenamiento. Se mide cuánto pierden F0 y F4, con 5 semillas y el corte de la bayesiana de cada una.
+
+Con una inflación pareja, F2 y F3 no cambian por construcción (la mediana y el ranking del mes la absorben), y F1 tampoco si el IPC la mide. Por eso, el punto en que F0 cae por debajo de cada una dice desde cuánta inflación conviene corregir. El supuesto fuerte es la inflación pareja para todas las variables: en la realidad no lo es, y los límites van por escalones (`scripts/11_estres_inflacion.py`).
+
+### S8. ¿Por qué funciona F4?
+
+1. **Qué usa el modelo**: la importancia (ganancia de los cortes) de las 55 columnas nuevas, por proporción, en 5 semillas del modelo final de F4.
+2. **Dónde gana**: la ganancia de F4 menos la de F0 en 201910, con el mismo corte (4.000), separada entre los clientes que cobran el sueldo en el banco (donde existen las 5 proporciones contra el sueldo) y los que no. Sin regla de decisión (`scripts/12_por_que_f4.py`).
+3. **Control con diferencias (F5)**: los mismos 11 pares de montos, restados en vez de divididos (`scripts/02b_proporciones.py --operacion diferencia`), con nulos en las mismas celdas que F4. La diferencia sí arrastra la inflación, y también el tamaño del cliente. Mismo protocolo que F4: bayesiana de 50 intentos, 20 semillas en 201910 y 20 en 201908.
+
+**Regla de F5**: F4 supera a F5 si la diferencia media es mayor que el desvío de F5 y el Wilcoxon da p < 0,05, con las dos reglas de corte. Con una sola, es mixto.
+- Si F4 supera a F5, lo que ayuda es que el cociente no depende de la escala (la inflación o el tamaño del cliente).
+- Si empatan, la mejora de F4 es información nueva, no sacar la inflación.
+
+F5 también se compara contra F0 con la regla de siempre.
 
 ## Cómo correrlo
 

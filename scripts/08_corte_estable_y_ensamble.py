@@ -213,7 +213,7 @@ def main() -> None:
     pd.concat([t1, t2], ignore_index=True).to_csv(RESULTADOS_DIR / "corte_estable_y_ensamble.csv", index=False)
 
     partes = ["# Corte estable y ensamble (generado por scripts/08_corte_estable_y_ensamble.py)\n",
-              "Experimentos de seguimiento S1 y S2 (reglas en el README). Ganancia en 201910; ± es el desvío entre "
+              f"Experimentos de seguimiento S1 y S2 (reglas en el README). Ganancia en {MES_TEST}; ± es el desvío entre "
               "semillas.\n"]
     filas = []
     for m, d in info1.items():
@@ -240,8 +240,8 @@ def main() -> None:
         for nombre, d in info2.items():
             g = t2[t2.metodo == nombre].set_index("semilla").ganancia
             fila = {"ensamble": nombre, "semillas": len(g), "corte estable": miles(d["corte_estable"]),
-                    "ganancia 201908 en su corte": millones(d["validacion_en_corte"].mean()),
-                    "ganancia 201910": f"{millones(g.mean())} ± {millones(g.std())}"}
+                    f"ganancia {MES_VALIDACION} en su corte": millones(d["validacion_en_corte"].mean()),
+                    f"ganancia {MES_TEST}": f"{millones(g.mean())} ± {millones(g.std())}"}
             if nombre != CONTROL:
                 r = comparar(t2, nombre, CONTROL, "ganancia")
                 supera = r["dif_media"] > r["desvio_contra"] and r["p_wilcoxon"] < 0.05
@@ -251,7 +251,7 @@ def main() -> None:
                 comunes = g.index.intersection(f0_solo.index)
                 fila["dif. vs F0 solo"] = millones((g.loc[comunes] - f0_solo.loc[comunes]).mean())
             filas.append(fila)
-        orden = ["ensamble", "semillas", "corte estable", "ganancia 201908 en su corte", "ganancia 201910",
+        orden = ["ensamble", "semillas", "corte estable", f"ganancia {MES_VALIDACION} en su corte", f"ganancia {MES_TEST}",
                  "dif. vs control", "gana en", "p Wilcoxon", "¿supera al control?", "dif. vs F0 solo"]
         tabla2 = pd.DataFrame(filas)
         tabla2 = tabla2[[c for c in orden if c in tabla2.columns]].fillna("")

@@ -49,10 +49,40 @@ def ruta_fe(metodo: str, foto_mes: int) -> Path:
 # Meses (baseline de Ale)
 # ---------------------------------------------------------------------------
 MES_LIMITE_DATOS = 201912        # la clase se calcula solo con datos de 2019
-MESES_ENTRENAMIENTO = [201903, 201904, 201905, 201906]
-MES_VALIDACION = 201908
-MESES_ENTRENAMIENTO_FINAL = [201903, 201904, 201905, 201906, 201907, 201908]
-MES_TEST = 201910                # el último mes que se procesa; 201911 y 201912 ni se tocan
+
+# Ventana de tiempo. "201910" es el baseline de Ale (por defecto). "201909"
+# (seguimiento S5) corre el mismo protocolo un mes antes, para confirmar en
+# otro mes lo que se vio en 201910: entrena 201903-201905, valida 201907,
+# reentrena 201903-201907 y testea 201909. Respeta el mismo hueco de un mes
+# (la clase del mes t se completa con los datos de t+2) y no puede empezar
+# antes de 201903 sin perder los lags de orden 2. Sus resultados van a
+# resultados/test_201909/ y output/test_201909/, y sus estudios de Optuna
+# llevan el sufijo _201909, así no se mezclan con los de 201910.
+# 01, 02 y 02b arman los datos de todos los meses: se corren sin VENTANA.
+VENTANA = os.environ.get("VENTANA", "201910")
+VENTANAS = {
+    "201910": {"entrenamiento": [201903, 201904, 201905, 201906], "validacion": 201908,
+               "final": [201903, 201904, 201905, 201906, 201907, 201908], "test": 201910},
+    "201909": {"entrenamiento": [201903, 201904, 201905], "validacion": 201907,
+               "final": [201903, 201904, 201905, 201906, 201907], "test": 201909},
+}
+if VENTANA not in VENTANAS:
+    raise SystemExit(f"VENTANA={VENTANA} no existe; opciones: {', '.join(VENTANAS)}")
+MESES_ENTRENAMIENTO = VENTANAS[VENTANA]["entrenamiento"]
+MES_VALIDACION = VENTANAS[VENTANA]["validacion"]
+MESES_ENTRENAMIENTO_FINAL = VENTANAS[VENTANA]["final"]
+MES_TEST = VENTANAS[VENTANA]["test"]   # con 201910, el último mes que se procesa; 201911 y 201912 ni se tocan
+SUFIJO_VENTANA = "" if VENTANA == "201910" else f"_{VENTANA}"
+if SUFIJO_VENTANA:
+    RESULTADOS_DIR = RESULTADOS_DIR / f"test_{VENTANA}"
+    OUTPUT_DIR = OUTPUT_DIR / f"test_{VENTANA}"
+
+
+def exigir_ventana_principal(script: str) -> None:
+    """01, 02 y 02b borran y rearman data/ para todos los meses hasta MES_TEST:
+    con otra ventana borrarían 201910."""
+    if SUFIJO_VENTANA:
+        raise SystemExit(f"{script} arma los datos de todos los meses: correrlo sin VENTANA")
 
 # ---------------------------------------------------------------------------
 # Familias del experimento. La única diferencia entre ellas es cómo se
@@ -69,9 +99,15 @@ METODOS_CORRECCION = ["ninguna", "ipc", "mediana", "ranking"]
 #                 (scripts/02b_proporciones.py). No corrige: AGREGA columnas
 #                 en las que la inflación se cancela sola (numerador y
 #                 denominador están en pesos del mismo mes).
-METODOS = METODOS_CORRECCION + ["proporciones"]
+#   diferencias   F5: control de F4 (seguimiento S8, 18/11 a la tarde). Los
+#                 mismos pares de montos, restados en vez de divididos, y nulos
+#                 en las mismas celdas que F4. La diferencia sí arrastra la
+#                 inflación (y el tamaño del cliente): si F5 rinde como F4, la
+#                 mejora de F4 viene de la información nueva y no de que el
+#                 cociente no tenga inflación.
+METODOS = METODOS_CORRECCION + ["proporciones", "diferencias"]
 NOMBRE_FAMILIA = {"ninguna": "F0 nominal", "ipc": "F1 IPC", "mediana": "F2 mediana", "ranking": "F3 ranking",
-                  "proporciones": "F4 proporciones"}
+                  "proporciones": "F4 proporciones", "diferencias": "F5 diferencias"}
 
 # F4: nombre -> (columnas que se suman arriba, columnas que se suman abajo).
 # Si el denominador es 0 o nulo, la proporción queda nula. Los nulos de cada

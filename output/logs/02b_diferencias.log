@@ -1,0 +1,27 @@
+=== diferencias: 11 diferencias x 5 = 55 columnas nuevas, meses 201901-201910 ===
+  201901: 123,916 filas, 815 features
+  201902: 125,020 filas, 815 features
+  201903: 125,622 filas, 815 features
+  201904: 126,116 filas, 815 features
+  201905: 126,763 filas, 815 features
+  201906: 128,370 filas, 815 features
+  201907: 129,853 filas, 815 features
+  201908: 131,775 filas, 815 features
+  201909: 133,419 filas, 815 features
+  201910: 135,633 filas, 815 features
+
+Cobertura y PSI (201903-201908 contra 201910):
+                 diferencia  pct_con_dato_201910  psi_diferencia  psi_numerador_nominal
+           dif_saldo_sueldo                 49.4          0.0187                 0.0067
+dif_consumo_tarjetas_sueldo                 49.4          0.0084                 0.0321
+       dif_prestamos_sueldo                 49.4          0.0157                 0.0054
+         dif_debitos_sueldo                 49.4          0.0178                 0.0041
+    dif_extracciones_sueldo                 49.4          0.0064                 0.0120
+        dif_visa_uso_limite                 96.1          0.0185                 0.0245
+      dif_master_uso_limite                 87.6          0.0261                 0.0059
+        dif_visa_pago_saldo                 86.0          0.0181                 0.0119
+      dif_master_pago_saldo                 38.1          0.0038                 0.0069
+   dif_visa_consumo_dolares                 81.2          0.0193                 0.1296
+           dif_dolarizacion                 95.0          0.0022                 0.0219
+
+diferencias listo (18 s) -> /Users/nicolaszarewsky/dmeyf/experimento_inflacion/data/fe/diferencias

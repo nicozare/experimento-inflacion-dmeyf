@@ -46,7 +46,8 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 
 from comun import COLUMNAS_CLAVE, es_monetaria, meses_disponibles, vaciar_carpeta
-from config import IPC, MES_REFERENCIA_IPC, METODOS_CORRECCION, OUTPUT_DIR, ruta_base, ruta_fe
+from config import (IPC, MES_REFERENCIA_IPC, METODOS_CORRECCION, OUTPUT_DIR, exigir_ventana_principal,
+                    ruta_base, ruta_fe)
 
 
 def cume_dist(v: np.ndarray) -> np.ndarray:
@@ -154,6 +155,7 @@ def procesar_metodo(metodo: str, meses: list[int]) -> None:
 
 
 def main() -> None:
+    exigir_ventana_principal("02_corregir_y_fe.py")
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--metodos", nargs="+", default=METODOS_CORRECCION, choices=METODOS_CORRECCION)
     args = parser.parse_args()

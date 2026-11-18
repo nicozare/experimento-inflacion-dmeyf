@@ -31,12 +31,12 @@ import numpy as np
 import pandas as pd
 from scipy.stats import wilcoxon
 
-from config import (COSTO_ESTIMULO, GANANCIA_ACIERTO, MES_TEST, METODOS, METODOS_CORRECCION, NOMBRE_FAMILIA, OUTPUT_DIR,
-                    RESULTADOS_DIR)
+from config import (COSTO_ESTIMULO, GANANCIA_ACIERTO, MES_TEST, MES_VALIDACION, MESES_ENTRENAMIENTO_FINAL, METODOS,
+                    METODOS_CORRECCION, NOMBRE_FAMILIA, OUTPUT_DIR, RESULTADOS_DIR)
 
 # Paleta categórica de referencia (orden fijo; color = familia en todos los gráficos)
 COLOR = {"ninguna": "#2a78d6", "ipc": "#eb6834", "mediana": "#1baf7a", "ranking": "#eda100",
-         "proporciones": "#e87ba4"}
+         "proporciones": "#e87ba4", "diferencias": "#008300"}
 FONDO, TINTA, TINTA_2, GRILLA = "#fcfcfb", "#0b0b0b", "#52514e", "#e4e3df"
 
 plt.rcParams.update({
@@ -116,7 +116,7 @@ def grafico_curvas(curvas: pd.DataFrame, bo: dict, metodos: list[str], archivo: 
     ax.xaxis.set_major_formatter(plt.FuncFormatter(lambda v, _: miles(int(v))))
     ax.set_title(titulo, pad=50)
     ax.text(0, 1.025, f"Media de {curvas.semilla.nunique()} semillas por familia; la banda es ±1 desvío.\n"
-            "Punto lleno = corte elegido en validación (201908). Anillo = mejor corte de la curva, que solo se conoce "
+            f"Punto lleno = corte elegido en validación ({MES_VALIDACION}). Anillo = mejor corte de la curva, que solo se conoce "
             "mirando el test.",
             transform=ax.transAxes, fontsize=11, color=TINTA_2, va="bottom")
     ax.set_xlabel("Clientes estimulados, los de mayor probabilidad (zona del máximo)")
@@ -130,6 +130,8 @@ def grafico_curvas(curvas: pd.DataFrame, bo: dict, metodos: list[str], archivo: 
 def grafico_diferencias(finales: pd.DataFrame, metodos: list[str]) -> None:
     base = finales[finales.metodo == "ninguna"].set_index("semilla")["ganancia_corte_validacion"]
     otros = [m for m in metodos if m != "ninguna" and (finales.metodo == m).any()]
+    if not otros:
+        return
     fig, ax = plt.subplots(figsize=(11, 1.6 + 1.3 * len(otros)))
     for i, metodo in enumerate(otros):
         s = finales[finales.metodo == metodo].set_index("semilla")["ganancia_corte_validacion"]
@@ -213,16 +215,16 @@ def main() -> None:
         for m in METODOS:
             if m in bo:
                 b, h = bo[m], bo[m]["hiperparametros"]
-                filas.append({"familia": NOMBRE_FAMILIA[m], "AUC 201908": decimal(b["auc_validacion"], 4),
+                filas.append({"familia": NOMBRE_FAMILIA[m], f"AUC {MES_VALIDACION}": decimal(b["auc_validacion"], 4),
                               "árboles": miles(b["best_iteration"]), "num_leaves": h["num_leaves"],
                               "learning_rate": decimal(h["learning_rate"], 4),
                               "min_data_in_leaf": miles(h["min_data_in_leaf"]),
                               "feature_fraction": decimal(h["feature_fraction"], 2),
                               "bagging_fraction": decimal(h["bagging_fraction"], 2),
-                              "corte (201908)": miles(b["corte_validacion"]),
-                              "ganancia 201908": millones(b["ganancia_validacion"]),
+                              f"corte ({MES_VALIDACION})": miles(b["corte_validacion"]),
+                              f"ganancia {MES_VALIDACION}": millones(b["ganancia_validacion"]),
                               "intentos": b["intentos_completos"]})
-        partes += ["## Optimización bayesiana (validación 201908)\n", tabla_md(pd.DataFrame(filas)), ""]
+        partes += [f"## Optimización bayesiana (validación {MES_VALIDACION})\n", tabla_md(pd.DataFrame(filas)), ""]
 
     if not finales.empty:
         finales.sort_values(["metodo", "semilla"]).to_csv(OUTPUT_DIR / "resultados_por_semilla.csv", index=False)
@@ -236,14 +238,15 @@ def main() -> None:
                                                       f"{millones(f.ganancia_corte_validacion.std())}",
                     "ganancia máxima (optimista)": f"{millones(f.ganancia_maxima.mean())} ± "
                                                    f"{millones(f.ganancia_maxima.std())}",
-                    "AUC 201910": f"{decimal(f.auc_test.mean(), 4)} ± {decimal(f.auc_test.std(), 4)}"}
+                    f"AUC {MES_TEST}": f"{decimal(f.auc_test.mean(), 4)} ± {decimal(f.auc_test.std(), 4)}"}
             if m != "ninguna" and (finales.metodo == "ninguna").any():
                 r = comparar(finales, m, "ninguna", "ganancia_corte_validacion")
                 supera = r["dif_media"] > r["desvio_contra"] and r["p_wilcoxon"] < 0.05
                 fila.update({"dif. vs F0": millones(r["dif_media"]), "gana en": f"{r['gana_en']}/{r['semillas']}",
                              "p Wilcoxon": formato_p(r["p_wilcoxon"]), "¿supera a F0?": "sí" if supera else "no"})
             filas.append(fila)
-        partes += [f"## Test {MES_TEST} (reentreno 201903-201908, mismas semillas en todas las familias)\n",
+        partes += [f"## Test {MES_TEST} (reentreno {MESES_ENTRENAMIENTO_FINAL[0]}-{MESES_ENTRENAMIENTO_FINAL[-1]}, mismas semillas "
+                   "en todas las familias)\n",
                    tabla_md(pd.DataFrame(filas).fillna("")), ""]
 
         filas = []
@@ -269,12 +272,15 @@ def main() -> None:
                    tabla_md(pd.DataFrame(filas)), ""]
         # Los gráficos principales son los del experimento preregistrado (F0-F3); F4 es un seguimiento
         # (S3, agrega columnas en vez de corregir) y va en su propio gráfico contra F0.
-        grafico_curvas(curvas, bo, METODOS_CORRECCION, "curvas_ganancia_201910.png",
+        grafico_curvas(curvas, bo, METODOS_CORRECCION, f"curvas_ganancia_{MES_TEST}.png",
                        f"Ganancia en {MES_TEST} según cuántos clientes se estimulan")
         grafico_diferencias(finales, METODOS_CORRECCION)
         if (curvas.metodo == "proporciones").any():
-            grafico_curvas(curvas, bo, ["ninguna", "proporciones"], "curvas_f4_201910.png",
+            grafico_curvas(curvas, bo, ["ninguna", "proporciones"], f"curvas_f4_{MES_TEST}.png",
                            f"F4 proporciones contra F0 nominal en {MES_TEST}")
+        if (curvas.metodo == "diferencias").any():
+            grafico_curvas(curvas, bo, ["ninguna", "proporciones", "diferencias"], f"curvas_f5_{MES_TEST}.png",
+                           f"F4 proporciones y F5 diferencias contra F0 nominal en {MES_TEST}")
 
     ruta_drift = OUTPUT_DIR / "drift_resumen.csv"
     if ruta_drift.exists():

@@ -101,6 +101,16 @@ todo el grupo corra las mismas versiones de librerías.
 - **No editar un script de bash mientras corre**: bash lo lee de a pedazos.
   Las cadenas largas viven en el scratchpad; para cambiar algo, esperar a que
   termine o pararla.
+- **Otra ventana de tiempo (S5)**: `VENTANA=201909` mueve todos los meses un
+  mes antes y manda resultados a `resultados/test_201909/` y
+  `output/test_201909/`; los estudios de Optuna llevan el sufijo `_201909`
+  (si no, 03 retomaría el estudio de 201910 y lo daría por completo). 01, 02
+  y 02b se niegan a correr con otra ventana, porque borran y rearman `data/`
+  hasta `MES_TEST` y se llevarían 201910.
+- **No probar 03 contra un estudio real con pocos intentos**: al retomar, el
+  muestreador arranca de nuevo con la misma semilla y repite los intentos al
+  azar del principio, y se pierde que los 10 primeros intentos sean iguales
+  en todas las familias (la comparación pareada de F4 contra F0 usó eso).
 
 ## Estado
 
