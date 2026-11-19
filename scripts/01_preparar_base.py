@@ -13,6 +13,10 @@ recién se aplica en 02):
   4. Se guarda un parquet por mes, ordenado por cliente, SOLO hasta el mes de
      test (201910): 201911 y 201912 son del dashboard y no se usan.
 
+Con DATOS=extendido (barrida de meses, 19/11) lee el crudo hasta 202108, calcula
+la clase con todos esos meses, guarda hasta 202106 en data/extendido/base/ y
+deja sus salidas en output/barrida/.
+
 Salida: data/base/<foto_mes>.parquet, output/clase_ternaria_por_mes.csv,
 output/celdas_rotas.csv.
 """
@@ -30,8 +34,8 @@ from config import (
     CORREGIR_CELDAS_ROTAS,
     DATA_DIR,
     MES_LIMITE_DATOS,
-    MES_TEST,
-    OUTPUT_DIR,
+    MES_ULTIMO_DATOS,
+    OUTPUT_DATOS,
     RAW_PATH,
     UMBRAL_CELDA_ROTA,
     ruta_base,
@@ -44,12 +48,12 @@ TIPOS_NUMERICOS = ("BIGINT", "DOUBLE", "INTEGER", "FLOAT", "HUGEINT", "SMALLINT"
 def detectar_celdas_rotas(con: duckdb.DuckDBPyConnection, numericas: list[str]) -> pd.DataFrame:
     """Una celda (mes, variable) está rota si su fracción de valores distintos
     de 0 es menor a UMBRAL_CELDA_ROTA veces la fracción típica (mediana entre
-    meses) de esa variable. Solo mira los meses que se usan (hasta MES_TEST)."""
+    meses) de esa variable. Solo mira los meses que se usan (hasta MES_ULTIMO_DATOS)."""
     fracciones = ", ".join(
         f'avg(CASE WHEN "{c}" IS NOT NULL AND "{c}" <> 0 THEN 1.0 ELSE 0.0 END) AS "{c}"' for c in numericas
     )
     frac = con.execute(
-        f"select foto_mes, {fracciones} from base where foto_mes <= {MES_TEST} group by 1 order by 1"
+        f"select foto_mes, {fracciones} from base where foto_mes <= {MES_ULTIMO_DATOS} group by 1 order by 1"
     ).df().set_index("foto_mes")
     filas = []
     for c in numericas:
@@ -79,7 +83,7 @@ def main() -> None:
     """)
     tipos = {r[0]: r[1] for r in con.execute("describe crudo").fetchall()}
     numericas = [c for c, t in tipos.items() if c not in NO_NUMERICAS and t.split("(")[0] in TIPOS_NUMERICOS]
-    print(f"  {con.execute('select count(*) from crudo').fetchone()[0]:,} filas de 2019, "
+    print(f"  {con.execute('select count(*) from crudo').fetchone()[0]:,} filas hasta {MES_LIMITE_DATOS}, "
           f"{len(numericas)} columnas numéricas", flush=True)
 
     # clase_ternaria (consulta del candidato de la competencia 1)
@@ -102,13 +106,13 @@ def main() -> None:
         select foto_mes, coalesce(clase_ternaria, 'SIN CLASE') as clase_ternaria, count(*) as n
         from base group by all order by all
     """).df().pivot(index="foto_mes", columns="clase_ternaria", values="n").fillna(0).astype(int)
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    clase.to_csv(OUTPUT_DIR / "clase_ternaria_por_mes.csv")
+    OUTPUT_DATOS.mkdir(parents=True, exist_ok=True)
+    clase.to_csv(OUTPUT_DATOS / "clase_ternaria_por_mes.csv")
     print(clase.to_string(), flush=True)
 
     rotas = detectar_celdas_rotas(con, numericas)
-    rotas.to_csv(OUTPUT_DIR / "celdas_rotas.csv", index=False)
-    print(f"\nCeldas rotas (hasta {MES_TEST}): {len(rotas)} (mes, variable)", flush=True)
+    rotas.to_csv(OUTPUT_DATOS / "celdas_rotas.csv", index=False)
+    print(f"\nCeldas rotas (hasta {MES_ULTIMO_DATOS}): {len(rotas)} (mes, variable)", flush=True)
     for mes, g in rotas.groupby("foto_mes"):
         print(f"  {mes}: {', '.join(g['variable'])}", flush=True)
     if CORREGIR_CELDAS_ROTAS and len(rotas):
@@ -122,12 +126,12 @@ def main() -> None:
     else:
         print("  -> se dejan como están (el baseline no las corrige)", flush=True)
 
-    # un parquet por mes hasta MES_TEST, ordenado por cliente
+    # un parquet por mes hasta MES_ULTIMO_DATOS, ordenado por cliente
     orden = ["numero_de_cliente", "foto_mes", "clase_ternaria"] + numericas
     lista = ", ".join(f'"{c}"' for c in orden)
     vaciar_carpeta(BASE_DIR)
     meses = [r[0] for r in con.execute(
-        f"select distinct foto_mes from base where foto_mes <= {MES_TEST} order by 1").fetchall()]
+        f"select distinct foto_mes from base where foto_mes <= {MES_ULTIMO_DATOS} order by 1").fetchall()]
     for mes in meses:
         con.execute(f"""
             copy (select {lista} from base where foto_mes = {mes} order by numero_de_cliente)

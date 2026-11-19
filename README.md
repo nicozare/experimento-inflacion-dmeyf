@@ -226,6 +226,42 @@ Detalle en `output/por_que_f4.md`.
 
 Detalle en `output/corte_estable_y_ensamble.md`.
 
+## Barrida de meses (19/11, pedida por el tutor)
+
+> **Estado (19/11, 14 h)**: reglas escritas antes de correr. Corre hasta el viernes 20/11 a la tarde.
+
+El tutor nos respondió que "el que no mejore es también un resultado válido", pero que para concluirlo hay que mostrarlo en más de un mes. También sugirió probar sacar las variables con mucho drift, y corregir también las variables no monetarias que tienen drift. Para tener más meses de test se usa el dataset completo (201901 a 202108, con la clase calculada con todos los meses). 2020-2021 no traen más inflación por mes que 2019, pero sí más meses y la pandemia. Los meses de 2019 tienen que salir idénticos a los del experimento principal (es un control).
+
+### El modelo de 2019 que envejece (S9)
+
+Los modelos finales de las cuatro familias se aplican sin reentrenar a cada mes de 201910 a 202106. Son los del experimento principal (entrenados con 201903-201908), con 5 semillas. La inflación acumulada contra el entrenamiento va de +18% a +117%: es la prueba de estrés con datos reales. En el medio también cambian otras cosas (la pandemia), pero les pasan a todas las familias por igual (`scripts/14_modelo_que_envejece.py`).
+
+**Regla**: la prueba de estrés predijo que la mediana le gana al modelo sin corregir desde ~+26% de inflación acumulada, y el ranking desde ~+99%. La predicción se cumple para cada una si, con el corte de la bayesiana de cada familia y la media de las 5 semillas, le gana al modelo sin corregir en al menos 2 de cada 3 meses por encima de su umbral (son 19 meses para la mediana y 3 para el ranking). El IPC, que recién convendría desde +183%, no debería ganarle en este rango.
+
+### La barrida con ventana móvil (S10)
+
+Para cada mes de test t (201910, 202001, 202004, 202007, 202010, 202101 y 202104) se usa la ventana del baseline corrida en el tiempo:
+- entrena de t-7 a t-4;
+- elige el corte en t-2, con el corte estable de 5 semillas (como S1);
+- reentrena de t-7 a t-2 y mide la ganancia en t.
+
+Con t = 201910 es exactamente la ventana principal. Los hiperparámetros y la cantidad de árboles son los de la bayesiana de 2019 de cada familia: rehacer la bayesiana en cada mes no entra en el tiempo que queda (`scripts/15_barrida_movil.py`).
+
+Además de las cuatro familias, se suman tres nuevas con las hipótesis del tutor. Cada una usa los hiperparámetros de la familia de la que sale. Sus variables se eligen una vez por ventana, con el PSI entre los meses del reentreno y el de test. El PSI no usa la clase, así que se puede calcular en producción.
+
+- **Sin las variables con mucho drift (F6)**: el modelo sin corregir, sin las variables con PSI > 0,25 (ni sus lags y deltas).
+- **Mediana sin las variables con mucho drift (F7)**: lo mismo sobre la mediana, con el PSI medido después de dividir por la mediana.
+- **Ranking de todo lo que drifta (F8)**: el ranking del mes (F3), más el ranking de las variables no monetarias con PSI > 0,1.
+
+Los umbrales son los de la convención usual del PSI: 0,1 es un cambio moderado y 0,25, uno fuerte.
+
+**Regla**: para cada mes se calcula la diferencia de la ganancia media de las 5 semillas contra el modelo sin corregir, con el corte estable de cada familia.
+- Una familia **supera** al modelo sin corregir si la diferencia media entre los 7 meses es positiva y el Wilcoxon pareado por mes da p < 0,05.
+- **Pierde** si la diferencia es negativa con p < 0,05.
+- Si no, **empata**.
+
+"Corregir no ayuda" queda confirmado si ni el IPC, ni la mediana, ni el ranking superan al modelo sin corregir. Con la misma regla se comparan también la mediana sin drift contra la mediana, y el ranking de todo lo que drifta contra el ranking.
+
 ## Limitaciones
 
 - **Un mes de test** (201910, y 201909 solo para las proporciones) **y una bayesiana por familia.** El desvío entre semillas no incluye la variabilidad de la optimización ni la de los clientes del mes, que pesa más.

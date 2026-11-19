@@ -20,6 +20,10 @@ número para hacer la cuenta: el modelo nunca la ve.
            variable con el mismo signo ("rank con cero fijo"): positivos en
            (0, 1], negativos en [-1, 0), el 0 queda en 0 y el nulo queda nulo.
            1 = el que más tiene ese mes. Empates: comparten el valor.
+  ranking_todo  Solo para la barrida de meses (19/11, familia F8): el mismo
+           ranking aplicado a TODAS las columnas numéricas, no solo a las
+           en pesos (en los flags 0/1 no cambia nada). 15 toma de acá las
+           variables no monetarias con drift.
 
 Después de corregir: lags y deltas de orden 1 y 2 sobre TODAS las columnas
 numéricas (corregidas o no): lag_k es el valor de la k-ésima fila anterior
@@ -46,7 +50,7 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 
 from comun import COLUMNAS_CLAVE, es_monetaria, meses_disponibles, vaciar_carpeta
-from config import (IPC, MES_REFERENCIA_IPC, METODOS_CORRECCION, OUTPUT_DIR, exigir_ventana_principal,
+from config import (IPC, MES_REFERENCIA_IPC, METODOS_CORRECCION, OUTPUT_DATOS, exigir_ventana_principal,
                     ruta_base, ruta_fe)
 
 
@@ -73,7 +77,7 @@ def corregir_mes(X: np.ndarray, mes: int, metodo: str, idx_monetarias: list[int]
             escala = float(np.median(np.abs(no_cero))) if len(no_cero) else np.nan
             escalas[j] = escala
             X[:, j] = np.where(x == 0, 0.0, x / escala)
-        elif metodo == "ranking":
+        elif metodo in ("ranking", "ranking_todo"):
             r = np.full_like(x, np.nan)
             r[x == 0] = 0.0
             pos, neg = x > 0, x < 0
@@ -94,6 +98,8 @@ def procesar_metodo(metodo: str, meses: list[int]) -> None:
     idx_monetarias = [j for j, c in enumerate(numericas) if es_monetaria(c)]
     p = len(numericas)
     print(f"\n=== {metodo}: {p} columnas numéricas, {len(idx_monetarias)} en pesos ===", flush=True)
+    if metodo == "ranking_todo":  # barrida de meses (F8): el ranking va a TODAS las numéricas
+        idx_monetarias = list(range(p))
 
     # universo de clientes -> índice denso, para guardar sus dos últimas filas
     clientes = np.unique(np.concatenate([
@@ -148,7 +154,7 @@ def procesar_metodo(metodo: str, meses: list[int]) -> None:
         print(f"  {mes}: {n:,} filas", flush=True)
 
     if auditoria:
-        destino = OUTPUT_DIR / f"escalas_{metodo}.csv"
+        destino = OUTPUT_DATOS / f"escalas_{metodo}.csv"
         pd.DataFrame(auditoria).to_csv(destino, index=False)
         print(f"  escalas usadas -> {destino}", flush=True)
     print(f"  {metodo} listo: {len(nombres)} features ({time.time() - t0:.0f} s)", flush=True)
@@ -157,12 +163,13 @@ def procesar_metodo(metodo: str, meses: list[int]) -> None:
 def main() -> None:
     exigir_ventana_principal("02_corregir_y_fe.py")
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("--metodos", nargs="+", default=METODOS_CORRECCION, choices=METODOS_CORRECCION)
+    parser.add_argument("--metodos", nargs="+", default=METODOS_CORRECCION,
+                        choices=METODOS_CORRECCION + ["ranking_todo"])
     args = parser.parse_args()
     meses = meses_disponibles()
     if not meses:
         raise SystemExit("No hay data/base/*.parquet: correr antes scripts/01_preparar_base.py")
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    OUTPUT_DATOS.mkdir(parents=True, exist_ok=True)
     for metodo in args.metodos:
         procesar_metodo(metodo, meses)
 

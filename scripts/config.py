@@ -45,10 +45,22 @@ def ruta_fe(metodo: str, foto_mes: int) -> Path:
     return FE_DIR / metodo / f"{foto_mes}.parquet"
 
 
+# Datos extendidos (19/11, barrida de meses que pidió el tutor). Con
+# DATOS=extendido, 01 y 02 arman 201901-202106 con la clase calculada con todo
+# el crudo (hasta 202108), en data/extendido/: no tocan data/base ni data/fe
+# del experimento principal. Los meses de 2019 salen idénticos (control en 14).
+DATOS = os.environ.get("DATOS", "2019")
+if DATOS not in ("2019", "extendido"):
+    raise SystemExit(f"DATOS={DATOS} no existe; opciones: 2019, extendido")
+if DATOS == "extendido":
+    BASE_DIR = DATA_DIR / "extendido" / "base"
+    FE_DIR = DATA_DIR / "extendido" / "fe"
+
+
 # ---------------------------------------------------------------------------
 # Meses (baseline de Ale)
 # ---------------------------------------------------------------------------
-MES_LIMITE_DATOS = 201912        # la clase se calcula solo con datos de 2019
+MES_LIMITE_DATOS = 202108 if DATOS == "extendido" else 201912  # la clase se calcula solo con datos de 2019
 
 # Ventana de tiempo. "201910" es el baseline de Ale (por defecto). "201909"
 # (seguimiento S5) corre el mismo protocolo un mes antes, para confirmar en
@@ -76,6 +88,15 @@ SUFIJO_VENTANA = "" if VENTANA == "201910" else f"_{VENTANA}"
 if SUFIJO_VENTANA:
     RESULTADOS_DIR = RESULTADOS_DIR / f"test_{VENTANA}"
     OUTPUT_DIR = OUTPUT_DIR / f"test_{VENTANA}"
+
+# Barrida de meses: resultados y salidas aparte. Con DATOS=extendido, 01 guarda
+# hasta 202106 (el último mes con la clase completa: BAJA+2 necesita los dos
+# meses siguientes) y las salidas de 01 y 02 (clase por mes, celdas rotas,
+# escalas) van a output/barrida/, así no pisan las del experimento principal.
+RESULTADOS_BARRIDA = REPO_DIR / "resultados" / "barrida"
+OUTPUT_BARRIDA = REPO_DIR / "output" / "barrida"
+MES_ULTIMO_DATOS = 202106 if DATOS == "extendido" else MES_TEST
+OUTPUT_DATOS = OUTPUT_BARRIDA if DATOS == "extendido" else OUTPUT_DIR
 
 
 def exigir_ventana_principal(script: str) -> None:
@@ -144,7 +165,8 @@ PROPORCIONES = {
 REGEX_MONETARIAS = r"^(m|Visa_m|Master_m)"
 
 # IPC Nacional, nivel general, base diciembre 2016 = 100 (INDEC). Serie
-# 148.3_INIVELNAL_DICI_M_26 de la API de series de tiempo de datos.gob.ar.
+# 148.3_INIVELNAL_DICI_M_26 de la API de series de tiempo de datos.gob.ar
+# (2019 cargado el 17/11; 2020-2021 agregado el 19/11 para la barrida de meses).
 # F1 lleva todo a pesos de MES_REFERENCIA_IPC (x * IPC[ref] / IPC[mes]).
 # Multiplicar todo por una constante no cambia los árboles, así que el mes
 # de referencia no afecta el resultado: solo cómo se leen los valores.
@@ -153,6 +175,11 @@ IPC = {
     201901: 189.6101, 201902: 196.7501, 201903: 205.9571, 201904: 213.0517,
     201905: 219.5691, 201906: 225.5370, 201907: 230.4940, 201908: 239.6077,
     201909: 253.7102, 201910: 262.0661, 201911: 273.2158, 201912: 283.4442,
+    202001: 289.8299, 202002: 295.6660, 202003: 305.5515, 202004: 310.1243,
+    202005: 314.9087, 202006: 321.9738, 202007: 328.2014, 202008: 337.0632,
+    202009: 346.6207, 202010: 359.6570, 202011: 371.0211, 202012: 385.8826,
+    202101: 401.5071, 202102: 415.8595, 202103: 435.8657, 202104: 453.6503,
+    202105: 468.7250, 202106: 483.6049, 202107: 498.0987, 202108: 510.3942,
 }
 
 # Celdas rotas (una variable en 0 para casi todos los clientes en un mes
@@ -213,3 +240,36 @@ COSTO_ESTIMULO = 27_500
 
 # Barrido de la cantidad de clientes a estimular (curvas de ganancia).
 CORTE_MINIMO, CORTE_MAXIMO, PASO_CORTE = 500, 20_000, 100
+
+# ---------------------------------------------------------------------------
+# Barrida de meses (19/11). El tutor: "que no mejore es un resultado válido,
+# pero tiene que poder demostrarse en más de un mes". Usa DATOS=extendido.
+# Las reglas de S9 y S10 están en el README, escritas antes de correr.
+# ---------------------------------------------------------------------------
+SEMILLAS_BARRIDA = SEMILLAS[:5]  # las 5 que la cátedra le asignó a Nicolás
+
+# S9, el modelo que envejece (14): los modelos finales de 2019 (201903-201908,
+# los mismos de 04) aplicados sin reentrenar a cada mes de 201910 a 202106.
+MESES_ENVEJECE = [201910, 201911, 201912] + [a * 100 + m for a in (2020, 2021) for m in range(1, 13)
+                                             if a * 100 + m <= 202106]
+
+# S10, la barrida con ventana móvil (15): la ventana del baseline corrida en el
+# tiempo. Para el mes de test t: entrena t-7 a t-4, elige el corte en t-2,
+# reentrena t-7 a t-2. Con t = 201910 es exactamente la ventana principal.
+MESES_TEST_BARRIDA = [201910, 202001, 202004, 202007, 202010, 202101, 202104]
+
+# Hipótesis secundarias del tutor, como familias nuevas de S10. Usan los
+# hiperparámetros de la bayesiana de 2019 de la familia de la que salen.
+#   ninguna_sin_drift  F6: F0 sin las variables con mucho drift (PSI > 0,25)
+#   mediana_sin_drift  F7: F2 sin las variables con mucho drift (PSI > 0,25,
+#                      medido después de dividir por la mediana)
+#   ranking_con_drift  F8: F3 + ranking de las variables NO monetarias con
+#                      drift (PSI > 0,1); sale de data/extendido/fe/ranking_todo
+# El PSI (el de 05) se mide entre los meses del reentreno y el mes de test, sin
+# la clase: se puede calcular en producción. Umbrales de la convención usual:
+# 0,1 = cambio moderado, 0,25 = cambio fuerte.
+PSI_CON_DRIFT, PSI_MUCHO_DRIFT = 0.10, 0.25
+FAMILIAS_DRIFT = {"ninguna_sin_drift": "ninguna", "mediana_sin_drift": "mediana", "ranking_con_drift": "ranking"}
+NOMBRE_FAMILIA |= {"ninguna_sin_drift": "F6 sin las de mucho drift",
+                   "mediana_sin_drift": "F7 mediana sin las de mucho drift",
+                   "ranking_con_drift": "F8 ranking de todo lo que drifta"}
