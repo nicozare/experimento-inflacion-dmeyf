@@ -11,6 +11,7 @@ Ganancia: +1.072.500 por cada BAJA+2 estimulado, -27.500 por cada estímulo a un
 | F2 mediana | 0,9323 | 1.125 | 322 | 0,0051 | 2.642 | 0,32 | 0,96 | 3.900 | $208,4M | 50 |
 | F3 ranking | 0,9316 | 1.223 | 567 | 0,0053 | 2.717 | 0,64 | 0,91 | 3.500 | $212,8M | 50 |
 | F4 proporciones | 0,9332 | 603 | 251 | 0,0116 | 2.492 | 0,65 | 0,90 | 4.500 | $212,8M | 50 |
+| F5 diferencias | 0,9326 | 484 | 284 | 0,0119 | 1.018 | 0,95 | 0,57 | 4.800 | $215,6M | 50 |
 
 ## Test 201910 (reentreno 201903-201908, mismas semillas en todas las familias)
 
@@ -21,6 +22,7 @@ Ganancia: +1.072.500 por cada BAJA+2 estimulado, -27.500 por cada estímulo a un
 | F2 mediana | 20 | $287,6M ± $2,1M | $289,7M ± $1,5M | 0,9376 ± 0,0002 | -$1,4M | 7/20 | 0,034 | no |
 | F3 ranking | 20 | $282,9M ± $3,0M | $291,2M ± $1,6M | 0,9366 ± 0,0003 | -$6,2M | 2/20 | < 0,001 | no |
 | F4 proporciones | 20 | $288,6M ± $2,1M | $293,0M ± $2,1M | 0,9360 ± 0,0003 | -$0,4M | 11/20 | 0,626 | no |
+| F5 diferencias | 20 | $288,0M ± $3,2M | $292,2M ± $2,3M | 0,9340 ± 0,0005 | -$1,0M | 7/20 | 0,567 | no |
 
 ## Corrección interna contra IPC
 
@@ -28,6 +30,12 @@ Ganancia: +1.072.500 por cada BAJA+2 estimulado, -27.500 por cada estímulo a un
 |---|---|---|---|---|
 | F2 mediana | $8,1M | 20/20 | < 0,001 | sí |
 | F3 ranking | $3,3M | 15/20 | 0,003 | sí |
+
+## Proporciones contra diferencias (S8, corte de la bayesiana)
+
+| comparación | dif. media | desvío de F5 | gana en | p Wilcoxon | ¿F4 supera a F5? |
+|---|---|---|---|---|---|
+| F4 proporciones vs F5 diferencias | $0,6M | $3,2M | 13/20 | 0,561 | no |
 
 ## Sensibilidad al corte (exploratorio, no es parte de la regla de decisión)
 
@@ -40,6 +48,7 @@ Ganancia media en 201910 si todas las familias estimularan la misma cantidad de 
 | F2 mediana | $279,8M | $286,0M | $287,2M | $285,3M | $281,3M | $279,2M |
 | F3 ranking | $275,6M | $282,9M | $288,9M | $288,5M | $286,6M | $282,9M |
 | F4 proporciones | $281,5M | $289,1M | $291,3M | $288,6M | $286,5M | $282,4M |
+| F5 diferencias | $282,7M | $286,6M | $289,0M | $287,9M | $287,7M | $281,7M |
 
 ## Drift de las variables en pesos (201903-201908 contra 201910)
 

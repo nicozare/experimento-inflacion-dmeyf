@@ -1,0 +1,19 @@
+# Corte estable y ensamble (generado por scripts/08_corte_estable_y_ensamble.py)
+
+Experimentos de seguimiento S1 y S2 (reglas en el README). Ganancia en 201909; ± es el desvío entre semillas.
+
+## S1. Corte estable (máximo de la curva promedio de las semillas en 201907)
+
+| familia | semillas | corte de la bayesiana | corte estable | cortes por semilla (mín. a máx.) | ganancia con el corte de la bayesiana | ganancia con el corte estable | dif. vs F0 | gana en | p Wilcoxon | ¿supera a F0? |
+|---|---|---|---|---|---|---|---|---|---|---|
+| F0 nominal | 20 | 4.400 | 5.500 | 3.500 a 5.700 | $253,5M | $252,4M ± $2,8M |  |  |  |  |
+| F4 proporciones | 20 | 5.500 | 4.500 | 3.700 a 5.500 | $252,7M | $255,1M ± $3,2M | $2,7M | 14/20 | 0,027 | no |
+
+## S2. Ensamble F0 + otra familia (promedio de probabilidades, misma semilla)
+
+Control: F0 con la misma semilla + F0 con la semilla siguiente. "dif. vs F0 solo": contra F0 con su corte estable (S1).
+
+| ensamble | semillas | corte estable | ganancia 201907 en su corte | ganancia 201909 | dif. vs control | gana en | p Wilcoxon | ¿supera al control? | dif. vs F0 solo |
+|---|---|---|---|---|---|---|---|---|---|
+| F0 + F0 (otra semilla) | 20 | 5.500 | $300,5M | $252,9M ± $1,6M |  |  |  |  | $0,5M |
+| F0 + F4 proporciones | 20 | 4.700 | $301,7M | $255,4M ± $2,1M | $2,5M | 15/20 | 0,001 | sí | $3,0M |

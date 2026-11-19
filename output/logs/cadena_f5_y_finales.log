@@ -1,0 +1,258 @@
+arranca: jueves, 19 de noviembre de 2026, 02:00:32 -03
+
+=== diferencias: entrena [201903, 201904, 201905, 201906] (506,871 filas), valida 201908 (131,775 filas), 815 features ===
+  intentos ya hechos: 0, faltan: 50
+  intento   0: AUC 0.92333 |  686 árboles | ganancia 201908 $194.7M en 5,200 | 37 s
+  intento   1: AUC 0.92261 |   77 árboles | ganancia 201908 $184.8M en 3,200 | 22 s
+  intento   2: AUC 0.91554 |   23 árboles | ganancia 201908 $181.5M en 4,000 | 59 s
+  intento   3: AUC 0.91779 |  183 árboles | ganancia 201908 $190.3M en 5,600 | 41 s
+  intento   4: AUC 0.93055 | 1736 árboles | ganancia 201908 $208.4M en 3,700 | 188 s
+  intento   5: AUC 0.92488 |   47 árboles | ganancia 201908 $191.4M en 5,200 | 62 s
+  intento   6: AUC 0.90885 |   34 árboles | ganancia 201908 $145.8M en 5,700 | 13 s
+  intento   7: AUC 0.93000 |  744 árboles | ganancia 201908 $202.4M en 4,000 | 75 s
+  intento   8: AUC 0.92668 |   61 árboles | ganancia 201908 $194.2M en 5,500 | 25 s
+  intento   9: AUC 0.92324 |   23 árboles | ganancia 201908 $184.2M en 3,900 | 20 s
+  intento  10: AUC 0.92853 |  972 árboles | ganancia 201908 $200.2M en 4,800 | 292 s
+  intento  11: AUC 0.93037 |  677 árboles | ganancia 201908 $210.1M en 4,200 | 186 s
+  intento  12: AUC 0.93113 |  648 árboles | ganancia 201908 $206.8M en 3,400 | 126 s
+  intento  13: AUC 0.93096 |  991 árboles | ganancia 201908 $207.3M en 3,900 | 128 s
+  intento  14: AUC 0.93075 |  357 árboles | ganancia 201908 $207.3M en 2,900 | 125 s
+  intento  15: AUC 0.92938 |  593 árboles | ganancia 201908 $202.4M en 3,600 | 50 s
+  intento  16: AUC 0.93224 |  582 árboles | ganancia 201908 $210.1M en 3,400 | 120 s
+  intento  17: AUC 0.93223 |  282 árboles | ganancia 201908 $210.1M en 4,200 | 100 s
+  intento  18: AUC 0.93123 |  261 árboles | ganancia 201908 $207.9M en 3,800 | 67 s
+  intento  19: AUC 0.93079 |  166 árboles | ganancia 201908 $213.4M en 3,800 | 53 s
+  intento  20: AUC 0.93260 |  484 árboles | ganancia 201908 $215.6M en 4,800 | 137 s
+  intento  21: AUC 0.93162 |  620 árboles | ganancia 201908 $210.1M en 3,400 | 110 s
+  intento  22: AUC 0.93211 |  703 árboles | ganancia 201908 $207.3M en 3,500 | 118 s
+  intento  23: AUC 0.92896 |  275 árboles | ganancia 201908 $205.7M en 3,200 | 88 s
+  intento  24: AUC 0.92986 | 1607 árboles | ganancia 201908 $206.2M en 3,900 | 148 s
+  intento  25: AUC 0.93045 |  328 árboles | ganancia 201908 $206.8M en 5,000 | 115 s
+  intento  26: AUC 0.93061 |  451 árboles | ganancia 201908 $214.5M en 4,200 | 79 s
+  intento  27: AUC 0.93094 |  253 árboles | ganancia 201908 $200.2M en 5,400 | 56 s
+  intento  28: AUC 0.93001 |  360 árboles | ganancia 201908 $209.6M en 4,100 | 122 s
+  intento  29: AUC 0.93001 |  407 árboles | ganancia 201908 $207.3M en 3,500 | 53 s
+  intento  30: AUC 0.93206 |  458 árboles | ganancia 201908 $210.7M en 3,100 | 133 s
+  intento  31: AUC 0.93119 |  558 árboles | ganancia 201908 $209.0M en 3,600 | 68 s
+  intento  32: AUC 0.93097 |  464 árboles | ganancia 201908 $211.2M en 4,800 | 164 s
+  intento  33: AUC 0.93160 |  841 árboles | ganancia 201908 $208.4M en 3,100 | 132 s
+  intento  34: AUC 0.93167 |  320 árboles | ganancia 201908 $209.6M en 4,100 | 84 s
+  intento  35: AUC 0.93123 |  357 árboles | ganancia 201908 $206.8M en 3,400 | 78 s
+  intento  36: AUC 0.92992 |  254 árboles | ganancia 201908 $211.2M en 3,800 | 128 s
+  intento  37: AUC 0.92948 |  884 árboles | ganancia 201908 $205.7M en 4,000 | 94 s
+  intento  38: AUC 0.93033 | 1370 árboles | ganancia 201908 $208.4M en 3,300 | 149 s
+  intento  39: AUC 0.93165 | 1209 árboles | ganancia 201908 $211.2M en 3,600 | 179 s
+  intento  40: AUC 0.93068 |  624 árboles | ganancia 201908 $204.6M en 3,600 | 95 s
+  intento  41: AUC 0.93128 |  663 árboles | ganancia 201908 $209.6M en 4,300 | 245 s
+  intento  42: AUC 0.93098 |  508 árboles | ganancia 201908 $210.1M en 4,000 | 223 s
+  intento  43: AUC 0.93180 |  929 árboles | ganancia 201908 $214.5M en 4,400 | 193 s
+  intento  44: AUC 0.93013 |  362 árboles | ganancia 201908 $211.2M en 4,800 | 71 s
+  intento  45: AUC 0.93165 |  611 árboles | ganancia 201908 $208.4M en 3,500 | 113 s
+  intento  46: AUC 0.93185 |  619 árboles | ganancia 201908 $209.6M en 3,700 | 110 s
+  intento  47: AUC 0.93236 |  429 árboles | ganancia 201908 $212.8M en 4,300 | 111 s
+  intento  48: AUC 0.93227 |  411 árboles | ganancia 201908 $210.7M en 3,500 | 94 s
+  intento  49: AUC 0.93097 |  281 árboles | ganancia 201908 $212.8M en 4,100 | 86 s
+  mejor intento 20: AUC 0.93260, 484 árboles, corte 4,800 -> /Users/nicolaszarewsky/dmeyf/experimento_inflacion/resultados/bo__diferencias.json
+bayesiana F5 lista: jueves, 19 de noviembre de 2026, 03:30:01 -03
+
+=== diferencias: entrena [201903, 201904, 201905, 201906, 201907, 201908] (768,499 filas), 484 árboles, corte de validación 4,800; 20 semillas pendientes ===
+  semilla 100081: ganancia $284.9M en 4,800 | máxima $292.6M en 4,000 | AUC 0.9344 | 123 s
+  semilla 100103: ganancia $287.1M en 4,800 | máxima $291.5M en 4,000 | AUC 0.9342 | 123 s
+  semilla 100129: ganancia $284.9M en 4,800 | máxima $288.2M en 4,000 | AUC 0.9341 | 123 s
+  semilla 100151: ganancia $291.5M en 4,800 | máxima $293.1M en 4,700 | AUC 0.9340 | 123 s
+  semilla 100169: ganancia $289.3M en 4,800 | máxima $290.4M en 4,400 | AUC 0.9340 | 123 s
+  semilla 100183: ganancia $291.5M en 4,800 | máxima $292.6M en 5,000 | AUC 0.9338 | 123 s
+  semilla 100189: ganancia $286.0M en 4,800 | máxima $290.4M en 4,400 | AUC 0.9335 | 123 s
+  semilla 100193: ganancia $292.6M en 4,800 | máxima $293.7M en 4,600 | AUC 0.9341 | 122 s
+  semilla 100207: ganancia $290.4M en 4,800 | máxima $294.2M en 3,700 | AUC 0.9328 | 123 s
+  semilla 100213: ganancia $286.0M en 4,800 | máxima $289.9M en 5,500 | AUC 0.9338 | 123 s
+  semilla 100237: ganancia $288.2M en 4,800 | máxima $294.8M en 3,800 | AUC 0.9339 | 123 s
+  semilla 100267: ganancia $286.0M en 4,800 | máxima $289.9M en 5,300 | AUC 0.9335 | 124 s
+  semilla 100271: ganancia $281.6M en 4,800 | máxima $289.3M en 3,600 | AUC 0.9342 | 123 s
+  semilla 100279: ganancia $290.4M en 4,800 | máxima $291.5M en 4,000 | AUC 0.9337 | 123 s
+  semilla 100291: ganancia $286.0M en 4,800 | máxima $295.9M en 3,600 | AUC 0.9351 | 123 s
+  semilla 100297: ganancia $284.9M en 4,800 | máxima $290.9M en 3,700 | AUC 0.9351 | 123 s
+  semilla 100313: ganancia $290.4M en 4,800 | máxima $293.1M en 3,300 | AUC 0.9342 | 123 s
+  semilla 100333: ganancia $290.4M en 4,800 | máxima $297.0M en 3,800 | AUC 0.9342 | 123 s
+  semilla 100343: ganancia $293.7M en 4,800 | máxima $293.7M en 4,800 | AUC 0.9340 | 123 s
+  semilla 100357: ganancia $284.9M en 4,800 | máxima $290.4M en 3,800 | AUC 0.9345 | 123 s
+finales F5 listos: jueves, 19 de noviembre de 2026, 04:11:07 -03
+
+=== diferencias: entrena [201903, 201904, 201905, 201906] (506,871 filas), predice 201908, 484 árboles; 20 semillas pendientes ===
+  semilla 100081: ganancia 201908 $215.6M en 4,800 | AUC 0.9326 | 94 s | reproduce la bayesiana: sí
+  semilla 100103: ganancia 201908 $209.0M en 5,200 | AUC 0.9307 | 94 s
+  semilla 100129: ganancia 201908 $211.2M en 4,400 | AUC 0.9315 | 95 s
+  semilla 100151: ganancia 201908 $209.6M en 3,900 | AUC 0.9307 | 95 s
+  semilla 100169: ganancia 201908 $212.8M en 4,700 | AUC 0.9311 | 94 s
+  semilla 100183: ganancia 201908 $209.6M en 4,300 | AUC 0.9305 | 95 s
+  semilla 100189: ganancia 201908 $211.8M en 4,500 | AUC 0.9308 | 95 s
+  semilla 100193: ganancia 201908 $206.8M en 4,000 | AUC 0.9313 | 95 s
+  semilla 100207: ganancia 201908 $211.2M en 4,400 | AUC 0.9310 | 95 s
+  semilla 100213: ganancia 201908 $211.8M en 4,900 | AUC 0.9308 | 95 s
+  semilla 100237: ganancia 201908 $213.9M en 4,100 | AUC 0.9313 | 95 s
+  semilla 100267: ganancia 201908 $210.7M en 4,100 | AUC 0.9316 | 95 s
+  semilla 100271: ganancia 201908 $211.2M en 4,800 | AUC 0.9316 | 95 s
+  semilla 100279: ganancia 201908 $213.9M en 4,900 | AUC 0.9307 | 94 s
+  semilla 100291: ganancia 201908 $209.6M en 3,700 | AUC 0.9308 | 95 s
+  semilla 100297: ganancia 201908 $210.1M en 4,600 | AUC 0.9313 | 95 s
+  semilla 100313: ganancia 201908 $213.9M en 4,300 | AUC 0.9309 | 94 s
+  semilla 100333: ganancia 201908 $207.3M en 3,900 | AUC 0.9304 | 95 s
+  semilla 100343: ganancia 201908 $213.4M en 4,400 | AUC 0.9308 | 95 s
+  semilla 100357: ganancia 201908 $207.9M en 4,600 | AUC 0.9311 | 95 s
+validación F5 lista: jueves, 19 de noviembre de 2026, 04:42:44 -03
+# Corte estable y ensamble (generado por scripts/08_corte_estable_y_ensamble.py)
+
+Experimentos de seguimiento S1 y S2 (reglas en el README). Ganancia en 201910; ± es el desvío entre semillas.
+
+## S1. Corte estable (máximo de la curva promedio de las semillas en 201908)
+
+| familia | semillas | corte de la bayesiana | corte estable | cortes por semilla (mín. a máx.) | ganancia con el corte de la bayesiana | ganancia con el corte estable | dif. vs F0 | gana en | p Wilcoxon | ¿supera a F0? |
+|---|---|---|---|---|---|---|---|---|---|---|
+| F0 nominal | 20 | 4.000 | 4.300 | 3.300 a 5.200 | $289,0M | $287,9M ± $2,0M |  |  |  |  |
+| F1 IPC | 20 | 5.000 | 4.800 | 3.500 a 5.600 | $279,6M | $279,8M ± $3,4M | -$8,1M | 0/20 | < 0,001 | no |
+| F2 mediana | 20 | 3.900 | 3.900 | 3.400 a 4.400 | $287,6M | $287,6M ± $2,1M | -$0,2M | 9/20 | 0,706 | no |
+| F3 ranking | 20 | 3.500 | 3.500 | 2.900 a 4.700 | $282,9M | $282,9M ± $3,0M | -$5,0M | 2/20 | < 0,001 | no |
+| F4 proporciones | 20 | 4.500 | 4.200 | 3.100 a 5.000 | $288,6M | $290,7M ± $2,6M | $2,8M | 17/20 | 0,002 | sí |
+| F5 diferencias | 20 | 4.800 | 4.500 | 3.700 a 5.200 | $288,0M | $287,9M ± $2,8M | $0,0M | 9/20 | 0,905 | no |
+
+### Proporciones contra diferencias (S8, corte estable)
+
+| comparación | dif. media | desvío de F5 | gana en | p Wilcoxon | ¿F4 supera a F5? |
+|---|---|---|---|---|---|
+| F4 proporciones vs F5 diferencias | $2,8M | $2,8M | 16/20 | 0,005 | no |
+
+## S2. Ensamble F0 + otra familia (promedio de probabilidades, misma semilla)
+
+Control: F0 con la misma semilla + F0 con la semilla siguiente. "dif. vs F0 solo": contra F0 con su corte estable (S1).
+
+| ensamble | semillas | corte estable | ganancia 201908 en su corte | ganancia 201910 | dif. vs control | gana en | p Wilcoxon | ¿supera al control? | dif. vs F0 solo |
+|---|---|---|---|---|---|---|---|---|---|
+| F0 + F0 (otra semilla) | 20 | 4.100 | $209,1M | $290,2M ± $1,6M |  |  |  |  | $2,3M |
+| F0 + F1 IPC | 20 | 4.600 | $209,6M | $283,8M ± $3,1M | -$6,4M | 0/20 | < 0,001 | no | -$4,1M |
+| F0 + F2 mediana | 20 | 3.400 | $208,3M | $285,0M ± $2,1M | -$5,2M | 0/20 | < 0,001 | no | -$2,9M |
+| F0 + F3 ranking | 20 | 4.900 | $209,5M | $284,4M ± $1,9M | -$5,8M | 0/20 | < 0,001 | no | -$3,5M |
+| F0 + F4 proporciones | 20 | 4.300 | $207,9M | $289,8M ± $1,5M | -$0,4M | 6/20 | 0,182 | no | $1,9M |
+| F0 + F5 diferencias | 20 | 4.100 | $209,9M | $288,9M ± $2,5M | -$1,3M | 5/20 | 0,042 | no | $1,0M |
+
+# Resumen del experimento (generado por scripts/06_resumen.py)
+
+Ganancia: +1.072.500 por cada BAJA+2 estimulado, -27.500 por cada estímulo a un cliente que no es BAJA+2.
+
+## Optimización bayesiana (validación 201908)
+
+| familia | AUC 201908 | árboles | num_leaves | learning_rate | min_data_in_leaf | feature_fraction | bagging_fraction | corte (201908) | ganancia 201908 | intentos |
+|---|---|---|---|---|---|---|---|---|---|---|
+| F0 nominal | 0,9334 | 715 | 432 | 0,0083 | 1.917 | 0,78 | 0,87 | 4.000 | $216,7M | 50 |
+| F1 IPC | 0,9331 | 612 | 366 | 0,0099 | 1.457 | 0,50 | 0,79 | 5.000 | $209,0M | 50 |
+| F2 mediana | 0,9323 | 1.125 | 322 | 0,0051 | 2.642 | 0,32 | 0,96 | 3.900 | $208,4M | 50 |
+| F3 ranking | 0,9316 | 1.223 | 567 | 0,0053 | 2.717 | 0,64 | 0,91 | 3.500 | $212,8M | 50 |
+| F4 proporciones | 0,9332 | 603 | 251 | 0,0116 | 2.492 | 0,65 | 0,90 | 4.500 | $212,8M | 50 |
+| F5 diferencias | 0,9326 | 484 | 284 | 0,0119 | 1.018 | 0,95 | 0,57 | 4.800 | $215,6M | 50 |
+
+## Test 201910 (reentreno 201903-201908, mismas semillas en todas las familias)
+
+| familia | semillas | ganancia (corte de validación) | ganancia máxima (optimista) | AUC 201910 | dif. vs F0 | gana en | p Wilcoxon | ¿supera a F0? |
+|---|---|---|---|---|---|---|---|---|
+| F0 nominal | 20 | $289,0M ± $2,2M | $290,5M ± $1,9M | 0,9364 ± 0,0004 |  |  |  |  |
+| F1 IPC | 20 | $279,6M ± $3,4M | $283,2M ± $2,4M | 0,9362 ± 0,0004 | -$9,5M | 0/20 | < 0,001 | no |
+| F2 mediana | 20 | $287,6M ± $2,1M | $289,7M ± $1,5M | 0,9376 ± 0,0002 | -$1,4M | 7/20 | 0,034 | no |
+| F3 ranking | 20 | $282,9M ± $3,0M | $291,2M ± $1,6M | 0,9366 ± 0,0003 | -$6,2M | 2/20 | < 0,001 | no |
+| F4 proporciones | 20 | $288,6M ± $2,1M | $293,0M ± $2,1M | 0,9360 ± 0,0003 | -$0,4M | 11/20 | 0,626 | no |
+| F5 diferencias | 20 | $288,0M ± $3,2M | $292,2M ± $2,3M | 0,9340 ± 0,0005 | -$1,0M | 7/20 | 0,567 | no |
+
+## Corrección interna contra IPC
+
+| familia | dif. vs F1 IPC | gana en | p Wilcoxon | ¿empata o le gana al IPC? |
+|---|---|---|---|---|
+| F2 mediana | $8,1M | 20/20 | < 0,001 | sí |
+| F3 ranking | $3,3M | 15/20 | 0,003 | sí |
+
+## Proporciones contra diferencias (S8, corte de la bayesiana)
+
+| comparación | dif. media | desvío de F5 | gana en | p Wilcoxon | ¿F4 supera a F5? |
+|---|---|---|---|---|---|
+| F4 proporciones vs F5 diferencias | $0,6M | $3,2M | 13/20 | 0,561 | no |
+
+## Sensibilidad al corte (exploratorio, no es parte de la regla de decisión)
+
+Ganancia media en 201910 si todas las familias estimularan la misma cantidad de clientes.
+
+| familia | 3.000 | 3.500 | 4.000 | 4.500 | 5.000 | 6.000 |
+|---|---|---|---|---|---|---|
+| F0 nominal | $278,7M | $284,5M | $289,0M | $286,0M | $282,9M | $278,6M |
+| F1 IPC | $274,7M | $276,8M | $279,2M | $280,4M | $279,6M | $276,2M |
+| F2 mediana | $279,8M | $286,0M | $287,2M | $285,3M | $281,3M | $279,2M |
+| F3 ranking | $275,6M | $282,9M | $288,9M | $288,5M | $286,6M | $282,9M |
+| F4 proporciones | $281,5M | $289,1M | $291,3M | $288,6M | $286,5M | $282,4M |
+| F5 diferencias | $282,7M | $286,6M | $289,0M | $287,9M | $287,7M | $281,7M |
+
+## Drift de las variables en pesos (201903-201908 contra 201910)
+
+| familia | PSI mediano (todas) | PSI mediano, variables de mercado | PSI mediano, límites y comisión | variables con PSI > 0,1 | AUC adversarial (continuas) | AUC adversarial (todas) |
+|---|---|---|---|---|---|---|
+| F0 nominal | 0,008 | 0,006 | 0,031 | 6% | 0,810 | 0,892 |
+| F1 IPC | 0,004 | 0,003 | 1,014 | 13% | 0,874 | 1,000 |
+| F2 mediana | 0,002 | 0,002 | 0,039 | 5% | 0,854 | 0,921 |
+| F3 ranking | 0,001 | 0,001 | 0,330 | 11% | 0,867 | 1,000 |
+
+F5 listo: jueves, 19 de noviembre de 2026, 04:42:50 -03
+  F0 nominal: montos en pesos: 4,4%, 60,7%, 24,7%, 10,3% (9 s)
+  ipc semilla 100081: entrenado (173 s)
+  F1 IPC: montos en pesos: 5,7%, 60,7%, 24,6%, 8,9% (184 s)
+  mediana semilla 100081: entrenado (222 s)
+  F2 mediana: montos en pesos: 4,8%, 65,4%, 20,5%, 9,3% (234 s)
+  ranking semilla 100081: entrenado (293 s)
+  F3 ranking: montos en pesos: 3,6%, 62,4%, 23,2%, 10,8% (305 s)
+  F4 proporciones: montos en pesos: 1,7%, 63,1%, 25,5%, 9,7% | cocientes: 2,9%, 28,7%, 21,0%, 47,4% (8 s)
+  diferencias semilla 100081: entrenado (122 s)
+  F5 diferencias: montos en pesos: 3,2%, 56,0%, 30,2%, 10,5% | diferencias: 10,9%, 39,2%, 27,8%, 22,2% (132 s)
+control: en el modelo sin corregir da lo mismo que 09
+# ¿Dónde cortan los árboles en cada familia? (generado por scripts/13_donde_cortan_las_familias.py)
+
+Extensión de S4. Modelo final de cada familia (semilla 100081, entrena 201903-201908). Cortes sobre el nivel y los lags; para cada uno, dónde cae el umbral entre los clientes del entrenamiento que tienen ese valor con el mismo signo. Cada corte pesa según su ganancia; las categorías suman 100% dentro de cada fila.
+
+| familia | columnas | parte de la ganancia de los cortes del modelo | separa el cero | montos bajos (el 25% más bajo) | montos medios | montos altos (el 25% más alto) |
+|---|---|---|---|---|---|---|
+| F0 nominal | montos en pesos | 37,3% | 4,4% | 60,7% | 24,7% | 10,3% |
+| F1 IPC | montos en pesos | 40,0% | 5,7% | 60,7% | 24,6% | 8,9% |
+| F2 mediana | montos en pesos | 38,3% | 4,8% | 65,4% | 20,5% | 9,3% |
+| F3 ranking | montos en pesos | 38,4% | 3,6% | 62,4% | 23,2% | 10,8% |
+| F4 proporciones | montos en pesos | 32,6% | 1,7% | 63,1% | 25,5% | 9,7% |
+| F4 proporciones | cocientes | 7,6% | 2,9% | 28,7% | 21,0% | 47,4% |
+| F5 diferencias | montos en pesos | 29,2% | 3,2% | 56,0% | 30,2% | 10,5% |
+| F5 diferencias | diferencias | 10,1% | 10,9% | 39,2% | 27,8% | 22,2% |
+
+-> output/donde_cortan_las_familias.md y .png
+control: sin remuestrear se recupera la ganancia de 04 y 08 en las 6 familias
+  200 remuestreos (3 s)
+  400 remuestreos (5 s)
+  600 remuestreos (7 s)
+  800 remuestreos (9 s)
+  1000 remuestreos (11 s)
+# Bootstrap de clientes (generado por scripts/10_bootstrap_clientes.py)
+
+Seguimiento S6 (regla en el README). 1.000 remuestreos con reposición de los clientes de 201910, los mismos para todas las familias y semillas; en cada uno, ganancia media de las 20 semillas en el corte de cada familia. El intervalo no incluye el azar de las semillas: es el que mide "error estándar: semillas" (la diferencia media con los clientes fijos, lo que ya medía el Wilcoxon).
+
+| comparación | corte | diferencia observada | intervalo del 95% | remuestreos con diferencia > 0 | error estándar: clientes | error estándar: semillas | ¿robusta al azar de los clientes? |
+|---|---|---|---|---|---|---|---|
+| F1 IPC vs F0 nominal | corte de la bayesiana | -$9,5M | -$17,8M a -$0,4M | 2% | $4,4M | $0,8M | sí |
+| F1 IPC vs F0 nominal | corte estable (S1) | -$8,1M | -$15,4M a $0,2M | 3% | $3,9M | $0,8M | no |
+| F2 mediana vs F0 nominal | corte de la bayesiana | -$1,4M | -$8,9M a $6,3M | 42% | $3,8M | $0,6M | no |
+| F2 mediana vs F0 nominal | corte estable (S1) | -$0,2M | -$8,7M a $7,7M | 49% | $4,2M | $0,6M | no |
+| F3 ranking vs F0 nominal | corte de la bayesiana | -$6,2M | -$14,6M a $2,8M | 10% | $4,5M | $0,9M | no |
+| F3 ranking vs F0 nominal | corte estable (S1) | -$5,0M | -$15,4M a $4,9M | 17% | $5,2M | $0,9M | no |
+| F4 proporciones vs F0 nominal | corte de la bayesiana | -$0,4M | -$5,1M a $5,9M | 47% | $2,7M | $0,8M | no |
+| F4 proporciones vs F0 nominal | corte estable (S1) | $2,8M | -$0,3M a $6,1M | 96% | $1,6M | $0,8M | no |
+| F5 diferencias vs F0 nominal | corte de la bayesiana | -$1,0M | -$6,7M a $6,1M | 42% | $3,4M | $0,9M | no |
+| F5 diferencias vs F0 nominal | corte estable (S1) | $0,0M | -$5,0M a $5,4M | 49% | $2,6M | $0,9M | no |
+| F2 mediana vs F1 IPC | corte de la bayesiana | $8,1M | -$0,7M a $16,7M | 96% | $4,5M | $0,8M | no |
+| F2 mediana vs F1 IPC | corte estable (S1) | $7,9M | -$0,2M a $15,8M | 97% | $4,2M | $0,8M | no |
+| F3 ranking vs F1 IPC | corte de la bayesiana | $3,3M | -$9,1M a $13,9M | 70% | $5,8M | $1,0M | no |
+| F3 ranking vs F1 IPC | corte estable (S1) | $3,1M | -$8,5M a $12,9M | 70% | $5,5M | $0,9M | no |
+| F4 proporciones vs F5 diferencias | corte de la bayesiana | $0,6M | -$5,1M a $5,4M | 58% | $2,7M | $1,0M | no |
+| F4 proporciones vs F5 diferencias | corte estable (S1) | $2,8M | -$3,0M a $8,1M | 87% | $2,7M | $0,9M | no |
+
+-> output/bootstrap_clientes.md, .png y resultados/bootstrap_clientes.csv (11 s)
+todo listo: jueves, 19 de noviembre de 2026, 04:57:33 -03
+
+[exited with code 0]

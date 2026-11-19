@@ -106,7 +106,10 @@ todo el grupo corra las mismas versiones de librerías.
   `output/test_201909/`; los estudios de Optuna llevan el sufijo `_201909`
   (si no, 03 retomaría el estudio de 201910 y lo daría por completo). 01, 02
   y 02b se niegan a correr con otra ventana, porque borran y rearman `data/`
-  hasta `MES_TEST` y se llevarían 201910.
+  hasta `MES_TEST` y se llevarían 201910. `output/test_201909/` no existe
+  hasta que un script la crea: todo script nuevo que escriba en `OUTPUT_DIR`
+  tiene que hacer `OUTPUT_DIR.mkdir(parents=True, exist_ok=True)` (la falta
+  de eso cortó la cadena del 18/11 en 08).
 - **No probar 03 contra un estudio real con pocos intentos**: al retomar, el
   muestreador arranca de nuevo con la misma semilla y repite los intentos al
   azar del principio, y se pierde que los 10 primeros intentos sean iguales
@@ -132,8 +135,8 @@ bayesiana, finales y 07 de F4; 08 y 06):
 - S2 ensambles: ninguno supera al control F0 + F0; F0 + F4 empata.
 - S3 F4 proporciones: empata con el corte de la bayesiana (-$0,4M) y supera a
   F0 con el corte estable (+$2,8M, 17/20, p = 0,002). El "sí" depende en parte
-  del corte de F0, y F4 agrega columnas (no aísla la inflación). Propuesto y
-  sin confirmar por el usuario: repetir F0 y F4 con 201909 como test.
+  del corte de F0, y F4 agrega columnas (no aísla la inflación). Se repitió
+  con 201909 como test en la segunda tanda (S5, abajo).
 - S4: el modelo nominal corta sobre todo en "no tiene" y montos bajos;
   deflactar octubre al predecir empeora la ganancia.
 
@@ -154,5 +157,27 @@ reglas se escribieron en el README antes de correr):
 - S8 partes 1 y 2 (12): las proporciones son el 8,9% de la ganancia de los
   cortes; la ventaja de F4 viene de los clientes que no cobran el sueldo en el
   banco (los que se van casi no lo cobran ahí).
-- S5 (F0 y F4 con 201909 como test) y S8 parte 3 (F5 diferencias) corren en
-  la cadena `cadena_segunda_tanda.sh` del scratchpad, desde las 16:54.
+- S5 (F0 y F4 con 201909 como test; cadena del 18/11 16:54 al 19/11 01:57):
+  no se confirma. Corte de la bayesiana -$0,8M (8/20, p = 0,268); corte
+  estable +$2,7M (14/20, p = 0,027), pero por debajo del desvío de F0 ($2,8M:
+  le faltan $0,08M). Fuera de la regla, el ensamble F0 + F4 sí le gana al
+  control en 201909 (+$2,5M, 15/20, p = 0,001); en 201910 empataba. La
+  cadena se cortó en 08 porque `output/test_201909/` no existía (06 la crea,
+  08 no): ahora 08 y 10 hacen mkdir, y 08, 06 y 10 de 201909 se corrieron a
+  mano.
+- S8 parte 3, F5 diferencias (19/11, 02:00 a 04:42; bayesiana 1,5 h, finales
+  41 min, validación 31 min, porque sus modelos son chicos: 484 árboles):
+  empata con F0 (-$1,0M con el corte de la bayesiana, $0,0M con el estable).
+  F4 no supera a F5 con la regla (+$0,6M; con el corte estable +$2,8M, 16/20,
+  p = 0,005, pero el desvío de F5 es $2,8M). La lectura escrita de antemano
+  para el empate ("es información nueva") no encaja, porque F5 no mejoró: el
+  README lo dice así y concluye que el control no separa las explicaciones.
+- 13, dónde cortan las seis familias (19/11, 04:43 a 04:57): todas cortan los
+  montos igual (65% a 70% de la ganancia en "no tiene" o en el 25% más bajo,
+  en F0 a F3); los cocientes de F4 se cortan arriba (47% en el 25% más alto)
+  y las restas de F5 quedan en el medio, con más cortes en el cero (11%).
+- README reescrito el 19/11 a pedido del usuario ("mucho más entendible y
+  resumido en los puntos claves"): resumen de un minuto arriba, resultados
+  por pregunta, los seguimientos en una tabla y nombres descriptivos con el
+  código entre paréntesis. La versión larga anterior queda en el commit
+  348abdc, enlazada desde el anexo.

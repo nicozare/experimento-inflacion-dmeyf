@@ -12,7 +12,11 @@ Seguimiento S6 (regla en el README). 1.000 remuestreos con reposición de los cl
 | F3 ranking vs F0 nominal | corte estable (S1) | -$5,0M | -$15,4M a $4,9M | 17% | $5,2M | $0,9M | no |
 | F4 proporciones vs F0 nominal | corte de la bayesiana | -$0,4M | -$5,1M a $5,9M | 47% | $2,7M | $0,8M | no |
 | F4 proporciones vs F0 nominal | corte estable (S1) | $2,8M | -$0,3M a $6,1M | 96% | $1,6M | $0,8M | no |
+| F5 diferencias vs F0 nominal | corte de la bayesiana | -$1,0M | -$6,7M a $6,1M | 42% | $3,4M | $0,9M | no |
+| F5 diferencias vs F0 nominal | corte estable (S1) | $0,0M | -$5,0M a $5,4M | 49% | $2,6M | $0,9M | no |
 | F2 mediana vs F1 IPC | corte de la bayesiana | $8,1M | -$0,7M a $16,7M | 96% | $4,5M | $0,8M | no |
 | F2 mediana vs F1 IPC | corte estable (S1) | $7,9M | -$0,2M a $15,8M | 97% | $4,2M | $0,8M | no |
 | F3 ranking vs F1 IPC | corte de la bayesiana | $3,3M | -$9,1M a $13,9M | 70% | $5,8M | $1,0M | no |
 | F3 ranking vs F1 IPC | corte estable (S1) | $3,1M | -$8,5M a $12,9M | 70% | $5,5M | $0,9M | no |
+| F4 proporciones vs F5 diferencias | corte de la bayesiana | $0,6M | -$5,1M a $5,4M | 58% | $2,7M | $1,0M | no |
+| F4 proporciones vs F5 diferencias | corte estable (S1) | $2,8M | -$3,0M a $8,1M | 87% | $2,7M | $0,9M | no |

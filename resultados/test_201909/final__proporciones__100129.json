@@ -1,0 +1,13 @@
+{
+  "metodo": "proporciones",
+  "semilla": 100129,
+  "corte_validacion": 5500,
+  "ganancia_corte_validacion": 254650000,
+  "ganancia_maxima": 257400000,
+  "corte_ganancia_maxima": 3800,
+  "auc_test": 0.9336982457118522,
+  "arboles": 1097,
+  "segundos": 255.1,
+  "lightgbm": "4.7.0",
+  "maquina": "Darwin arm64"
+}

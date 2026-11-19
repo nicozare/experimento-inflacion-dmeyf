@@ -1,0 +1,36 @@
+{
+  "metodo": "ninguna",
+  "hiperparametros": {
+    "num_leaves": 327,
+    "learning_rate": 0.005776081661931212,
+    "min_data_in_leaf": 1447,
+    "feature_fraction": 0.688424864129731,
+    "bagging_fraction": 0.8380984885780528
+  },
+  "best_iteration": 889,
+  "auc_validacion": 0.9333570328229104,
+  "corte_validacion": 4400,
+  "ganancia_validacion": 304700000,
+  "intento": 39,
+  "intentos_completos": 50,
+  "params_fijos": {
+    "objective": "binary",
+    "metric": "auc",
+    "bagging_freq": 1,
+    "feature_pre_filter": false,
+    "deterministic": true,
+    "force_row_wise": true,
+    "verbosity": -1,
+    "num_threads": 0
+  },
+  "semilla_bo": 100081,
+  "meses_entrenamiento": [
+    201903,
+    201904,
+    201905
+  ],
+  "mes_validacion": 201907,
+  "lightgbm": "4.7.0",
+  "maquina": "Darwin arm64 (arm)",
+  "segundos_esta_corrida": 7282
+}

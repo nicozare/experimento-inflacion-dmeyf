@@ -1,0 +1,54 @@
+
+=== diferencias: entrena [201903, 201904, 201905, 201906] (506,871 filas), valida 201908 (131,775 filas), 815 features ===
+  intentos ya hechos: 0, faltan: 50
+  intento   0: AUC 0.92333 |  686 árboles | ganancia 201908 $194.7M en 5,200 | 37 s
+  intento   1: AUC 0.92261 |   77 árboles | ganancia 201908 $184.8M en 3,200 | 22 s
+  intento   2: AUC 0.91554 |   23 árboles | ganancia 201908 $181.5M en 4,000 | 59 s
+  intento   3: AUC 0.91779 |  183 árboles | ganancia 201908 $190.3M en 5,600 | 41 s
+  intento   4: AUC 0.93055 | 1736 árboles | ganancia 201908 $208.4M en 3,700 | 188 s
+  intento   5: AUC 0.92488 |   47 árboles | ganancia 201908 $191.4M en 5,200 | 62 s
+  intento   6: AUC 0.90885 |   34 árboles | ganancia 201908 $145.8M en 5,700 | 13 s
+  intento   7: AUC 0.93000 |  744 árboles | ganancia 201908 $202.4M en 4,000 | 75 s
+  intento   8: AUC 0.92668 |   61 árboles | ganancia 201908 $194.2M en 5,500 | 25 s
+  intento   9: AUC 0.92324 |   23 árboles | ganancia 201908 $184.2M en 3,900 | 20 s
+  intento  10: AUC 0.92853 |  972 árboles | ganancia 201908 $200.2M en 4,800 | 292 s
+  intento  11: AUC 0.93037 |  677 árboles | ganancia 201908 $210.1M en 4,200 | 186 s
+  intento  12: AUC 0.93113 |  648 árboles | ganancia 201908 $206.8M en 3,400 | 126 s
+  intento  13: AUC 0.93096 |  991 árboles | ganancia 201908 $207.3M en 3,900 | 128 s
+  intento  14: AUC 0.93075 |  357 árboles | ganancia 201908 $207.3M en 2,900 | 125 s
+  intento  15: AUC 0.92938 |  593 árboles | ganancia 201908 $202.4M en 3,600 | 50 s
+  intento  16: AUC 0.93224 |  582 árboles | ganancia 201908 $210.1M en 3,400 | 120 s
+  intento  17: AUC 0.93223 |  282 árboles | ganancia 201908 $210.1M en 4,200 | 100 s
+  intento  18: AUC 0.93123 |  261 árboles | ganancia 201908 $207.9M en 3,800 | 67 s
+  intento  19: AUC 0.93079 |  166 árboles | ganancia 201908 $213.4M en 3,800 | 53 s
+  intento  20: AUC 0.93260 |  484 árboles | ganancia 201908 $215.6M en 4,800 | 137 s
+  intento  21: AUC 0.93162 |  620 árboles | ganancia 201908 $210.1M en 3,400 | 110 s
+  intento  22: AUC 0.93211 |  703 árboles | ganancia 201908 $207.3M en 3,500 | 118 s
+  intento  23: AUC 0.92896 |  275 árboles | ganancia 201908 $205.7M en 3,200 | 88 s
+  intento  24: AUC 0.92986 | 1607 árboles | ganancia 201908 $206.2M en 3,900 | 148 s
+  intento  25: AUC 0.93045 |  328 árboles | ganancia 201908 $206.8M en 5,000 | 115 s
+  intento  26: AUC 0.93061 |  451 árboles | ganancia 201908 $214.5M en 4,200 | 79 s
+  intento  27: AUC 0.93094 |  253 árboles | ganancia 201908 $200.2M en 5,400 | 56 s
+  intento  28: AUC 0.93001 |  360 árboles | ganancia 201908 $209.6M en 4,100 | 122 s
+  intento  29: AUC 0.93001 |  407 árboles | ganancia 201908 $207.3M en 3,500 | 53 s
+  intento  30: AUC 0.93206 |  458 árboles | ganancia 201908 $210.7M en 3,100 | 133 s
+  intento  31: AUC 0.93119 |  558 árboles | ganancia 201908 $209.0M en 3,600 | 68 s
+  intento  32: AUC 0.93097 |  464 árboles | ganancia 201908 $211.2M en 4,800 | 164 s
+  intento  33: AUC 0.93160 |  841 árboles | ganancia 201908 $208.4M en 3,100 | 132 s
+  intento  34: AUC 0.93167 |  320 árboles | ganancia 201908 $209.6M en 4,100 | 84 s
+  intento  35: AUC 0.93123 |  357 árboles | ganancia 201908 $206.8M en 3,400 | 78 s
+  intento  36: AUC 0.92992 |  254 árboles | ganancia 201908 $211.2M en 3,800 | 128 s
+  intento  37: AUC 0.92948 |  884 árboles | ganancia 201908 $205.7M en 4,000 | 94 s
+  intento  38: AUC 0.93033 | 1370 árboles | ganancia 201908 $208.4M en 3,300 | 149 s
+  intento  39: AUC 0.93165 | 1209 árboles | ganancia 201908 $211.2M en 3,600 | 179 s
+  intento  40: AUC 0.93068 |  624 árboles | ganancia 201908 $204.6M en 3,600 | 95 s
+  intento  41: AUC 0.93128 |  663 árboles | ganancia 201908 $209.6M en 4,300 | 245 s
+  intento  42: AUC 0.93098 |  508 árboles | ganancia 201908 $210.1M en 4,000 | 223 s
+  intento  43: AUC 0.93180 |  929 árboles | ganancia 201908 $214.5M en 4,400 | 193 s
+  intento  44: AUC 0.93013 |  362 árboles | ganancia 201908 $211.2M en 4,800 | 71 s
+  intento  45: AUC 0.93165 |  611 árboles | ganancia 201908 $208.4M en 3,500 | 113 s
+  intento  46: AUC 0.93185 |  619 árboles | ganancia 201908 $209.6M en 3,700 | 110 s
+  intento  47: AUC 0.93236 |  429 árboles | ganancia 201908 $212.8M en 4,300 | 111 s
+  intento  48: AUC 0.93227 |  411 árboles | ganancia 201908 $210.7M en 3,500 | 94 s
+  intento  49: AUC 0.93097 |  281 árboles | ganancia 201908 $212.8M en 4,100 | 86 s
+  mejor intento 20: AUC 0.93260, 484 árboles, corte 4,800 -> /Users/nicolaszarewsky/dmeyf/experimento_inflacion/resultados/bo__diferencias.json

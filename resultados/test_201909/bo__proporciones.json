@@ -1,0 +1,36 @@
+{
+  "metodo": "proporciones",
+  "hiperparametros": {
+    "num_leaves": 301,
+    "learning_rate": 0.005179920114826756,
+    "min_data_in_leaf": 72,
+    "feature_fraction": 0.6997036721725187,
+    "bagging_fraction": 0.9635975599024601
+  },
+  "best_iteration": 1097,
+  "auc_validacion": 0.9332307656619607,
+  "corte_validacion": 5500,
+  "ganancia_validacion": 305250000,
+  "intento": 38,
+  "intentos_completos": 50,
+  "params_fijos": {
+    "objective": "binary",
+    "metric": "auc",
+    "bagging_freq": 1,
+    "feature_pre_filter": false,
+    "deterministic": true,
+    "force_row_wise": true,
+    "verbosity": -1,
+    "num_threads": 0
+  },
+  "semilla_bo": 100081,
+  "meses_entrenamiento": [
+    201903,
+    201904,
+    201905
+  ],
+  "mes_validacion": 201907,
+  "lightgbm": "4.7.0",
+  "maquina": "Darwin arm64 (arm)",
+  "segundos_esta_corrida": 9170
+}

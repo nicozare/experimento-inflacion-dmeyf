@@ -206,6 +206,7 @@ def grafico_ensambles(tabla: pd.DataFrame, info: dict) -> None:
 
 # ---------------------------------------------------------------------------
 def main() -> None:
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)  # con VENTANA=201909, output/test_201909/ puede no existir
     t1, info1 = s1()
     if t1.empty:
         raise SystemExit("Faltan resultados: correr antes scripts/04_entrenar_final.py y 07_validacion_semillas.py")
@@ -232,6 +233,13 @@ def main() -> None:
         filas.append(fila)
     partes += [f"## S1. Corte estable (máximo de la curva promedio de las semillas en {MES_VALIDACION})\n",
                tabla_md(pd.DataFrame(filas).fillna("")), ""]
+    if "proporciones" in info1 and "diferencias" in info1:  # S8 (parte 3), con el corte estable
+        r = comparar(t1, "proporciones", "diferencias", "ganancia")
+        supera = r["dif_media"] > r["desvio_contra"] and r["p_wilcoxon"] < 0.05
+        partes += ["### Proporciones contra diferencias (S8, corte estable)\n", tabla_md(pd.DataFrame([{
+            "comparación": "F4 proporciones vs F5 diferencias", "dif. media": millones(r["dif_media"]),
+            "desvío de F5": millones(r["desvio_contra"]), "gana en": f"{r['gana_en']}/{r['semillas']}",
+            "p Wilcoxon": formato_p(r["p_wilcoxon"]), "¿F4 supera a F5?": "sí" if supera else "no"}])), ""]
     grafico_cortes(info1)
 
     if info2:

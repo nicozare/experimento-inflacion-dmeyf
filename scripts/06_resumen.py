@@ -260,6 +260,16 @@ def main() -> None:
         if filas:
             partes += ["## Corrección interna contra IPC\n", tabla_md(pd.DataFrame(filas)), ""]
 
+        # S8 (parte 3): proporciones contra su control con diferencias, regla de siempre
+        if (finales.metodo == "proporciones").any() and (finales.metodo == "diferencias").any():
+            r = comparar(finales, "proporciones", "diferencias", "ganancia_corte_validacion")
+            supera = r["dif_media"] > r["desvio_contra"] and r["p_wilcoxon"] < 0.05
+            tabla = pd.DataFrame([{"comparación": "F4 proporciones vs F5 diferencias",
+                                   "dif. media": millones(r["dif_media"]), "desvío de F5": millones(r["desvio_contra"]),
+                                   "gana en": f"{r['gana_en']}/{r['semillas']}", "p Wilcoxon": formato_p(r["p_wilcoxon"]),
+                                   "¿F4 supera a F5?": "sí" if supera else "no"}])
+            partes += ["## Proporciones contra diferencias (S8, corte de la bayesiana)\n", tabla_md(tabla), ""]
+
         # Exploratorio, NO es parte de la regla de decisión: qué pasaría si todas
         # las familias estimularan la misma cantidad de clientes.
         cortes_fijos = [3_000, 3_500, 4_000, 4_500, 5_000, 6_000]

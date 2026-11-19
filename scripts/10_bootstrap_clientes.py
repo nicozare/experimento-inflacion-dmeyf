@@ -73,6 +73,7 @@ def main() -> None:
     parser.add_argument("--remuestreos", type=int, default=1000)
     B = parser.parse_args().remuestreos
     t0 = time.time()
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)  # con VENTANA=201909, output/test_201909/ puede no existir
 
     familias = [m for m in METODOS
                 if all((RESULTADOS_DIR / f"prediccion__{m}__{s}.parquet").exists() for s in SEMILLAS)]
@@ -171,7 +172,8 @@ def main() -> None:
 def grafico(res: pd.DataFrame, B: int) -> None:
     contra_f0 = res[res.contra == "ninguna"]
     familias = list(dict.fromkeys(contra_f0.familia))
-    fig, ax = plt.subplots(figsize=(11, 1.7 + 1.0 * len(familias)))
+    alto = 2.8 + 0.9 * len(familias)
+    fig, ax = plt.subplots(figsize=(11, alto))
     for i, m in enumerate(familias):
         for j, (r, lleno) in enumerate([("bayesiana", True), ("estable", False)]):
             f = contra_f0[(contra_f0.familia == m) & (contra_f0.regla_clave == r)].iloc[0]
@@ -182,18 +184,18 @@ def grafico(res: pd.DataFrame, B: int) -> None:
     ax.axvline(0, color=TINTA_2, lw=1.2, ls="--")
     ax.xaxis.set_major_formatter(plt.FuncFormatter(lambda v, _: f"{v:g}".replace(".", ",").replace("-", "−")))
     ax.set_yticks(range(len(familias)), [NOMBRE_FAMILIA[m] for m in familias])
-    ax.invert_yaxis()
+    ax.set_ylim(len(familias) - 0.5, -0.5)  # de arriba hacia abajo, con aire arriba y abajo de cada fila
     ax.grid(axis="y", visible=False)
     ax.plot([], [], "o", ms=9, mew=2, mec=TINTA_2, mfc=TINTA_2, label="corte de la bayesiana")
     ax.plot([], [], "o", ms=9, mew=2, mec=TINTA_2, mfc=FONDO, label="corte estable (S1)")
-    ax.legend(loc="lower center", ncol=2, bbox_to_anchor=(0.5, -0.30 if len(familias) <= 4 else -0.26))
     ax.set_xlabel(f"Ganancia de la familia menos la de F0 en {MES_TEST} (millones de $)")
     ax.set_title(f"Diferencia contra F0 con el azar de los clientes de {MES_TEST}", pad=50)
     ax.text(0, 1.025, f"Punto = diferencia observada (media de {len(SEMILLAS)} semillas). Barra = intervalo del 95% "
             f"en {miles_txt(B)} remuestreos de clientes.\nSi la barra cruza el 0, la diferencia no es robusta al azar "
             "de qué clientes caen en el mes.", transform=ax.transAxes, fontsize=11, color=TINTA_2,
             va="bottom")
-    fig.tight_layout()
+    fig.tight_layout(rect=(0, 0.6 / alto, 1, 1))  # la leyenda va abajo de todo, debajo del eje
+    fig.legend(*ax.get_legend_handles_labels(), loc="lower center", ncol=2, bbox_to_anchor=(0.5, 0.0))
     fig.savefig(OUTPUT_DIR / "bootstrap_clientes.png", dpi=160)
     plt.close(fig)
 

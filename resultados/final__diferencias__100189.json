@@ -1,0 +1,13 @@
+{
+  "metodo": "diferencias",
+  "semilla": 100189,
+  "corte_validacion": 4800,
+  "ganancia_corte_validacion": 286000000,
+  "ganancia_maxima": 290400000,
+  "corte_ganancia_maxima": 4400,
+  "auc_test": 0.9334858075994901,
+  "arboles": 484,
+  "segundos": 122.9,
+  "lightgbm": "4.7.0",
+  "maquina": "Darwin arm64"
+}

@@ -1,0 +1,227 @@
+arranca: miércoles, 18 de noviembre de 2026, 16:54:13 -03
+
+=== ninguna: entrena [201903, 201904, 201905] (378,501 filas), valida 201907 (129,853 filas), 760 features ===
+  intentos ya hechos: 0, faltan: 50
+  intento   0: AUC 0.92401 |  160 árboles | ganancia 201907 $286.6M en 4,900 | 11 s
+  intento   1: AUC 0.92090 |  178 árboles | ganancia 201907 $281.6M en 4,600 | 24 s
+  intento   2: AUC 0.91126 |   24 árboles | ganancia 201907 $259.6M en 5,200 | 51 s
+  intento   3: AUC 0.91700 |   71 árboles | ganancia 201907 $259.1M en 4,500 | 26 s
+  intento   4: AUC 0.93142 | 1845 árboles | ganancia 201907 $300.9M en 6,100 | 142 s
+  intento   5: AUC 0.92562 |   69 árboles | ganancia 201907 $291.5M en 3,800 | 89 s
+  intento   6: AUC 0.91080 |  156 árboles | ganancia 201907 $255.2M en 4,400 | 23 s
+  intento   7: AUC 0.93092 |  796 árboles | ganancia 201907 $299.2M en 4,200 | 94 s
+  intento   8: AUC 0.92648 |   63 árboles | ganancia 201907 $286.6M en 3,700 | 27 s
+  intento   9: AUC 0.92092 |   20 árboles | ganancia 201907 $270.1M en 4,100 | 21 s
+  intento  10: AUC 0.93138 |  806 árboles | ganancia 201907 $301.9M en 5,100 | 365 s
+  intento  11: AUC 0.93152 |  706 árboles | ganancia 201907 $300.9M en 5,700 | 487 s
+  intento  12: AUC 0.93333 |  784 árboles | ganancia 201907 $305.2M en 4,900 | 226 s
+  intento  13: AUC 0.92948 |  485 árboles | ganancia 201907 $290.4M en 5,400 | 378 s
+  intento  14: AUC 0.93116 |  693 árboles | ganancia 201907 $304.1M en 4,500 | 509 s
+  intento  15: AUC 0.93234 |  360 árboles | ganancia 201907 $307.4M en 4,100 | 135 s
+  intento  16: AUC 0.93003 |  100 árboles | ganancia 201907 $312.9M en 4,900 | 68 s
+  intento  17: AUC 0.93233 |  274 árboles | ganancia 201907 $304.7M en 4,200 | 100 s
+  intento  18: AUC 0.93137 |  243 árboles | ganancia 201907 $298.6M en 3,900 | 84 s
+  intento  19: AUC 0.93180 |  213 árboles | ganancia 201907 $299.2M en 4,000 | 108 s
+  intento  20: AUC 0.93166 |  335 árboles | ganancia 201907 $313.5M en 4,200 | 133 s
+  intento  21: AUC 0.93202 |  750 árboles | ganancia 201907 $300.9M en 5,100 | 191 s
+  intento  22: AUC 0.93264 | 1007 árboles | ganancia 201907 $299.2M en 3,600 | 248 s
+  intento  23: AUC 0.93151 | 1163 árboles | ganancia 201907 $297.0M en 5,600 | 254 s
+  intento  24: AUC 0.93277 |  647 árboles | ganancia 201907 $303.6M en 3,800 | 121 s
+  intento  25: AUC 0.93104 |  547 árboles | ganancia 201907 $295.4M en 4,100 | 69 s
+  intento  26: AUC 0.93166 |  226 árboles | ganancia 201907 $295.9M en 4,400 | 41 s
+  intento  27: AUC 0.93175 |  329 árboles | ganancia 201907 $300.3M en 4,200 | 94 s
+  intento  28: AUC 0.93197 |  346 árboles | ganancia 201907 $303.6M en 5,800 | 134 s
+  intento  29: AUC 0.93176 | 1228 árboles | ganancia 201907 $299.2M en 6,000 | 112 s
+  intento  30: AUC 0.93279 | 1143 árboles | ganancia 201907 $298.1M en 5,200 | 151 s
+  intento  31: AUC 0.93242 |  711 árboles | ganancia 201907 $299.8M en 5,700 | 81 s
+  intento  32: AUC 0.93222 |  577 árboles | ganancia 201907 $301.4M en 5,200 | 81 s
+  intento  33: AUC 0.93328 | 1239 árboles | ganancia 201907 $300.3M en 4,800 | 201 s
+  intento  34: AUC 0.93151 | 1230 árboles | ganancia 201907 $303.1M en 5,500 | 111 s
+  intento  35: AUC 0.93316 |  740 árboles | ganancia 201907 $298.6M en 3,700 | 105 s
+  intento  36: AUC 0.93240 |  756 árboles | ganancia 201907 $300.9M en 3,900 | 161 s
+  intento  37: AUC 0.93256 | 1244 árboles | ganancia 201907 $298.6M en 5,700 | 141 s
+  intento  38: AUC 0.93175 | 1332 árboles | ganancia 201907 $300.3M en 5,800 | 156 s
+  intento  39: AUC 0.93336 |  889 árboles | ganancia 201907 $304.7M en 4,400 | 164 s
+  intento  40: AUC 0.93249 |  603 árboles | ganancia 201907 $299.8M en 4,500 | 138 s
+  intento  41: AUC 0.93218 | 1007 árboles | ganancia 201907 $306.9M en 5,400 | 205 s
+  intento  42: AUC 0.93217 |  849 árboles | ganancia 201907 $300.3M en 4,400 | 96 s
+  intento  43: AUC 0.93257 |  845 árboles | ganancia 201907 $303.6M en 6,200 | 190 s
+  intento  44: AUC 0.93272 |  798 árboles | ganancia 201907 $300.3M en 3,200 | 144 s
+  intento  45: AUC 0.93262 |  872 árboles | ganancia 201907 $298.1M en 4,800 | 128 s
+  intento  46: AUC 0.93251 | 1019 árboles | ganancia 201907 $305.8M en 4,200 | 217 s
+  intento  47: AUC 0.93216 |  791 árboles | ganancia 201907 $303.6M en 4,800 | 179 s
+  intento  48: AUC 0.93231 |  779 árboles | ganancia 201907 $298.1M en 5,000 | 114 s
+  intento  49: AUC 0.93285 |  907 árboles | ganancia 201907 $300.9M en 4,700 | 152 s
+  mejor intento 39: AUC 0.93336, 889 árboles, corte 4,400 -> /Users/nicolaszarewsky/dmeyf/experimento_inflacion/resultados/test_201909/bo__ninguna.json
+
+=== proporciones: entrena [201903, 201904, 201905] (378,501 filas), valida 201907 (129,853 filas), 815 features ===
+  intentos ya hechos: 0, faltan: 50
+  intento   0: AUC 0.92450 |  217 árboles | ganancia 201907 $282.7M en 4,600 | 14 s
+  intento   1: AUC 0.92496 |  118 árboles | ganancia 201907 $295.9M en 4,400 | 20 s
+  intento   2: AUC 0.91254 |   17 árboles | ganancia 201907 $274.4M en 4,900 | 51 s
+  intento   3: AUC 0.91877 |   32 árboles | ganancia 201907 $264.6M en 4,100 | 21 s
+  intento   4: AUC 0.93147 | 1368 árboles | ganancia 201907 $295.9M en 3,000 | 110 s
+  intento   5: AUC 0.92516 |   64 árboles | ganancia 201907 $288.8M en 4,500 | 50 s
+  intento   6: AUC 0.91034 |   39 árboles | ganancia 201907 $257.9M en 3,500 | 11 s
+  intento   7: AUC 0.93132 |  780 árboles | ganancia 201907 $299.2M en 5,000 | 64 s
+  intento   8: AUC 0.92691 |   49 árboles | ganancia 201907 $286.0M en 5,800 | 17 s
+  intento   9: AUC 0.92374 |   26 árboles | ganancia 201907 $272.2M en 5,900 | 15 s
+  intento  10: AUC 0.93189 |  825 árboles | ganancia 201907 $297.0M en 5,000 | 222 s
+  intento  11: AUC 0.93206 |  835 árboles | ganancia 201907 $305.8M en 4,200 | 323 s
+  intento  12: AUC 0.93213 |  849 árboles | ganancia 201907 $304.1M en 4,700 | 233 s
+  intento  13: AUC 0.93014 |  420 árboles | ganancia 201907 $297.6M en 5,500 | 206 s
+  intento  14: AUC 0.93262 |  900 árboles | ganancia 201907 $300.9M en 4,300 | 239 s
+  intento  15: AUC 0.93096 | 1085 árboles | ganancia 201907 $301.9M en 5,100 | 159 s
+  intento  16: AUC 0.93139 |  177 árboles | ganancia 201907 $302.5M en 4,800 | 65 s
+  intento  17: AUC 0.93200 | 1023 árboles | ganancia 201907 $295.9M en 4,000 | 449 s
+  intento  18: AUC 0.93172 |  629 árboles | ganancia 201907 $299.8M en 3,700 | 136 s
+  intento  19: AUC 0.93293 |  537 árboles | ganancia 201907 $303.6M en 5,000 | 132 s
+  intento  20: AUC 0.93098 |  734 árboles | ganancia 201907 $304.7M en 4,600 | 92 s
+  intento  21: AUC 0.93257 |  948 árboles | ganancia 201907 $306.4M en 5,300 | 170 s
+  intento  22: AUC 0.93056 |  293 árboles | ganancia 201907 $298.6M en 4,100 | 142 s
+  intento  23: AUC 0.93283 |  777 árboles | ganancia 201907 $297.0M en 3,800 | 221 s
+  intento  24: AUC 0.93233 |  696 árboles | ganancia 201907 $303.6M en 5,000 | 170 s
+  intento  25: AUC 0.93149 |  449 árboles | ganancia 201907 $301.9M en 4,700 | 259 s
+  intento  26: AUC 0.93195 |  849 árboles | ganancia 201907 $294.2M en 4,100 | 364 s
+  intento  27: AUC 0.93127 |  338 árboles | ganancia 201907 $302.5M en 5,000 | 68 s
+  intento  28: AUC 0.93224 |  458 árboles | ganancia 201907 $306.9M en 4,200 | 151 s
+  intento  29: AUC 0.93130 |  492 árboles | ganancia 201907 $306.9M en 4,400 | 220 s
+  intento  30: AUC 0.93129 |  823 árboles | ganancia 201907 $304.1M en 4,700 | 235 s
+  intento  31: AUC 0.93081 |  731 árboles | ganancia 201907 $303.6M en 4,800 | 106 s
+  intento  32: AUC 0.93209 |  671 árboles | ganancia 201907 $295.9M en 3,600 | 188 s
+  intento  33: AUC 0.93177 |  673 árboles | ganancia 201907 $294.2M en 5,500 | 172 s
+  intento  34: AUC 0.93226 |  612 árboles | ganancia 201907 $298.6M en 3,900 | 130 s
+  intento  35: AUC 0.93162 |  339 árboles | ganancia 201907 $306.9M en 4,200 | 121 s
+  intento  36: AUC 0.93233 | 1327 árboles | ganancia 201907 $301.4M en 3,600 | 390 s
+  intento  37: AUC 0.93149 |  276 árboles | ganancia 201907 $308.0M en 4,800 | 139 s
+  intento  38: AUC 0.93323 | 1097 árboles | ganancia 201907 $305.2M en 5,500 | 251 s
+  intento  39: AUC 0.93199 |  949 árboles | ganancia 201907 $305.8M en 4,000 | 171 s
+  intento  40: AUC 0.93193 | 1077 árboles | ganancia 201907 $301.9M en 4,500 | 188 s
+  intento  41: AUC 0.93273 | 1138 árboles | ganancia 201907 $304.7M en 4,400 | 356 s
+  intento  42: AUC 0.93270 |  841 árboles | ganancia 201907 $300.9M en 5,500 | 284 s
+  intento  43: AUC 0.93283 |  886 árboles | ganancia 201907 $304.7M en 5,000 | 278 s
+  intento  44: AUC 0.93150 | 1113 árboles | ganancia 201907 $304.7M en 5,400 | 490 s
+  intento  45: AUC 0.93277 |  725 árboles | ganancia 201907 $301.9M en 4,300 | 129 s
+  intento  46: AUC 0.93136 |  676 árboles | ganancia 201907 $295.4M en 3,500 | 235 s
+  intento  47: AUC 0.93269 |  777 árboles | ganancia 201907 $299.2M en 4,000 | 181 s
+  intento  48: AUC 0.93039 | 1167 árboles | ganancia 201907 $289.3M en 6,800 | 459 s
+  intento  49: AUC 0.93223 |  876 árboles | ganancia 201907 $304.7M en 4,600 | 265 s
+  mejor intento 38: AUC 0.93323, 1097 árboles, corte 5,500 -> /Users/nicolaszarewsky/dmeyf/experimento_inflacion/resultados/test_201909/bo__proporciones.json
+bayesiana 201909 lista: miércoles, 18 de noviembre de 2026, 21:28:26 -03
+
+=== ninguna: entrena [201903, 201904, 201905, 201906, 201907] (636,724 filas), 889 árboles, corte de validación 4,400; 20 semillas pendientes ===
+  semilla 100081: ganancia $256.3M en 4,400 | máxima $257.9M en 3,100 | AUC 0.9337 | 220 s
+  semilla 100103: ganancia $255.2M en 4,400 | máxima $257.4M en 3,600 | AUC 0.9342 | 220 s
+  semilla 100129: ganancia $254.1M en 4,400 | máxima $255.8M en 4,500 | AUC 0.9329 | 220 s
+  semilla 100151: ganancia $255.2M en 4,400 | máxima $255.2M en 4,400 | AUC 0.9337 | 220 s
+  semilla 100169: ganancia $259.6M en 4,400 | máxima $262.9M en 4,200 | AUC 0.9339 | 220 s
+  semilla 100183: ganancia $253.0M en 4,400 | máxima $255.2M en 4,200 | AUC 0.9334 | 220 s
+  semilla 100189: ganancia $246.4M en 4,400 | máxima $257.4M en 3,600 | AUC 0.9337 | 220 s
+  semilla 100193: ganancia $254.1M en 4,400 | máxima $255.2M en 4,000 | AUC 0.9336 | 220 s
+  semilla 100207: ganancia $249.7M en 4,400 | máxima $254.1M en 5,600 | AUC 0.9339 | 220 s
+  semilla 100213: ganancia $254.1M en 4,400 | máxima $254.1M en 4,400 | AUC 0.9339 | 220 s
+  semilla 100237: ganancia $250.8M en 4,400 | máxima $256.3M en 5,200 | AUC 0.9336 | 219 s
+  semilla 100267: ganancia $253.0M en 4,400 | máxima $257.9M en 3,700 | AUC 0.9341 | 220 s
+  semilla 100271: ganancia $250.8M en 4,400 | máxima $255.2M en 3,200 | AUC 0.9335 | 219 s
+  semilla 100279: ganancia $254.1M en 4,400 | máxima $256.3M en 3,400 | AUC 0.9339 | 220 s
+  semilla 100291: ganancia $253.0M en 4,400 | máxima $257.9M en 4,900 | AUC 0.9340 | 220 s
+  semilla 100297: ganancia $256.3M en 4,400 | máxima $259.1M en 3,700 | AUC 0.9341 | 220 s
+  semilla 100313: ganancia $255.2M en 4,400 | máxima $259.1M en 5,700 | AUC 0.9338 | 220 s
+  semilla 100333: ganancia $253.0M en 4,400 | máxima $257.9M en 3,500 | AUC 0.9339 | 220 s
+  semilla 100343: ganancia $251.9M en 4,400 | máxima $255.2M en 4,600 | AUC 0.9334 | 220 s
+  semilla 100357: ganancia $254.1M en 4,400 | máxima $256.9M en 5,300 | AUC 0.9337 | 220 s
+
+=== proporciones: entrena [201903, 201904, 201905, 201906, 201907] (636,724 filas), 1097 árboles, corte de validación 5,500; 20 semillas pendientes ===
+  semilla 100081: ganancia $252.4M en 5,500 | máxima $260.7M en 3,800 | AUC 0.9330 | 255 s
+  semilla 100103: ganancia $253.6M en 5,500 | máxima $258.5M en 3,600 | AUC 0.9329 | 255 s
+  semilla 100129: ganancia $254.7M en 5,500 | máxima $257.4M en 3,800 | AUC 0.9337 | 255 s
+  semilla 100151: ganancia $246.9M en 5,500 | máxima $254.1M en 3,400 | AUC 0.9325 | 255 s
+  semilla 100169: ganancia $254.7M en 5,500 | máxima $259.1M en 4,700 | AUC 0.9331 | 256 s
+  semilla 100183: ganancia $251.3M en 5,500 | máxima $259.6M en 3,400 | AUC 0.9329 | 256 s
+  semilla 100189: ganancia $250.2M en 5,500 | máxima $261.8M en 3,800 | AUC 0.9336 | 255 s
+  semilla 100193: ganancia $251.3M en 5,500 | máxima $257.9M en 3,500 | AUC 0.9327 | 255 s
+  semilla 100207: ganancia $252.4M en 5,500 | máxima $262.4M en 4,300 | AUC 0.9332 | 256 s
+  semilla 100213: ganancia $252.4M en 5,500 | máxima $256.9M en 4,700 | AUC 0.9332 | 256 s
+  semilla 100237: ganancia $255.8M en 5,500 | máxima $262.9M en 4,400 | AUC 0.9330 | 256 s
+  semilla 100267: ganancia $251.3M en 5,500 | máxima $256.9M en 3,900 | AUC 0.9330 | 256 s
+  semilla 100271: ganancia $251.3M en 5,500 | máxima $258.5M en 3,800 | AUC 0.9330 | 255 s
+  semilla 100279: ganancia $252.4M en 5,500 | máxima $258.5M en 4,200 | AUC 0.9326 | 255 s
+  semilla 100291: ganancia $249.2M en 5,500 | máxima $259.6M en 5,000 | AUC 0.9339 | 255 s
+  semilla 100297: ganancia $254.7M en 5,500 | máxima $258.5M en 4,800 | AUC 0.9332 | 254 s
+  semilla 100313: ganancia $255.8M en 5,500 | máxima $258.5M en 3,600 | AUC 0.9334 | 255 s
+  semilla 100333: ganancia $253.6M en 5,500 | máxima $256.9M en 5,100 | AUC 0.9326 | 255 s
+  semilla 100343: ganancia $256.9M en 5,500 | máxima $263.4M en 4,100 | AUC 0.9331 | 256 s
+  semilla 100357: ganancia $253.6M en 5,500 | máxima $257.4M en 4,600 | AUC 0.9331 | 255 s
+finales 201909 listos: jueves, 19 de noviembre de 2026, 00:06:57 -03
+
+=== ninguna: entrena [201903, 201904, 201905] (378,501 filas), predice 201907, 889 árboles; 20 semillas pendientes ===
+  semilla 100081: ganancia 201907 $304.7M en 4,400 | AUC 0.9334 | 129 s | reproduce la bayesiana: sí
+  semilla 100103: ganancia 201907 $304.7M en 5,200 | AUC 0.9328 | 129 s
+  semilla 100129: ganancia 201907 $301.9M en 5,700 | AUC 0.9321 | 129 s
+  semilla 100151: ganancia 201907 $302.5M en 4,800 | AUC 0.9327 | 128 s
+  semilla 100169: ganancia 201907 $301.4M en 5,200 | AUC 0.9324 | 129 s
+  semilla 100183: ganancia 201907 $301.9M en 5,300 | AUC 0.9328 | 129 s
+  semilla 100189: ganancia 201907 $301.4M en 5,400 | AUC 0.9323 | 128 s
+  semilla 100193: ganancia 201907 $300.9M en 3,500 | AUC 0.9326 | 129 s
+  semilla 100207: ganancia 201907 $301.9M en 4,900 | AUC 0.9321 | 129 s
+  semilla 100213: ganancia 201907 $302.5M en 4,600 | AUC 0.9330 | 129 s
+  semilla 100237: ganancia 201907 $300.9M en 3,900 | AUC 0.9328 | 129 s
+  semilla 100267: ganancia 201907 $300.3M en 5,400 | AUC 0.9331 | 129 s
+  semilla 100271: ganancia 201907 $304.1M en 5,300 | AUC 0.9321 | 129 s
+  semilla 100279: ganancia 201907 $301.4M en 4,000 | AUC 0.9328 | 129 s
+  semilla 100291: ganancia 201907 $301.9M en 5,300 | AUC 0.9329 | 128 s
+  semilla 100297: ganancia 201907 $303.6M en 4,800 | AUC 0.9331 | 129 s
+  semilla 100313: ganancia 201907 $301.9M en 5,500 | AUC 0.9323 | 128 s
+  semilla 100333: ganancia 201907 $301.4M en 5,200 | AUC 0.9331 | 129 s
+  semilla 100343: ganancia 201907 $305.2M en 5,700 | AUC 0.9328 | 129 s
+  semilla 100357: ganancia 201907 $303.1M en 4,900 | AUC 0.9329 | 127 s
+
+=== proporciones: entrena [201903, 201904, 201905] (378,501 filas), predice 201907, 1097 árboles; 20 semillas pendientes ===
+  semilla 100081: ganancia 201907 $305.2M en 5,500 | AUC 0.9332 | 202 s | reproduce la bayesiana: sí
+  semilla 100103: ganancia 201907 $300.9M en 4,300 | AUC 0.9327 | 203 s
+  semilla 100129: ganancia 201907 $305.2M en 4,500 | AUC 0.9331 | 202 s
+  semilla 100151: ganancia 201907 $306.4M en 4,700 | AUC 0.9329 | 203 s
+  semilla 100169: ganancia 201907 $300.3M en 4,600 | AUC 0.9327 | 202 s
+  semilla 100183: ganancia 201907 $301.9M en 4,500 | AUC 0.9326 | 202 s
+  semilla 100189: ganancia 201907 $299.2M en 4,600 | AUC 0.9327 | 203 s
+  semilla 100193: ganancia 201907 $308.0M en 4,000 | AUC 0.9329 | 202 s
+  semilla 100207: ganancia 201907 $305.2M en 5,300 | AUC 0.9324 | 203 s
+  semilla 100213: ganancia 201907 $309.6M en 4,500 | AUC 0.9330 | 203 s
+  semilla 100237: ganancia 201907 $307.4M en 4,700 | AUC 0.9331 | 202 s
+  semilla 100267: ganancia 201907 $301.9M en 4,300 | AUC 0.9324 | 202 s
+  semilla 100271: ganancia 201907 $302.5M en 4,600 | AUC 0.9331 | 202 s
+  semilla 100279: ganancia 201907 $297.6M en 3,700 | AUC 0.9331 | 203 s
+  semilla 100291: ganancia 201907 $304.7M en 4,200 | AUC 0.9326 | 203 s
+  semilla 100297: ganancia 201907 $305.8M en 5,400 | AUC 0.9331 | 202 s
+  semilla 100313: ganancia 201907 $300.3M en 5,000 | AUC 0.9327 | 202 s
+  semilla 100333: ganancia 201907 $302.5M en 4,000 | AUC 0.9331 | 202 s
+  semilla 100343: ganancia 201907 $306.9M en 4,400 | AUC 0.9328 | 203 s
+  semilla 100357: ganancia 201907 $308.0M en 4,200 | AUC 0.9325 | 202 s
+validación 201909 lista: jueves, 19 de noviembre de 2026, 01:57:26 -03
+Traceback (most recent call last):
+  File "/Users/nicolaszarewsky/dmeyf/experimento_inflacion/scripts/08_corte_estable_y_ensamble.py", line 276, in <module>
+    main()
+  File "/Users/nicolaszarewsky/dmeyf/experimento_inflacion/scripts/08_corte_estable_y_ensamble.py", line 242, in main
+    grafico_cortes(info1)
+  File "/Users/nicolaszarewsky/dmeyf/experimento_inflacion/scripts/08_corte_estable_y_ensamble.py", line 164, in grafico_cortes
+    fig.savefig(OUTPUT_DIR / "cortes_validacion.png", dpi=160)
+  File "/Users/nicolaszarewsky/dmeyf/experimento_inflacion/.venv/lib/python3.11/site-packages/matplotlib/figure.py", line 3515, in savefig
+    self.canvas.print_figure(fname, **kwargs)
+  File "/Users/nicolaszarewsky/dmeyf/experimento_inflacion/.venv/lib/python3.11/site-packages/matplotlib/backend_bases.py", line 2289, in print_figure
+    result = print_method(
+             ^^^^^^^^^^^^^
+  File "/Users/nicolaszarewsky/dmeyf/experimento_inflacion/.venv/lib/python3.11/site-packages/matplotlib/backend_bases.py", line 2146, in <lambda>
+    print_method = functools.wraps(meth)(lambda *args, **kwargs: meth(
+                                                                 ^^^^^
+  File "/Users/nicolaszarewsky/dmeyf/experimento_inflacion/.venv/lib/python3.11/site-packages/matplotlib/backends/backend_agg.py", line 537, in print_png
+    self._print_pil(filename_or_obj, "png", pil_kwargs, metadata)
+  File "/Users/nicolaszarewsky/dmeyf/experimento_inflacion/.venv/lib/python3.11/site-packages/matplotlib/backends/backend_agg.py", line 486, in _print_pil
+    mpl.image.imsave(
+  File "/Users/nicolaszarewsky/dmeyf/experimento_inflacion/.venv/lib/python3.11/site-packages/matplotlib/image.py", line 1729, in imsave
+    image.save(fname, **pil_kwargs)
+  File "/Users/nicolaszarewsky/dmeyf/experimento_inflacion/.venv/lib/python3.11/site-packages/PIL/Image.py", line 2707, in save
+    fp = builtins.open(filename, "w+b")
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/nicolaszarewsky/dmeyf/experimento_inflacion/output/test_201909/cortes_validacion.png'
+
+[exited with code 1]

@@ -5,10 +5,10 @@ __pycache__/
 # datos y artefactos pesados (se regeneran corriendo los scripts)
 data/
 
-# predicciones por cliente: pesadas, quedan locales. Los resúmenes de
-# resultados (resultados/*.json y *.csv) y output/ SÍ se versionan: son las
-# salidas originales del experimento.
-resultados/prediccion*.parquet
+# predicciones por cliente: pesadas, quedan locales (también las de
+# resultados/test_201909/). Los resúmenes de resultados (*.json y *.csv) y
+# output/ SÍ se versionan: son las salidas originales del experimento.
+resultados/**/prediccion*.parquet
 
 # uv.lock SÍ se versiona: fija las versiones de las librerías, para que todo
 # el grupo corra exactamente lo mismo.
