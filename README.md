@@ -18,7 +18,7 @@ Entrega: video grupal (máximo 10 minutos) antes del mediodía del lunes 23/11; 
 
 1. **Los modelos casi no miran el nivel de precios.** En todas las familias, corrijan o no, entre el 60% y el 70% de la ganancia de los cortes sobre montos pregunta si el cliente tiene poco o nada, y la inflación casi no mueve esos umbrales bajos. Corregir cambia la escala, pero no esa pregunta.
 2. **El cambio grande de octubre de 2019 no es de precios**: es el comportamiento en dólares después de las PASO. Las correcciones bajan el drift de la variable típica, pero octubre sigue igual de distinguible.
-3. **En 2019 hubo poca inflación** entre el entrenamiento y el test (+18%). Inflando octubre a mano, la mediana empieza a convenir desde ~+26% y el ranking desde ~+99%.
+3. **Entre el entrenamiento y el test pasan pocos meses**: los precios suben 18%, aunque 2019 cerró con 54% anual. Inflando octubre a mano, la mediana empieza a convenir desde ~+26% y el ranking desde ~+99%.
 
 **Lo único que mejoró algo no corrige: agrega.** Sumar 11 proporciones del propio cliente (saldo / sueldo, uso del límite, dolarización), que no tienen inflación, sin sacar los montos. En octubre gana con una regla de corte y empata con la otra; en septiembre no se confirma; y con la regla tampoco supera a su control, que resta los mismos pares en vez de dividirlos.
 
@@ -230,7 +230,7 @@ Detalle en `output/corte_estable_y_ensamble.md`.
 
 - **Un mes de test** (201910, y 201909 solo para las proporciones) **y una bayesiana por familia.** El desvío entre semillas no incluye la variabilidad de la optimización ni la de los clientes del mes, que pesa más.
 - **Los seguimientos se decidieron después de mirar octubre.** Sus reglas se escribieron antes de correrlos, pero las ideas salieron de las curvas de octubre.
-- **2019 es un año particular**: poca inflación entre el entrenamiento y el test (+18%), devaluación después de las PASO y sin pandemia.
+- **2019 es un año particular**: devaluación después de las PASO y sin pandemia. Y la ventana es corta: entre el entrenamiento y el test los precios suben 18%, aunque el año cerró con 54%.
 - **Celdas rotas**: 201910 tiene 14 variables en 0 para todos los clientes, y 201905 tiene 9. Afectan a todas las familias por igual (`output/celdas_rotas.csv`).
 - **El IPC (F1) usa el de octubre como si estuviera disponible**: en producción se publica a mitad del mes siguiente. Es una ventaja a su favor, y aun así pierde.
 - **La mediana y el ranking borran también los cambios reales**: si todo el banco se empobrece en un mes, no lo ven.
@@ -242,7 +242,7 @@ Detalle en `output/corte_estable_y_ensamble.md`.
 - **En 2019, con el baseline de la cátedra, corregir la inflación de las variables en pesos no sube la ganancia.** La hipótesis principal no se sostiene.
 - **Si se corrige, que no sea con el IPC**: es la peor en ganancia, la única pérdida que resiste el azar de los clientes y la que más distorsiona las variables que el banco ajusta por escalones. La mediana del mes es la que menos pierde, y no depende del INDEC.
 - **Bajar el drift no alcanza**: las correcciones bajan el PSI de la variable típica, pero los modelos casi no usan el nivel de precios, y el cambio de octubre que pesa no es de precios.
-- **Con más inflación, la respuesta podría cambiar**: según la prueba de estrés, desde ~+26% entre el entrenamiento y el test la mediana ya convendría. 2020-2021 queda por probar.
+- **Con más inflación entre el entrenamiento y el test, la respuesta podría cambiar**: según la prueba de estrés, desde ~+26% la mediana ya convendría. Eso pasaría con el test más lejos del entrenamiento, o con una inflación mensual más alta que la de 2019.
 - **Agregar información sin inflación es lo único que ayudó, y no se confirmó**: no superó al modelo sin corregir en septiembre, ni, con la regla, a su control con diferencias en octubre.
 - **El corte pesa tanto como la familia, y un mes de test no alcanza**: las diferencias entre familias son del tamaño de lo que se pierde por elegir el corte en otro mes, y más chicas que el azar de los clientes del mes.
 
@@ -255,7 +255,7 @@ Detalle en `output/corte_estable_y_ensamble.md`.
 
 ## Qué seguiríamos probando
 
-1. **2020-2021**, el resto del dataset: más meses de test (para el azar de los clientes), más inflación (la prueba de estrés dice que ahí la mediana podría convenir) y la pandemia.
+1. **2020-2021**, el resto del dataset: más meses de test (para el azar de los clientes) y la pandemia. Ojo: no trae más inflación por mes que 2019 (36% anual en 2020 y 51% en 2021, contra 54% en 2019). Para tener más inflación entre el entrenamiento y el test, el test tiene que quedar más lejos del entrenamiento.
 2. **Corregir solo las variables de mercado** y dejar en nominal las que el banco ajusta por escalones (límites y comisión de mantenimiento).
 3. **Elegir el corte con varios meses de validación**, porque el mejor corte cambia de un mes a otro.
 4. **El IPC con un mes de rezago**, que es el que estaría disponible en producción (lo estudia Inflacion_1).
