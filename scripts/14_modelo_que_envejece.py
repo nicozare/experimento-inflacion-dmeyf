@@ -24,15 +24,26 @@ resumen agrega el AUC y la ganancia con el mejor corte de cada semilla, que no
 dependen de ese corte, por tramos de inflación acumulada; el gráfico tiene un
 segundo panel con el AUC.
 
+Control de hiperparámetros (--control-hiperparametros, pedido por el usuario
+el 19/11 al ver S9; criterio en el README antes de correr): las familias
+difieren en la corrección y en los hiperparámetros de su bayesiana. Tres
+variantes, con el corte de F0: el IPC entrenado con los hiperparámetros y los
+árboles de F0; los modelos de F0 con cada mes llevado a precios del
+entrenamiento con un solo factor (la inversa de la prueba de estrés); y los
+modelos de F0 con cada monto deflactado con el IPC de su mes (como la prueba
+directa de S4, que se reproduce en 201910 como control).
+
 Salida:
   resultados/barrida/envejece.csv          ganancia por familia, semilla y mes
   resultados/barrida/envejece_curvas.csv   curva de ganancia media de las semillas, por familia y mes
+  resultados/barrida/envejece_control.csv  control de hiperparámetros
   output/barrida/envejece.md y .png
 
 Uso:
     DATOS=extendido uv run python scripts/14_modelo_que_envejece.py
     DATOS=extendido uv run python scripts/14_modelo_que_envejece.py --solo-resumen
     DATOS=extendido uv run python scripts/14_modelo_que_envejece.py --solo-control
+    DATOS=extendido uv run python scripts/14_modelo_que_envejece.py --control-hiperparametros
 """
 from __future__ import annotations
 
@@ -56,6 +67,7 @@ from config import (DATA_DIR, DATOS, IPC, MESES_ENTRENAMIENTO_FINAL, MESES_ENVEJ
 
 r6 = importlib.import_module("06_resumen")
 r11 = importlib.import_module("11_estres_inflacion")  # modelos finales guardados en data/modelos/
+r9 = importlib.import_module("09_donde_corta")  # deflactar un mes, como la prueba directa de S4
 decimal, millones, tabla_md = r6.decimal, r6.millones, r6.tabla_md
 FONDO, TINTA, TINTA_2, COLOR = r6.FONDO, r6.TINTA, r6.TINTA_2, r6.COLOR
 
@@ -212,6 +224,9 @@ def resumen(res: pd.DataFrame) -> None:
     partes += ["## Exploratorio: con otros cortes (no es parte de la regla)\n", tabla_md(pd.DataFrame(filas)), ""]
 
     partes += sin_el_corte(res, meses, infl)
+    ruta_control = RESULTADOS_BARRIDA / "envejece_control.csv"
+    if ruta_control.exists():
+        partes += resumen_control(res, pd.read_csv(ruta_control), meses, infl)
     texto = "\n".join(partes)
     (OUTPUT_BARRIDA / "envejece.md").write_text(texto, encoding="utf-8")
     grafico(dif, diferencias(res, "auc")[0] * 1000, infl)
@@ -312,18 +327,118 @@ def grafico(dif: pd.DataFrame, dif_auc: pd.DataFrame, infl: pd.Series) -> None:
     plt.close(fig)
 
 
+# Control de hiperparámetros (pedido por el usuario el 19/11 al ver S9; criterio en el README antes de correr).
+# Las tres variantes usan el corte del modelo sin corregir y se comparan con él, mes y semilla pareados.
+CONTROL = {
+    "ipc_hp_f0": "IPC con los hiperparámetros de F0",
+    "f0_un_factor": "F0 con cada mes a precios del entrenamiento (un solo factor)",
+    "f0_cada_mes": "F0 con cada monto deflactado con el IPC de su mes",
+}
+
+
+def medir_control() -> pd.DataFrame:
+    cortes = cortes_barrido()
+    corte = int(leer_bo("ninguna")["corte_validacion"])
+    feats = columnas_features("ninguna", MESES_ENVEJECE[0])
+    if columnas_features("ipc", MESES_ENVEJECE[0]) != feats:
+        raise SystemExit("F0 y F1 deberían tener las mismas columnas (la corrección reemplaza el valor)")
+    pesos = [j for j, f in enumerate(feats) if r11.es_pesos(f)]
+    modelos_f0 = r11.modelos_finales("ninguna", SEMILLAS_BARRIDA, None, None, feats)
+    faltan = [s for s in SEMILLAS_BARRIDA if not r11.ruta_modelo("ipc", s, "ninguna").exists()]
+    X_train, k_train = cargar_meses("ipc", MESES_ENTRENAMIENTO_FINAL, feats) if faltan else (None, None)
+    modelos_ipc = r11.modelos_finales("ipc", SEMILLAS_BARRIDA, X_train, k_train, feats, hiperparametros_de="ninguna")
+    del X_train
+    filas = []
+    for mes in MESES_ENVEJECE:
+        t0 = time.time()
+        X, k = cargar_meses("ninguna", [mes], feats)
+        X_ipc, k_ipc = cargar_meses("ipc", [mes], feats)
+        if not np.array_equal(k["numero_de_cliente"].to_numpy(), k_ipc["numero_de_cliente"].to_numpy()):
+            raise SystemExit(f"{mes}: F0 y F1 no tienen los mismos clientes en el mismo orden")
+        clase = k["clase_ternaria"].to_numpy()
+        y = etiqueta_binaria(k["clase_ternaria"])
+        un_factor = X.copy()
+        un_factor[:, pesos] *= np.float32(IPC_ENTRENAMIENTO / IPC[mes])  # la inversa de la prueba de estrés
+        variantes = {"ipc_hp_f0": (modelos_ipc, X_ipc), "f0_un_factor": (modelos_f0, un_factor),
+                     "f0_cada_mes": (modelos_f0, r9.deflactar(X, feats, True, mes))}
+        for nombre, (modelos, Xv) in variantes.items():
+            for s, modelo in modelos.items():
+                prob = modelo.predict(Xv)
+                g = ganancia_por_corte(prob, clase, cortes)
+                filas.append({"metodo": nombre, "semilla": s, "mes": mes, "inflacion": inflacion(mes),
+                              "corte": corte, "ganancia": int(g[cortes == corte][0]),
+                              "ganancia_4000": int(g[cortes == 4000][0]), "ganancia_maxima": int(g.max()),
+                              "corte_ganancia_maxima": int(cortes[np.argmax(g)]), "auc": auc(y, prob),
+                              "clientes": len(clase), "baja2": int((clase == "BAJA+2").sum())})
+        del X, X_ipc, un_factor, variantes
+        print(f"  {mes}: listo ({time.time() - t0:.0f} s)", flush=True)
+    control = pd.DataFrame(filas)
+
+    # control: en 201910, deflactar cada monto con el IPC de su mes es la prueba directa de S4 (09)
+    g = control.query("metodo == 'f0_cada_mes' and mes == 201910 and semilla == 100081").ganancia.iloc[0]
+    if millones(g) != "$267,3M":
+        raise SystemExit(f"en 201910 la deflación de cada mes da {millones(g)} y en 09 dio $267,3M")
+    print("control: en 201910, deflactar cada monto con el IPC de su mes reproduce la prueba directa de 09", flush=True)
+    control.to_csv(RESULTADOS_BARRIDA / "envejece_control.csv", index=False)
+    return control
+
+
+def resumen_control(res: pd.DataFrame, control: pd.DataFrame, meses: list[int], infl: pd.Series) -> list[str]:
+    todo = pd.concat([res, control], ignore_index=True)
+    nombres = {"ipc": "IPC con sus propios hiperparámetros (F1, el de arriba)", **CONTROL}
+    tramo_2021 = [m for m in meses if infl[m] >= TRAMOS[-1][1]]
+    filas, auc_2021 = [], {}
+    for metrica, nombre_metrica, escala in [("auc", "AUC (milésimas)", 1000),
+                                            ("ganancia_maxima", "ganancia con el mejor corte", None),
+                                            ("ganancia_4000", "ganancia con 4.000 clientes (el corte de F0)", None)]:
+        tabla = todo.pivot_table(index=["mes", "semilla"], columns="metodo", values=metrica)
+        for variante, nombre in nombres.items():
+            d = (tabla[variante] - tabla["ninguna"]).groupby("mes").mean()
+            fila = {"variante": nombre, "medida": nombre_metrica}
+            for tramo, desde, hasta in TRAMOS:
+                sel = [m for m in meses if desde <= infl[m] < hasta]
+                v = d.loc[sel]
+                media = decimal(v.mean() * escala, 1) if escala else millones(v.mean())
+                fila[f"{tramo} ({sel[0]}-{sel[-1]})"] = f"{media} ({int((v > 0).sum())} de {len(sel)})"
+            filas.append(fila)
+            if metrica == "auc":
+                auc_2021[variante] = d.loc[tramo_2021].mean() * 1000
+    mitad = auc_2021["ipc"] / 2
+    hp, un = auc_2021["ipc_hp_f0"], auc_2021["f0_un_factor"]
+    lectura = [
+        f"- **{CONTROL['ipc_hp_f0']}**: {decimal(hp, 1)} milésimas de AUC en 2021, contra "
+        f"{decimal(auc_2021['ipc'], 1)} del IPC con sus propios hiperparámetros. "
+        + ("Gana al menos la mitad: la ventaja viene de la corrección, no de los hiperparámetros." if hp >= mitad
+           else "Gana menos de la mitad: al menos la mitad de la ventaja viene de los hiperparámetros."),
+        f"- **{CONTROL['f0_un_factor']}**: {decimal(un, 1)} milésimas. "
+        + ("Gana al menos la mitad: alcanza con deflactar al predecir, sin reentrenar." if un >= mitad
+           else "Gana menos de la mitad: deflactar al predecir no alcanza; hay que entrenar con los montos corregidos."),
+        f"- **{CONTROL['f0_cada_mes']}** (como la prueba directa de S4): {decimal(auc_2021['f0_cada_mes'], 1)} "
+        "milésimas.",
+    ]
+    return ["## Control de hiperparámetros (criterio escrito antes de correr)\n",
+            "Las familias difieren en la corrección y también en los hiperparámetros de su bayesiana. Cada variante "
+            "se compara con el modelo sin corregir (F0), mes y semilla pareados. Criterio, con el AUC medio de 2021: "
+            "ganar al menos la mitad de lo que gana el IPC con sus propios hiperparámetros.\n",
+            tabla_md(pd.DataFrame(filas)), "", *lectura, ""]
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--solo-resumen", action="store_true", help="rehace las tablas y el gráfico con lo ya medido")
     parser.add_argument("--solo-control", action="store_true",
                         help="solo verifica que los meses de 2019 de los datos extendidos sean los del experimento principal")
+    parser.add_argument("--control-hiperparametros", action="store_true",
+                        help="mide las variantes que separan la corrección de los hiperparámetros y rehace el resumen")
     args = parser.parse_args()
     if DATOS != "extendido":
         raise SystemExit("Correr con DATOS=extendido (los datos de 2020-2021 están en data/extendido/)")
     if args.solo_control:
         control_datos()
         return
-    if args.solo_resumen:
+    if args.control_hiperparametros:
+        medir_control()
+    if args.solo_resumen or args.control_hiperparametros:
         res = pd.read_csv(RESULTADOS_BARRIDA / "envejece.csv")
     else:
         control_datos()

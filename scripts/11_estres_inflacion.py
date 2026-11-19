@@ -68,16 +68,20 @@ def es_pesos(feature: str) -> bool:
     return es_monetaria(base) or base.startswith("dif_")
 
 
-def ruta_modelo(metodo: str, semilla: int):
-    return MODELOS_DIR / f"{metodo}__{semilla}.txt"
+def ruta_modelo(metodo: str, semilla: int, hiperparametros_de: str | None = None):
+    sufijo = f"__hiperparametros_de_{hiperparametros_de}" if hiperparametros_de else ""
+    return MODELOS_DIR / f"{metodo}{sufijo}__{semilla}.txt"
 
 
-def modelos_finales(metodo: str, semillas: list[int], X_train, k_train, feats) -> dict[int, lgb.Booster]:
-    """Los modelos finales de 04, entrenados igual (o leídos de data/modelos/)."""
-    bo = leer_bo(metodo)
+def modelos_finales(metodo: str, semillas: list[int], X_train, k_train, feats,
+                    hiperparametros_de: str | None = None) -> dict[int, lgb.Booster]:
+    """Los modelos finales de 04, entrenados igual (o leídos de data/modelos/).
+    Con hiperparametros_de, los datos de `metodo` con los hiperparámetros y la
+    cantidad de árboles de la bayesiana de otra familia (control de S9)."""
+    bo = leer_bo(hiperparametros_de or metodo)
     modelos, dtrain = {}, None
     for s in semillas:
-        ruta = ruta_modelo(metodo, s)
+        ruta = ruta_modelo(metodo, s, hiperparametros_de)
         if ruta.exists():
             modelos[s] = lgb.Booster(model_file=str(ruta))
             continue

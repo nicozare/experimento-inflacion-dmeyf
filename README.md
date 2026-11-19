@@ -258,6 +258,14 @@ Los modelos finales de las cuatro familias se aplican sin reentrenar a cada mes 
 - **Lectura.** Con la inflación de 2019 entre el entrenamiento y el test (hasta +30%), corregir no ayuda, como en el experimento principal. Si el modelo no se reentrena, corregir empieza a ayudar desde unos +35%, con cualquiera de las tres, y la ventaja crece con la inflación acumulada (correlación de Spearman del AUC entre 0,80 y 0,87). La prueba de estrés anticipó la idea pero no los umbrales: multiplicar los montos de octubre por un factor parejo no reproduce 18 meses reales.
 - **Cuidado.** Es exploratorio: la regla escrita antes no se cumplió, y el AUC y los tramos se agregaron al ver los resultados. Son 5 semillas. Y la inflación acumulada avanza junto con el tiempo y con la pandemia, así que esto no separa "más inflación" de "más meses sin reentrenar".
 
+**Control de hiperparámetros** (pedido el 19/11 al ver S9; criterio escrito antes de correr). Las familias no difieren solo en la corrección: cada una tiene los hiperparámetros de su bayesiana. Para separar las dos cosas se suman tres variantes, con las mismas 5 semillas y el corte del modelo sin corregir (4.000 clientes):
+
+1. **El IPC con los hiperparámetros del modelo sin corregir**: mismos hiperparámetros, árboles, semillas y meses de entrenamiento. Solo cambian los montos, deflactados.
+2. **Los mismos modelos sin corregir, con cada mes llevado a precios del entrenamiento**: todos los montos (nivel, lags y deltas) divididos por la inflación acumulada, con un solo factor por mes. Es la inversa de la prueba de estrés y no entrena nada.
+3. **Lo mismo, pero deflactando cada monto con el IPC de su mes**: los deltas quedan en términos reales, como en la prueba directa de S4.
+
+Criterio, con el AUC medio de 2021 contra el modelo sin corregir. Si la variante 1 gana al menos la mitad de lo que gana el IPC con sus propios hiperparámetros (+10,0 milésimas), la ventaja viene de la corrección y no de los hiperparámetros. Si la variante 2 gana al menos la mitad, alcanza con deflactar al predecir, sin reentrenar.
+
 Detalle mes a mes en `output/barrida/envejece.md`.
 
 ### La barrida con ventana móvil (S10)

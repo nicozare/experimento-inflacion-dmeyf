@@ -94,14 +94,20 @@ def categoria(p: float) -> str:
     return CATEGORIAS[1] if p <= 0.25 else CATEGORIAS[2] if p <= 0.75 else CATEGORIAS[3]
 
 
-def deflactar(X: np.ndarray, feats: list[str], deltas: bool) -> np.ndarray:
-    """201910 en pesos del entrenamiento: cada monto con el IPC de su mes
-    (nivel 201910, lag_1 201909, lag_2 201908). Con deltas=True los deltas
-    se recalculan con los montos deflactados; con False quedan nominales
-    (aísla el efecto de los umbrales sobre montos)."""
+def mes_anterior(mes: int, k: int) -> int:
+    total = (mes // 100) * 12 + mes % 100 - 1 - k
+    return (total // 12) * 100 + total % 12 + 1
+
+
+def deflactar(X: np.ndarray, feats: list[str], deltas: bool, mes: int = MES_TEST) -> np.ndarray:
+    """El mes (por defecto 201910) en pesos del entrenamiento: cada monto con
+    el IPC de su mes (nivel `mes`, lag_1 el mes anterior, lag_2 dos meses
+    antes). Con deltas=True los deltas se recalculan con los montos
+    deflactados; con False quedan nominales (aísla el efecto de los umbrales
+    sobre montos). 14 lo usa con otros meses (control de S9)."""
     D = X.copy()
     idx = {f: j for j, f in enumerate(feats)}
-    meses = {"": MES_TEST, "lag_1_": 201909, "lag_2_": 201908}
+    meses = {"": mes, "lag_1_": mes_anterior(mes, 1), "lag_2_": mes_anterior(mes, 2)}
     for base in [f for f in feats if separar(f)[1] == "nivel" and es_monetaria(f)]:
         for prefijo, mes in meses.items():
             D[:, idx[prefijo + base]] *= IPC_ENTRENAMIENTO / IPC[mes]
