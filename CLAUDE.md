@@ -209,6 +209,19 @@ drifta (F8). Reglas en el README antes de correr (commit 055da5d).
   los resultados), las tres correcciones envejecen mejor desde ~+35% y ganan
   los 6 meses de 2021 (AUC +10 a +11 milésimas, +$12M a +$19M con el mejor
   corte), casi igual entre ellas pese a tener hiperparámetros distintos.
+- Control de hiperparámetros de S9 (`14 --control-hiperparametros`, 19/11 a
+  la tarde, ~50 min; criterio en el README antes de correr, commit 1cee062):
+  la ventaja es de la corrección. El IPC con los hiperparámetros de F0 gana
+  +10,1 milésimas de AUC en 2021 (con los suyos, +10,0). Los modelos de F0
+  con cada mes a precios del entrenamiento (un solo factor, sin entrenar)
+  ganan +10,6 milésimas y +$18,9M por mes con el mejor corte: alcanza con
+  deflactar al predecir. Deflactar cada monto con el IPC de su mes (deltas
+  reales) da lo mismo en 2021, pero en 2019 pierde -$14,9M (como en S4). Los
+  modelos `ipc__hiperparametros_de_ninguna__*.txt` quedan en `data/modelos/`.
+- Pendiente cuando termine S10: reescribir el README como un paper (resumen,
+  hipótesis, métodos, resultados con gráficos, conclusiones; organizado por
+  pregunta y no por seguimiento), sin referencias a conversaciones ni a
+  comentarios del tutor. Lo pidió el usuario el 19/11.
 - S10 (15) corre desde el 19/11 a las 15:21 (cadena `barrida.sh` del
   scratchpad); termina el viernes 20/11 a la noche. Antes de ver S10 se
   escribió en el README la predicción que sale de S9: con +9% a +19% entre el

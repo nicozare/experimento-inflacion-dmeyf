@@ -229,7 +229,12 @@ def resumen(res: pd.DataFrame) -> None:
         partes += resumen_control(res, pd.read_csv(ruta_control), meses, infl)
     texto = "\n".join(partes)
     (OUTPUT_BARRIDA / "envejece.md").write_text(texto, encoding="utf-8")
-    grafico(dif, diferencias(res, "auc")[0] * 1000, infl)
+    auc_control = None  # el mismo F0 con los montos deflactados al predecir (control de hiperparámetros)
+    if ruta_control.exists():
+        tabla = pd.concat([res, pd.read_csv(ruta_control)]).pivot_table(index=["mes", "semilla"], columns="metodo",
+                                                                         values="auc")
+        auc_control = (tabla["f0_un_factor"] - tabla["ninguna"]).groupby("mes").mean() * 1000
+    grafico(dif, diferencias(res, "auc")[0] * 1000, infl, auc_control)
     print(texto)
     print("-> output/barrida/envejece.md y .png, resultados/barrida/envejece.csv")
 
@@ -285,7 +290,7 @@ def sin_el_corte(res: pd.DataFrame, meses: list[int], infl: pd.Series) -> list[s
     return partes
 
 
-def grafico(dif: pd.DataFrame, dif_auc: pd.DataFrame, infl: pd.Series) -> None:
+def grafico(dif: pd.DataFrame, dif_auc: pd.DataFrame, infl: pd.Series, auc_control: pd.Series | None = None) -> None:
     meses = list(dif.index)
     x = np.array([infl[m] * 100 for m in meses])
     fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(11, 9.6), sharex=True)
@@ -303,6 +308,9 @@ def grafico(dif: pd.DataFrame, dif_auc: pd.DataFrame, infl: pd.Series) -> None:
                                                        if v else "0"))
         ax.set_ylabel(f"Corrección menos F0\n({unidad})")
         ax.set_title(titulo, loc="left", fontsize=12, pad=24 if ax is ax1 else 8)  # arriba de ax1 van los meses
+    if auc_control is not None:
+        ax2.plot(x, auc_control.loc[meses].to_numpy(), "--o", color=COLOR["ninguna"], lw=2, ms=6, mfc=FONDO,
+                 mec=COLOR["ninguna"], mew=1.5, zorder=4, label="F0 con los montos deflactados al predecir")
     ax2.xaxis.set_major_formatter(plt.FuncFormatter(lambda v, _: f"+{v:.0f}%"))
     ax2.set_xlabel("Inflación acumulada entre el entrenamiento (201903-201908) y el mes al que se aplica el modelo")
     fig.suptitle("¿Envejece mejor un modelo corregido?", x=0.06, ha="left", y=0.985, fontsize=16, fontweight="bold")
@@ -321,8 +329,9 @@ def grafico(dif: pd.DataFrame, dif_auc: pd.DataFrame, infl: pd.Series) -> None:
         lado.set_visible(False)
     arriba.grid(False)
     fig.tight_layout(rect=(0, 0.045, 1, 0.9), h_pad=2.5)
-    fig.legend(*ax1.get_legend_handles_labels(), loc="lower center", ncol=3, bbox_to_anchor=(0.5, 0.0),
-               frameon=False)
+    manijas, etiquetas = ax2.get_legend_handles_labels()
+    fig.legend(manijas, etiquetas, loc="lower center", ncol=len(manijas), bbox_to_anchor=(0.5, 0.0), frameon=False,
+               fontsize=12, handlelength=2.6, columnspacing=1.4)
     fig.savefig(OUTPUT_BARRIDA / "envejece.png", dpi=160)
     plt.close(fig)
 

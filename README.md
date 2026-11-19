@@ -266,6 +266,11 @@ Los modelos finales de las cuatro familias se aplican sin reentrenar a cada mes 
 
 Criterio, con el AUC medio de 2021 contra el modelo sin corregir. Si la variante 1 gana al menos la mitad de lo que gana el IPC con sus propios hiperparámetros (+10,0 milésimas), la ventaja viene de la corrección y no de los hiperparámetros. Si la variante 2 gana al menos la mitad, alcanza con deflactar al predecir, sin reentrenar.
 
+**Resultado del control: la ventaja es de la corrección, no de los hiperparámetros.**
+- En 2021, el IPC entrenado con los hiperparámetros del modelo sin corregir le gana +10,1 milésimas de AUC, lo mismo que con los suyos (+10,0).
+- Alcanza con deflactar al predecir. Los mismos modelos sin corregir, con cada mes llevado a precios del entrenamiento con un solo factor, ganan +10,6 milésimas en 2021, sin entrenar nada. En ganancia son +$18,9M por mes con el mejor corte y +$13,6M con el mismo corte de 4.000 clientes. Con la inflación de 2019 (hasta +30%), en cambio, no ayuda: -$4,3M con el mejor corte.
+- Deflactar cada monto con el IPC de su mes da lo mismo en 2021, pero en 2019 pierde mucho más (-$14,9M), como en la prueba directa de S4: el modelo aprendió los deltas con la inflación adentro.
+
 Detalle mes a mes en `output/barrida/envejece.md`.
 
 ### La barrida con ventana móvil (S10)

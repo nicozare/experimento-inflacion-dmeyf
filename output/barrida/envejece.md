@@ -104,3 +104,26 @@ Diferencia media contra F0 en cada tramo de inflación acumulada y en cuántos m
 | 202104 | +104% | 10.400 | 9,8 (5/5) | 9,6 (5/5) | 9,8 (5/5) |
 | 202105 | +111% | 9.800 | 9,5 (5/5) | 10,4 (5/5) | 11,0 (5/5) |
 | 202106 | +117% | 10.000 | 13,8 (5/5) | 13,9 (5/5) | 15,5 (5/5) |
+
+## Control de hiperparámetros (criterio escrito antes de correr)
+
+Las familias difieren en la corrección y también en los hiperparámetros de su bayesiana. Cada variante se compara con el modelo sin corregir (F0), mes y semilla pareados. Criterio, con el AUC medio de 2021: ganar al menos la mitad de lo que gana el IPC con sus propios hiperparámetros.
+
+| variante | medida | hasta +30% (201910-202001) | +33% a +74% (202002-202012) | +81% a +117% (202101-202106) |
+|---|---|---|---|---|
+| IPC con sus propios hiperparámetros (F1, el de arriba) | AUC (milésimas) | 0,0 (2 de 4) | 4,0 (10 de 11) | 10,0 (6 de 6) |
+| IPC con los hiperparámetros de F0 | AUC (milésimas) | 0,2 (2 de 4) | 3,3 (10 de 11) | 10,1 (6 de 6) |
+| F0 con cada mes a precios del entrenamiento (un solo factor) | AUC (milésimas) | 0,4 (4 de 4) | 3,5 (11 de 11) | 10,6 (6 de 6) |
+| F0 con cada monto deflactado con el IPC de su mes | AUC (milésimas) | -0,5 (0 de 4) | 3,4 (10 de 11) | 10,6 (6 de 6) |
+| IPC con sus propios hiperparámetros (F1, el de arriba) | ganancia con el mejor corte | -$5,5M (0 de 4) | $5,8M (10 de 11) | $14,4M (6 de 6) |
+| IPC con los hiperparámetros de F0 | ganancia con el mejor corte | -$5,8M (0 de 4) | $5,5M (11 de 11) | $16,2M (6 de 6) |
+| F0 con cada mes a precios del entrenamiento (un solo factor) | ganancia con el mejor corte | -$4,3M (0 de 4) | $5,5M (10 de 11) | $18,9M (6 de 6) |
+| F0 con cada monto deflactado con el IPC de su mes | ganancia con el mejor corte | -$14,9M (0 de 4) | $5,0M (9 de 11) | $19,8M (6 de 6) |
+| IPC con sus propios hiperparámetros (F1, el de arriba) | ganancia con 4.000 clientes (el corte de F0) | -$9,3M (0 de 4) | $4,7M (9 de 11) | $14,0M (6 de 6) |
+| IPC con los hiperparámetros de F0 | ganancia con 4.000 clientes (el corte de F0) | -$9,9M (0 de 4) | $4,3M (9 de 11) | $13,2M (6 de 6) |
+| F0 con cada mes a precios del entrenamiento (un solo factor) | ganancia con 4.000 clientes (el corte de F0) | -$5,3M (0 de 4) | $3,5M (9 de 11) | $13,6M (6 de 6) |
+| F0 con cada monto deflactado con el IPC de su mes | ganancia con 4.000 clientes (el corte de F0) | -$17,4M (0 de 4) | $3,3M (8 de 11) | $17,1M (5 de 6) |
+
+- **IPC con los hiperparámetros de F0**: 10,1 milésimas de AUC en 2021, contra 10,0 del IPC con sus propios hiperparámetros. Gana al menos la mitad: la ventaja viene de la corrección, no de los hiperparámetros.
+- **F0 con cada mes a precios del entrenamiento (un solo factor)**: 10,6 milésimas. Gana al menos la mitad: alcanza con deflactar al predecir, sin reentrenar.
+- **F0 con cada monto deflactado con el IPC de su mes** (como la prueba directa de S4): 10,6 milésimas.
