@@ -17,6 +17,13 @@ Controles:
     (mismas columnas, mismos clientes, mismos valores);
   - en 201910, la ganancia de cada semilla con el corte de la bayesiana es la de 04.
 
+Exploratorio, agregado el 19/11 al ver los resultados: el corte fijo de la
+bayesiana confunde la regla, porque en 2021 hay casi el doble de BAJA+2 y el
+mejor corte se duplica (gana sola la familia que estimula más clientes). El
+resumen agrega el AUC y la ganancia con el mejor corte de cada semilla, que no
+dependen de ese corte, por tramos de inflación acumulada; el gráfico tiene un
+segundo panel con el AUC.
+
 Salida:
   resultados/barrida/envejece.csv          ganancia por familia, semilla y mes
   resultados/barrida/envejece_curvas.csv   curva de ganancia media de las semillas, por familia y mes
@@ -164,9 +171,14 @@ def resumen(res: pd.DataFrame) -> None:
                       "meses por encima": len(arriba), "meses en que le gana": ganados,
                       "diferencia media en esos meses": millones(dif.loc[arriba, metodo].mean()) if arriba else "",
                       "¿se cumple?": "sí" if cumple else "no"})
+    ganados_ipc = dif["ipc"] > 0
+    desde = next(m for i, m in enumerate(meses) if ganados_ipc.loc[meses[i:]].all())  # gana todos los meses desde acá
     partes += ["## La predicción de la prueba de estrés (regla de S9)\n",
                "Se cumple si la corrección le gana a F0 en al menos 2 de cada 3 meses con más inflación acumulada "
-               "que su umbral.\n", tabla_md(pd.DataFrame(filas)), ""]
+               "que su umbral.\n", tabla_md(pd.DataFrame(filas)), "",
+               f"El IPC, que según la prueba de estrés recién convendría desde +183%, no debería ganarle en este "
+               f"rango: le gana en {int(ganados_ipc.sum())} de {len(meses)} meses, y en todos desde {desde} "
+               f"(+{infl[desde]:.0%}). Tampoco se cumple.\n"]
 
     # ¿la ventaja crece con la inflación? (descriptivo)
     filas = []
@@ -199,45 +211,103 @@ def resumen(res: pd.DataFrame) -> None:
                           "diferencia media en esos meses": millones(d.loc[arriba, metodo].mean())})
     partes += ["## Exploratorio: con otros cortes (no es parte de la regla)\n", tabla_md(pd.DataFrame(filas)), ""]
 
+    partes += sin_el_corte(res, meses, infl)
     texto = "\n".join(partes)
     (OUTPUT_BARRIDA / "envejece.md").write_text(texto, encoding="utf-8")
-    grafico(dif, infl, media_f0)
+    grafico(dif, diferencias(res, "auc")[0] * 1000, infl)
     print(texto)
     print("-> output/barrida/envejece.md y .png, resultados/barrida/envejece.csv")
 
 
-def grafico(dif: pd.DataFrame, infl: pd.Series, media_f0: pd.Series) -> None:
+TRAMOS = [("hasta +30%", 0.0, 0.31), ("+33% a +74%", 0.31, 0.75), ("+81% a +117%", 0.75, 9.0)]
+
+
+def sin_el_corte(res: pd.DataFrame, meses: list[int], infl: pd.Series) -> list[str]:
+    """Exploratorio (agregado al ver los resultados, 19/11): la regla usa el corte fijo de la bayesiana
+    de cada familia, pero el mejor corte se mueve mucho entre meses. Acá se comparan las familias con
+    medidas que no dependen de ese corte."""
+    n = len(SEMILLAS_BARRIDA)
+    mejor_f0 = res.query("metodo == 'ninguna'").groupby("mes").corte_ganancia_maxima.mean()
+    cortes = {m: int(leer_bo(m)["corte_validacion"]) for m in METODOS_CORRECCION}
+    partes = ["## Por qué el corte de la bayesiana confunde (exploratorio, no es parte de la regla)\n",
+              f"Cada familia estimula siempre la misma cantidad de clientes: F0 {r6.miles(cortes['ninguna'])}, "
+              f"IPC {r6.miles(cortes['ipc'])}, mediana {r6.miles(cortes['mediana'])} y ranking "
+              f"{r6.miles(cortes['ranking'])}. Pero el mejor corte de F0 (media de las {n} semillas) pasa de "
+              f"{r6.miles(int(round(mejor_f0[meses[0]], -2)))} clientes en {meses[0]} a "
+              f"{r6.miles(int(round(mejor_f0.loc[[m for m in meses if m >= 202101]].mean(), -2)))} en promedio en 2021, "
+              "porque hay casi el doble de BAJA+2. Con un corte fijo, la familia que estimula más clientes "
+              "gana sola en 2021 (el IPC) y la que estimula menos pierde sola (el ranking), corrijan o no. "
+              "Por eso se miran también el AUC, que no depende del corte, y la ganancia con el mejor corte de "
+              "cada semilla (que mira el test, igual para todas).\n"]
+    filas = []
+    for metrica, nombre, escala in [("auc", "AUC (milésimas)", 1000), ("ganancia_maxima", "ganancia con el mejor corte", None),
+                                    ("ganancia_4000", "ganancia con 4.000 clientes", None),
+                                    ("ganancia", "ganancia con el corte de la bayesiana (la regla)", None)]:
+        d, _ = diferencias(res, metrica)
+        for metodo in CORRECCIONES:
+            fila = {"corrección": NOMBRE_FAMILIA[metodo], "medida": nombre,
+                    "meses en que le gana a F0": f"{int((d[metodo] > 0).sum())} de {len(meses)}"}
+            for tramo, desde, hasta in TRAMOS:
+                sel = [m for m in meses if desde <= infl[m] < hasta]
+                v = d.loc[sel, metodo]
+                media = decimal(v.mean() * escala, 1) if escala else millones(v.mean())
+                fila[f"{tramo} ({sel[0]}-{sel[-1]})"] = f"{media} ({int((v > 0).sum())} de {len(sel)})"
+            rho, p = spearmanr([infl[m] for m in meses], d[metodo].to_numpy())
+            p_texto = r6.formato_p(p)
+            fila["Spearman con la inflación"] = f"{decimal(rho, 2)} (p {p_texto if p_texto.startswith('<') else '= ' + p_texto})"
+            filas.append(fila)
+    partes += ["## Sin depender del corte (exploratorio)\n",
+               "Diferencia media contra F0 en cada tramo de inflación acumulada y en cuántos meses del tramo le gana.\n",
+               tabla_md(pd.DataFrame(filas)), ""]
+    dif_auc, gana_auc = diferencias(res, "auc")
+    filas = []
+    for m in meses:
+        fila = {"mes": m, "inflación acumulada": f"+{infl[m]:.0%}", "mejor corte de F0": r6.miles(int(round(mejor_f0[m], -2)))}
+        for metodo in CORRECCIONES:
+            fila[NOMBRE_FAMILIA[metodo] + " - F0"] = f"{decimal(dif_auc.loc[m, metodo] * 1000, 1)} ({int(gana_auc.loc[m, metodo])}/{n})"
+        filas.append(fila)
+    partes += ["## AUC mes a mes (milésimas de AUC de la corrección menos las de F0)\n", tabla_md(pd.DataFrame(filas)), ""]
+    return partes
+
+
+def grafico(dif: pd.DataFrame, dif_auc: pd.DataFrame, infl: pd.Series) -> None:
     meses = list(dif.index)
     x = np.array([infl[m] * 100 for m in meses])
-    fig, ax = plt.subplots(figsize=(11, 6.6))
-    ax.axhline(0, color=TINTA_2, lw=1.2, ls="--")
-    for metodo, umbral in UMBRAL_PREDICHO.items():
-        ax.axvline(umbral * 100, color=COLOR[metodo], lw=1.2, ls=":", zorder=1)
-        ax.annotate(f"desde acá ganaría\n{NOMBRE_FAMILIA[metodo].split(' ', 1)[1]} (prueba de estrés)",
-                    (umbral * 100, 1.0), xycoords=("data", "axes fraction"), xytext=(4, -4),
-                    textcoords="offset points", va="top", fontsize=10, color=TINTA_2)
-    for metodo in CORRECCIONES:
-        ax.plot(x, dif[metodo] / 1e6, "-o", color=COLOR[metodo], lw=2, ms=7, mec=FONDO, mew=1.5,
-                label=NOMBRE_FAMILIA[metodo], zorder=3)
-    ax.xaxis.set_major_formatter(plt.FuncFormatter(lambda v, _: f"+{v:.0f}%"))
-    ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda v, _: f"{v:g}".replace(".", ",").replace("-", "−")))
-    ax.set_xlabel("Inflación acumulada entre el entrenamiento (201903-201908) y el mes al que se aplica el modelo")
-    ax.set_ylabel("Ganancia de la corrección menos la de F0 (millones de $)")
-    ax.set_title("¿Envejece mejor un modelo corregido?", pad=50)
-    ax.text(0, 1.025, f"Modelos de 2019 aplicados sin reentrenar a cada mes, de {meses[0]} a {meses[-1]}. Media de "
-            f"{len(SEMILLAS_BARRIDA)} semillas,\ncorte de la bayesiana de cada familia. Arriba de 0, la corrección le "
-            "gana al modelo sin corregir.", transform=ax.transAxes, fontsize=11, color=TINTA_2, va="bottom")
-    # meses de referencia, arriba del eje
-    arriba = ax.twiny()
-    arriba.set_xlim(ax.get_xlim())
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(11, 9.6), sharex=True)
+    paneles = [(ax1, dif / 1e6, "Ganancia con el corte de la bayesiana de cada familia (la regla de S9)",
+                "millones de $"),
+               (ax2, dif_auc, "AUC, que no depende del corte (exploratorio)", "milésimas de AUC")]
+    for ax, valores, titulo, unidad in paneles:
+        ax.axhline(0, color=TINTA_2, lw=1.2, ls="--")
+        for metodo, umbral in UMBRAL_PREDICHO.items():
+            ax.axvline(umbral * 100, color=COLOR[metodo], lw=1.4, ls=":", zorder=1)
+        for metodo in CORRECCIONES:
+            ax.plot(x, valores[metodo], "-o", color=COLOR[metodo], lw=2, ms=6.5, mec=FONDO, mew=1.5,
+                    label=NOMBRE_FAMILIA[metodo], zorder=3)
+        ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda v, _: f"{v:+g}".replace(".", ",").replace("-", "−")
+                                                       if v else "0"))
+        ax.set_ylabel(f"Corrección menos F0\n({unidad})")
+        ax.set_title(titulo, loc="left", fontsize=12, pad=24 if ax is ax1 else 8)  # arriba de ax1 van los meses
+    ax2.xaxis.set_major_formatter(plt.FuncFormatter(lambda v, _: f"+{v:.0f}%"))
+    ax2.set_xlabel("Inflación acumulada entre el entrenamiento (201903-201908) y el mes al que se aplica el modelo")
+    fig.suptitle("¿Envejece mejor un modelo corregido?", x=0.06, ha="left", y=0.985, fontsize=16, fontweight="bold")
+    fig.text(0.06, 0.95, f"Modelos de 2019 aplicados sin reentrenar a cada mes, de {meses[0]} a {meses[-1]} (media de "
+             f"{len(SEMILLAS_BARRIDA)} semillas). Arriba de 0,\nla corrección le gana al modelo sin corregir (F0). "
+             "Las punteadas marcan desde dónde ganaría según la prueba\nde estrés: la mediana desde +26% y el "
+             "ranking desde +99% (el IPC, desde +183%, queda fuera del gráfico).",
+             fontsize=11, color=TINTA_2, va="top", linespacing=1.4)
+    # meses de referencia, arriba del primer panel
+    arriba = ax1.twiny()
+    arriba.set_xlim(ax1.get_xlim())
     marcas = [m for m in meses if m % 100 in (1, 7) or m == meses[0]]
     arriba.set_xticks([infl[m] * 100 for m in marcas], [str(m) for m in marcas], fontsize=10, color=TINTA_2)
     arriba.tick_params(length=0, pad=2)
     for lado in arriba.spines.values():
         lado.set_visible(False)
     arriba.grid(False)
-    fig.tight_layout(rect=(0, 0.06, 1, 1))
-    fig.legend(*ax.get_legend_handles_labels(), loc="lower center", ncol=3, bbox_to_anchor=(0.5, 0.0))
+    fig.tight_layout(rect=(0, 0.045, 1, 0.9), h_pad=2.5)
+    fig.legend(*ax1.get_legend_handles_labels(), loc="lower center", ncol=3, bbox_to_anchor=(0.5, 0.0),
+               frameon=False)
     fig.savefig(OUTPUT_BARRIDA / "envejece.png", dpi=160)
     plt.close(fig)
 

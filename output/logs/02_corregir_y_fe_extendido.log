@@ -1,0 +1,167 @@
+
+=== ninguna: 152 columnas numéricas, 73 en pesos ===
+  201901: 123,916 filas
+  201902: 125,020 filas
+  201903: 125,622 filas
+  201904: 126,116 filas
+  201905: 126,763 filas
+  201906: 128,370 filas
+  201907: 129,853 filas
+  201908: 131,775 filas
+  201909: 133,419 filas
+  201910: 135,633 filas
+  201911: 137,523 filas
+  201912: 139,555 filas
+  202001: 142,929 filas
+  202002: 146,184 filas
+  202003: 148,313 filas
+  202004: 148,831 filas
+  202005: 150,267 filas
+  202006: 152,712 filas
+  202007: 154,772 filas
+  202008: 156,234 filas
+  202009: 157,519 filas
+  202010: 158,941 filas
+  202011: 160,072 filas
+  202012: 160,834 filas
+  202101: 161,342 filas
+  202102: 161,919 filas
+  202103: 162,900 filas
+  202104: 163,284 filas
+  202105: 163,768 filas
+  202106: 164,114 filas
+  ninguna listo: 760 features (61 s)
+
+=== ipc: 152 columnas numéricas, 73 en pesos ===
+  201901: 123,916 filas
+  201902: 125,020 filas
+  201903: 125,622 filas
+  201904: 126,116 filas
+  201905: 126,763 filas
+  201906: 128,370 filas
+  201907: 129,853 filas
+  201908: 131,775 filas
+  201909: 133,419 filas
+  201910: 135,633 filas
+  201911: 137,523 filas
+  201912: 139,555 filas
+  202001: 142,929 filas
+  202002: 146,184 filas
+  202003: 148,313 filas
+  202004: 148,831 filas
+  202005: 150,267 filas
+  202006: 152,712 filas
+  202007: 154,772 filas
+  202008: 156,234 filas
+  202009: 157,519 filas
+  202010: 158,941 filas
+  202011: 160,072 filas
+  202012: 160,834 filas
+  202101: 161,342 filas
+  202102: 161,919 filas
+  202103: 162,900 filas
+  202104: 163,284 filas
+  202105: 163,768 filas
+  202106: 164,114 filas
+  escalas usadas -> /Users/nicolaszarewsky/dmeyf/experimento_inflacion/output/barrida/escalas_ipc.csv
+  ipc listo: 760 features (63 s)
+
+=== mediana: 152 columnas numéricas, 73 en pesos ===
+  201901: 123,916 filas
+  201902: 125,020 filas
+  201903: 125,622 filas
+  201904: 126,116 filas
+  201905: 126,763 filas
+  201906: 128,370 filas
+  201907: 129,853 filas
+  201908: 131,775 filas
+  201909: 133,419 filas
+  201910: 135,633 filas
+  201911: 137,523 filas
+  201912: 139,555 filas
+  202001: 142,929 filas
+  202002: 146,184 filas
+  202003: 148,313 filas
+  202004: 148,831 filas
+  202005: 150,267 filas
+  202006: 152,712 filas
+  202007: 154,772 filas
+  202008: 156,234 filas
+  202009: 157,519 filas
+  202010: 158,941 filas
+  202011: 160,072 filas
+  202012: 160,834 filas
+  202101: 161,342 filas
+  202102: 161,919 filas
+  202103: 162,900 filas
+  202104: 163,284 filas
+  202105: 163,768 filas
+  202106: 164,114 filas
+  escalas usadas -> /Users/nicolaszarewsky/dmeyf/experimento_inflacion/output/barrida/escalas_mediana.csv
+  mediana listo: 760 features (66 s)
+
+=== ranking: 152 columnas numéricas, 73 en pesos ===
+  201901: 123,916 filas
+  201902: 125,020 filas
+  201903: 125,622 filas
+  201904: 126,116 filas
+  201905: 126,763 filas
+  201906: 128,370 filas
+  201907: 129,853 filas
+  201908: 131,775 filas
+  201909: 133,419 filas
+  201910: 135,633 filas
+  201911: 137,523 filas
+  201912: 139,555 filas
+  202001: 142,929 filas
+  202002: 146,184 filas
+  202003: 148,313 filas
+  202004: 148,831 filas
+  202005: 150,267 filas
+  202006: 152,712 filas
+  202007: 154,772 filas
+  202008: 156,234 filas
+  202009: 157,519 filas
+  202010: 158,941 filas
+  202011: 160,072 filas
+  202012: 160,834 filas
+  202101: 161,342 filas
+  202102: 161,919 filas
+  202103: 162,900 filas
+  202104: 163,284 filas
+  202105: 163,768 filas
+  202106: 164,114 filas
+  ranking listo: 760 features (81 s)
+
+=== ranking_todo: 152 columnas numéricas, 73 en pesos ===
+  201901: 123,916 filas
+  201902: 125,020 filas
+  201903: 125,622 filas
+  201904: 126,116 filas
+  201905: 126,763 filas
+  201906: 128,370 filas
+  201907: 129,853 filas
+  201908: 131,775 filas
+  201909: 133,419 filas
+  201910: 135,633 filas
+  201911: 137,523 filas
+  201912: 139,555 filas
+  202001: 142,929 filas
+  202002: 146,184 filas
+  202003: 148,313 filas
+  202004: 148,831 filas
+  202005: 150,267 filas
+  202006: 152,712 filas
+  202007: 154,772 filas
+  202008: 156,234 filas
+  202009: 157,519 filas
+  202010: 158,941 filas
+  202011: 160,072 filas
+  202012: 160,834 filas
+  202101: 161,342 filas
+  202102: 161,919 filas
+  202103: 162,900 filas
+  202104: 163,284 filas
+  202105: 163,768 filas
+  202106: 164,114 filas
+  ranking_todo listo: 760 features (94 s)

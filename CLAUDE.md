@@ -110,6 +110,10 @@ todo el grupo corra las mismas versiones de librerías.
   hasta que un script la crea: todo script nuevo que escriba en `OUTPUT_DIR`
   tiene que hacer `OUTPUT_DIR.mkdir(parents=True, exist_ok=True)` (la falta
   de eso cortó la cadena del 18/11 en 08).
+- **Un corte fijo no es neutral si cambia la cantidad de bajas**: al aplicar
+  un modelo a otros meses, comparar familias con el corte de su bayesiana
+  favorece a la que estimula más clientes cuando hay más BAJA+2 (pasó en S9).
+  Mirar también el AUC o la ganancia con el mejor corte.
 - **No probar 03 contra un estudio real con pocos intentos**: al retomar, el
   muestreador arranca de nuevo con la misma semilla y repite los intentos al
   azar del principio, y se pierde que los 10 primeros intentos sean iguales
@@ -181,3 +185,31 @@ reglas se escribieron en el README antes de correr):
   por pregunta, los seguimientos en una tabla y nombres descriptivos con el
   código entre paréntesis. La versión larga anterior queda en el commit
   348abdc, enlazada desde el anexo.
+- Corrección del 19/11: 2020-2021 NO tienen más inflación por mes que 2019
+  (36,1% y 50,9% anual contra 53,8%); lo que traen es más meses y la
+  pandemia. El README lo decía mal en cuatro lugares (arreglado en 85c98bd).
+
+Barrida de meses (19/11, pedida por el tutor: "el que no mejore es también un
+resultado válido", pero hay que mostrarlo en más de un mes). El usuario eligió
+las cuatro propuestas: modelo que envejece (S9), barrida con ventana móvil
+(S10), sacar las variables con mucho drift (F6, F7) y ranking de todo lo que
+drifta (F8). Reglas en el README antes de correr (commit 055da5d).
+
+- Datos: `DATOS=extendido` hace que 01 y 02 armen 201901-202106 en
+  `data/extendido/` (20 GB; la clase se calcula con el crudo hasta 202108) y
+  escriban sus salidas en `output/barrida/`. `02 --metodos ranking_todo`
+  aplica el ranking a todas las numéricas (lo usa F8). El control de 14
+  verifica que 201903-201910 son idénticos a `data/fe/`.
+- S9 (14, 19/11 14:08 a 15:21): con la regla (corte de la bayesiana) no se
+  cumple nada: mediana 11 de 19 meses (hacían falta 13), ranking 1 de 3, y el
+  IPC, que no debía ganar, gana 13 de 21. La regla quedó confundida por el
+  corte fijo: en 2021 hay casi el doble de BAJA+2 y el mejor corte de F0 pasa
+  de 4.000 a ~9.800, así que gana sola la familia con el corte más grande
+  (IPC, 5.000). Sin el corte (AUC y mejor corte; exploratorio, agregado al ver
+  los resultados), las tres correcciones envejecen mejor desde ~+35% y ganan
+  los 6 meses de 2021 (AUC +10 a +11 milésimas, +$12M a +$19M con el mejor
+  corte), casi igual entre ellas pese a tener hiperparámetros distintos.
+- S10 (15) corre desde el 19/11 a las 15:21 (cadena `barrida.sh` del
+  scratchpad); termina el viernes 20/11 a la noche. Antes de ver S10 se
+  escribió en el README la predicción que sale de S9: con +9% a +19% entre el
+  reentreno y el test, "corregir no ayuda" debería confirmarse.

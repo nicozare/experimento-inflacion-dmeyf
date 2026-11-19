@@ -14,11 +14,13 @@ Entrega: video grupal (máximo 10 minutos) antes del mediodía del lunes 23/11; 
 - **Ninguna corrección le gana al modelo sin corregir.** La mediana casi empata (-$1,4M sobre $289M), el ranking pierde $6,2M y el IPC, $9,5M.
 - **La mediana y el ranking sí le ganan al IPC**, pero esa diferencia no resiste el azar de qué clientes caen en el mes.
 
+**Pero si el modelo envejece sin reentrenar, sí (exploratorio).** Con los modelos de 2019 aplicados hasta 202106 (S9), desde unos +35% de inflación acumulada las tres correcciones ordenan mejor a los clientes que el modelo sin corregir. En 2021 (+81% a +117%) le ganan todos los meses: entre $12M y $19M más por mes, cada una con su mejor corte. La regla escrita antes no lo confirma, porque usaba el corte fijo de 2019 y en 2021 las bajas casi se duplican.
+
 **Por qué corregir no ayuda.** Tres hallazgos que apuntan a lo mismo:
 
 1. **Los modelos casi no miran el nivel de precios.** En todas las familias, corrijan o no, entre el 60% y el 70% de la ganancia de los cortes sobre montos pregunta si el cliente tiene poco o nada, y la inflación casi no mueve esos umbrales bajos. Corregir cambia la escala, pero no esa pregunta.
 2. **El cambio grande de octubre de 2019 no es de precios**: es el comportamiento en dólares después de las PASO. Las correcciones bajan el drift de la variable típica, pero octubre sigue igual de distinguible.
-3. **Entre el entrenamiento y el test pasan pocos meses**: los precios suben 18%, aunque 2019 cerró con 54% anual. Inflando octubre a mano, la mediana empieza a convenir desde ~+26% y el ranking desde ~+99%.
+3. **Entre el entrenamiento y el test pasan pocos meses**: los precios suben 18%, aunque 2019 cerró con 54% anual. Con el modelo de 2019 aplicado sin reentrenar a 2020-2021, corregir empieza a convenir recién desde unos +35% (S9, abajo).
 
 **Lo único que mejoró algo no corrige: agrega.** Sumar 11 proporciones del propio cliente (saldo / sueldo, uso del límite, dolarización), que no tienen inflación, sin sacar los montos. En octubre gana con una regla de corte y empata con la otra; en septiembre no se confirma; y con la regla tampoco supera a su control, que resta los mismos pares en vez de dividirlos.
 
@@ -139,6 +141,7 @@ Se decidieron después de ver el resultado principal. Las reglas de cada uno se 
 | Otro mes de test (S5) | ¿Se confirma lo de las proporciones en septiembre? | No: no supera con ninguna de las dos reglas de corte | `output/test_201909/` |
 | Azar de los clientes (S6) | ¿Las diferencias resisten que el mes tenga otros clientes? | Casi ninguna: solo que el IPC pierde | `output/bootstrap_clientes.md` |
 | Estrés de inflación (S7) | ¿Con cuánta inflación convendría corregir? | La mediana desde ~+26% entre el entrenamiento y el test; el ranking desde ~+99% | `output/estres_inflacion.md` |
+| Modelo que envejece (S9) | ¿Corregir ayuda si el modelo no se reentrena? | Con la regla (el corte fijo de 2019), no se cumple lo predicho. Sin depender del corte, las tres correcciones le ganan al modelo sin corregir desde unos +35% de inflación acumulada, y todos los meses de 2021 | `output/barrida/envejece.md` |
 | Por qué ayudan las proporciones (S8) | ¿Qué aportan, y es por sacar la inflación? | Ayudan con los que no cobran el sueldo en el banco; el control con diferencias no separa si es por la inflación | `output/por_que_f4.md` |
 
 ## ¿Por qué corregir no ayuda?
@@ -228,7 +231,7 @@ Detalle en `output/corte_estable_y_ensamble.md`.
 
 ## Barrida de meses (19/11, pedida por el tutor)
 
-> **Estado (19/11, 14 h)**: reglas escritas antes de correr. Corre hasta el viernes 20/11 a la tarde.
+> **Estado (19/11, 16 h)**: el modelo que envejece (S9) terminó; sus resultados están abajo. La barrida con ventana móvil (S10) corre hasta el viernes 20/11 a la noche. Las reglas de las dos se escribieron antes de correr.
 
 El tutor nos respondió que "el que no mejore es también un resultado válido", pero que para concluirlo hay que mostrarlo en más de un mes. También sugirió probar sacar las variables con mucho drift, y corregir también las variables no monetarias que tienen drift. Para tener más meses de test se usa el dataset completo (201901 a 202108, con la clase calculada con todos los meses). 2020-2021 no traen más inflación por mes que 2019, pero sí más meses y la pandemia. Los meses de 2019 tienen que salir idénticos a los del experimento principal (es un control).
 
@@ -237,6 +240,25 @@ El tutor nos respondió que "el que no mejore es también un resultado válido",
 Los modelos finales de las cuatro familias se aplican sin reentrenar a cada mes de 201910 a 202106. Son los del experimento principal (entrenados con 201903-201908), con 5 semillas. La inflación acumulada contra el entrenamiento va de +18% a +117%: es la prueba de estrés con datos reales. En el medio también cambian otras cosas (la pandemia), pero les pasan a todas las familias por igual (`scripts/14_modelo_que_envejece.py`).
 
 **Regla**: la prueba de estrés predijo que la mediana le gana al modelo sin corregir desde ~+26% de inflación acumulada, y el ranking desde ~+99%. La predicción se cumple para cada una si, con el corte de la bayesiana de cada familia y la media de las 5 semillas, le gana al modelo sin corregir en al menos 2 de cada 3 meses por encima de su umbral (son 19 meses para la mediana y 3 para el ranking). El IPC, que recién convendría desde +183%, no debería ganarle en este rango.
+
+**Resultado (19/11)**. Los dos controles dan bien: los meses de 2019 de los datos extendidos son idénticos a los del experimento principal, y en 201910 cada modelo recupera la ganancia del experimento principal.
+
+![¿Envejece mejor un modelo corregido?](output/barrida/envejece.png)
+
+- **Con la regla, las predicciones de la prueba de estrés no se cumplen.** La mediana le gana al modelo sin corregir en 11 de los 19 meses por encima de +26% (hacían falta 13), y el ranking en 1 de los 3 por encima de +99%. El IPC, que no debería ganarle, le gana en 13 de los 21 meses, y en todos desde 202009 (+56%).
+- **Pero la regla quedó mal planteada para este caso.** Cada familia estimula siempre la cantidad de clientes que eligió su bayesiana en 2019: 4.000 el modelo sin corregir, 5.000 el IPC, 3.900 la mediana y 3.500 el ranking. En 2021 hay casi el doble de BAJA+2, y el mejor corte del modelo sin corregir pasa de 4.000 a unos 9.800 clientes. Con un corte fijo, la familia que más estimula gana sola en 2021 (el IPC, +$46M por mes) y la que menos estimula pierde sola (el ranking), corrijan o no.
+- **Sin depender del corte, las tres correcciones envejecen mejor que el modelo sin corregir** (exploratorio). Diferencia de cada corrección contra el modelo sin corregir:
+
+| Inflación acumulada | hasta +30% (201910 a 202001) | +33% a +74% (resto de 2020) | +81% a +117% (2021) |
+|---|---|---|---|
+| AUC (no depende del corte) | 0,0 a +0,8 milésimas | +3,5 a +5,0 milésimas; las tres ganan en 10 de 11 meses | +10,0 a +11,0 milésimas; las tres ganan los 6 meses |
+| Ganancia con el mejor corte de cada una (mira el test) | -$5,5M a -$3,2M; pierden en 11 de 12 casos | +$3,8M a +$5,8M; ganan en 7 a 10 de 11 meses | +$12,2M a +$19,0M; las tres ganan los 6 meses |
+
+- **Lo común a las tres es sacar el nivel de precios.** Tienen hiperparámetros distintos y aun así ganan casi lo mismo en AUC mes a mes (en 202104: +9,8, +9,6 y +9,8 milésimas). Y el IPC no saca otra cosa: no toca los cambios reales, como los de la pandemia.
+- **Lectura.** Con la inflación de 2019 entre el entrenamiento y el test (hasta +30%), corregir no ayuda, como en el experimento principal. Si el modelo no se reentrena, corregir empieza a ayudar desde unos +35%, con cualquiera de las tres, y la ventaja crece con la inflación acumulada (correlación de Spearman del AUC entre 0,80 y 0,87). La prueba de estrés anticipó la idea pero no los umbrales: multiplicar los montos de octubre por un factor parejo no reproduce 18 meses reales.
+- **Cuidado.** Es exploratorio: la regla escrita antes no se cumplió, y el AUC y los tramos se agregaron al ver los resultados. Son 5 semillas. Y la inflación acumulada avanza junto con el tiempo y con la pandemia, así que esto no separa "más inflación" de "más meses sin reentrenar".
+
+Detalle mes a mes en `output/barrida/envejece.md`.
 
 ### La barrida con ventana móvil (S10)
 
@@ -261,6 +283,8 @@ Los umbrales son los de la convención usual del PSI: 0,1 es un cambio moderado 
 - Si no, **empata**.
 
 "Corregir no ayuda" queda confirmado si ni el IPC, ni la mediana, ni el ranking superan al modelo sin corregir. Con la misma regla se comparan también la mediana sin drift contra la mediana, y el ranking de todo lo que drifta contra el ranking.
+
+**Predicción escrita después de S9 y antes de ver S10 (19/11, 16 h).** En esta ventana, entre el reentreno y el test hay de +9% a +19% de inflación: el rango en que, en S9, ninguna corrección le ganaba al modelo sin corregir. Esperamos que se confirme "corregir no ayuda". Acá el corte se elige en cada ventana, así que no tiene el problema del corte fijo de S9.
 
 ## Limitaciones
 
