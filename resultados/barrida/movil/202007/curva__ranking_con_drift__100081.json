@@ -1,0 +1,9 @@
+{
+  "familia": "ranking_con_drift",
+  "semilla": 100081,
+  "auc": 0.9395683568050329,
+  "ganancia_maxima": 201300000,
+  "columnas": 760,
+  "arboles": 1223,
+  "segundos": 359.7
+}

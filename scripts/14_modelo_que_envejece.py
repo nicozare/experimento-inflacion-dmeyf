@@ -294,7 +294,7 @@ def grafico(dif: pd.DataFrame, dif_auc: pd.DataFrame, infl: pd.Series, auc_contr
     meses = list(dif.index)
     x = np.array([infl[m] * 100 for m in meses])
     fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(11, 9.6), sharex=True)
-    paneles = [(ax1, dif / 1e6, "Ganancia con el corte de la bayesiana de cada familia (la regla de S9)",
+    paneles = [(ax1, dif / 1e6, "Ganancia con el corte de la bayesiana de cada familia (la regla)",
                 "millones de $"),
                (ax2, dif_auc, "AUC, que no depende del corte (exploratorio)", "milésimas de AUC")]
     for ax, valores, titulo, unidad in paneles:

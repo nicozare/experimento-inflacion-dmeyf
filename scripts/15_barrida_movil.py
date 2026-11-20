@@ -36,6 +36,7 @@ import argparse
 import importlib
 import json
 import shutil
+import textwrap
 import time
 
 import lightgbm as lgb
@@ -56,8 +57,13 @@ from config import (DATOS, FAMILIAS_DRIFT, MESES_TEST_BARRIDA, METODOS_CORRECCIO
 r5 = importlib.import_module("05_drift")      # psi()
 r6 = importlib.import_module("06_resumen")    # formatos y colores
 r9 = importlib.import_module("09_donde_corta")  # separar(): nombre base de cada columna
-decimal, millones, tabla_md, formato_p = r6.decimal, r6.millones, r6.tabla_md, r6.formato_p
+decimal, tabla_md, formato_p = r6.decimal, r6.tabla_md, r6.formato_p
 FONDO, TINTA, TINTA_2, COLOR = r6.FONDO, r6.TINTA, r6.TINTA_2, r6.COLOR
+
+
+def millones(x: float) -> str:
+    """El formato de 06, sin el "-$0,0M" de las diferencias que redondean a cero."""
+    return r6.millones(x if abs(x) >= 5e4 else 0.0)
 
 FAMILIAS = METODOS_CORRECCION + list(FAMILIAS_DRIFT)
 CARPETA = RESULTADOS_BARRIDA / "movil"
@@ -213,17 +219,27 @@ def leer_curvas(t: int, familia: str, prefijo: str) -> pd.DataFrame | None:
     return pd.DataFrame({s: pd.read_csv(r).set_index("corte").ganancia for s, r in zip(SEMILLAS_BARRIDA, rutas)}).T
 
 
+def auc_semilla(t: int, familia: str, s: int) -> float:
+    """AUC en el test del modelo final. En 201910, F0 a F3 son los modelos de 04 (su AUC está en su json)."""
+    ruta = CARPETA / str(t) / f"curva__{familia}__{s}.json"
+    if ruta.exists():
+        return json.loads(ruta.read_text(encoding="utf-8"))["auc"]
+    return json.loads((RESULTADOS_DIR / f"final__{familia}__{s}.json").read_text(encoding="utf-8"))["auc_test"]
+
+
 def resumen() -> None:
-    filas = []
+    filas, curvas = [], {}
     for t in MESES_TEST_BARRIDA:
         for familia in FAMILIAS:
             V, T = leer_curvas(t, familia, "curva_validacion"), leer_curvas(t, familia, "curva")
             if V is None or T is None:
                 continue
+            curvas[(t, familia)] = T
             corte = int(V.mean().idxmax())  # corte estable, como S1
             for s in SEMILLAS_BARRIDA:
                 filas.append({"mes": t, "familia": familia, "semilla": s, "corte_estable": corte,
-                              "ganancia": int(T.loc[s, corte]), "ganancia_maxima": int(T.loc[s].max())})
+                              "ganancia": int(T.loc[s, corte]), "ganancia_maxima": int(T.loc[s].max()),
+                              "auc": auc_semilla(t, familia, s)})
     res = pd.DataFrame(filas)
     RESULTADOS_BARRIDA.mkdir(parents=True, exist_ok=True)
     res.to_csv(RESULTADOS_BARRIDA / "movil.csv", index=False)
@@ -277,6 +293,45 @@ def resumen() -> None:
         filas.append(fila)
     partes += ["## Mes a mes: diferencia contra F0 (en cuántas semillas gana)\n", tabla_md(pd.DataFrame(filas)), ""]
 
+    # sin depender del corte (exploratorio, agregado al ver los resultados, como en S9)
+    A = res.pivot_table(index="mes", columns="familia", values="auc")
+    M = res.pivot_table(index="mes", columns="familia", values="ganancia_maxima")
+    explora = []
+    for a, b in COMPARACIONES:
+        if a not in G.columns or b not in G.columns:
+            continue
+        meses = G.index[G[a].notna() & G[b].notna()]
+        mismo = pd.Series({t: (curvas[(t, a)][cortes.loc[t, b]] - curvas[(t, b)][cortes.loc[t, b]]).mean()
+                           for t in meses})
+        codigo_b = NOMBRE_FAMILIA[b].split()[0]
+        for medida, d, fmt in [
+                ("AUC (milésimas)", (A.loc[meses, a] - A.loc[meses, b]) * 1000, lambda x: decimal(x, 1)),
+                (f"ganancia con el corte estable de {codigo_b}", mismo, millones),
+                ("ganancia con el mejor corte de cada semilla (mira el test)", M.loc[meses, a] - M.loc[meses, b], millones),
+                ("ganancia con el corte estable de cada una (la regla)", G.loc[meses, a] - G.loc[meses, b], millones)]:
+            explora.append({"comparación": f"{NOMBRE_FAMILIA[a]} vs {NOMBRE_FAMILIA[b]}", "medida": medida,
+                            "diferencia media por mes": fmt(d.mean()), "meses en que gana": f"{int((d > 0).sum())} de {len(d)}"})
+    if explora:
+        partes += ["## Sin depender del corte (exploratorio)\n",
+                   "La regla compara cada familia con su propio corte estable, y el corte cambia mucho de un mes a otro. "
+                   "Para separar el orden de los clientes del corte se miran también el AUC, la ganancia si las dos "
+                   "estimulan la misma cantidad de clientes y la ganancia con el mejor corte de cada semilla (que mira "
+                   "el test, igual para todas). Media de las 5 semillas en cada mes.\n",
+                   tabla_md(pd.DataFrame(explora)), ""]
+
+    tabla_cortes = []
+    for t in G.index:
+        fila = {"mes de test": t, "valida en": ventana(t)["validacion"]}
+        if clase is not None:
+            for m, nombre in [(ventana(t)["validacion"], "BAJA+2 en validación"), (t, "BAJA+2 en el test")]:
+                fila[nombre] = r6.miles(int(clase.loc[m, "BAJA+2"])) if m in clase.index else ""
+        for f in familias:
+            fila[NOMBRE_FAMILIA[f].split()[0]] = r6.miles(int(cortes.loc[t, f])) if pd.notna(cortes.loc[t, f]) else ""
+        if (t, "ninguna") in curvas:
+            fila["mejor corte de F0 (mira el test)"] = r6.miles(int(curvas[(t, "ninguna")].mean().idxmax()))
+        tabla_cortes.append(fila)
+    partes += ["## Corte estable de cada familia (clientes a estimular)\n", tabla_md(pd.DataFrame(tabla_cortes)), ""]
+
     drift = []
     for t in MESES_TEST_BARRIDA:
         ruta = CARPETA / str(t) / "variables_drift.csv"
@@ -293,37 +348,49 @@ def resumen() -> None:
     texto = "\n".join(partes)
     (OUTPUT_BARRIDA / "movil.md").write_text(texto, encoding="utf-8")
     if "ninguna" in G.columns and len(familias) > 1:
-        grafico(G, familias)
+        grafico(G, A, familias)
     print(texto)
     print("-> output/barrida/movil.md y .png, resultados/barrida/movil.csv")
 
 
-def grafico(G: pd.DataFrame, familias: list[str]) -> None:
+def grafico(G: pd.DataFrame, A: pd.DataFrame, familias: list[str]) -> None:
+    """Dos paneles con las mismas filas: la ganancia con el corte de cada familia (la regla) y el AUC (exploratorio)."""
     otras = [f for f in familias if f != "ninguna"]
     color = {f: COLOR.get(f, COLOR.get(FAMILIAS_DRIFT.get(f), TINTA_2)) for f in otras}
-    alto = 2.8 + 0.85 * len(otras)
-    fig, ax = plt.subplots(figsize=(11, alto))
-    for i, f in enumerate(otras):
-        d = (G[f] - G["ninguna"]).dropna() / 1e6
-        hueco = f in FAMILIAS_DRIFT  # las familias nuevas, con el color de la familia de la que salen y sin relleno
-        ax.scatter(d, np.full(len(d), i), s=70, color=FONDO if hueco else color[f], edgecolor=color[f],
-                   linewidth=2, zorder=3)
-        ax.plot([d.mean()] * 2, [i - 0.3, i + 0.3], color=TINTA, lw=2.5, zorder=4)
-        ax.annotate(f"media {millones(d.mean() * 1e6)} · gana en {int((d > 0).sum())} de {len(d)} meses",
-                    (1.0, i), xycoords=("axes fraction", "data"), xytext=(8, 0), textcoords="offset points",
-                    va="center", fontsize=11, color=TINTA_2)
-    ax.axvline(0, color=TINTA_2, lw=1.2, ls="--")
-    ax.set_yticks(range(len(otras)), [NOMBRE_FAMILIA[f] for f in otras])
-    ax.set_ylim(len(otras) - 0.5, -0.5)
-    ax.grid(axis="y", visible=False)
-    ax.xaxis.set_major_formatter(plt.FuncFormatter(lambda v, _: f"{v:g}".replace(".", ",").replace("-", "−")))
-    ax.set_xlabel("Ganancia de la familia menos la de F0 en el mismo mes (millones de $)")
-    ax.set_title("Barrida con ventana móvil: cada familia contra F0, mes por mes", pad=50)
-    ax.text(0, 1.025, f"Cada punto es un mes de test ({', '.join(map(str, G.index))}); la raya negra es la media.\n"
-            f"Media de {len(SEMILLAS_BARRIDA)} semillas, corte estable de cada familia. Huecos: hipótesis del tutor.",
-            transform=ax.transAxes, fontsize=11, color=TINTA_2, va="bottom")
-    fig.tight_layout()
-    fig.subplots_adjust(right=0.66)
+    ancho, alto = 13.0, 2.2 + 0.75 * len(otras)
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(ancho, alto), sharey=True)
+    paneles = [(ax1, (G.sub(G["ninguna"], axis=0)) / 1e6, lambda x: ("+" if x > 0 else "") + millones(x * 1e6),
+                "Ganancia con el corte estable de cada familia (la regla)", "millones de $"),
+               (ax2, A.sub(A["ninguna"], axis=0) * 1000, lambda x: ("+" if x > 0 else "") + decimal(x, 1),
+                "AUC, que no depende del corte (exploratorio)", "milésimas")]
+    for ax, dif, fmt, titulo, unidad in paneles:
+        for i, f in enumerate(otras):
+            d = dif[f].dropna()
+            hueco = f in FAMILIAS_DRIFT  # las familias por drift, con el color de la familia de la que salen y sin relleno
+            ax.scatter(d, np.full(len(d), i), s=60, color=FONDO if hueco else color[f], edgecolor=color[f],
+                       linewidth=2, zorder=3)
+            ax.plot([d.mean()] * 2, [i - 0.3, i + 0.3], color=TINTA, lw=2.5, zorder=4)
+            ax.annotate(f"media {fmt(d.mean())}\ngana en {int((d > 0).sum())} de {len(d)}", (1.0, i),
+                        xycoords=("axes fraction", "data"), xytext=(6, 0), textcoords="offset points",
+                        va="center", fontsize=9.5, color=TINTA_2, linespacing=1.2)
+        ax.axvline(0, color=TINTA_2, lw=1.2, ls="--")
+        ax.grid(axis="y", visible=False)
+        ax.xaxis.set_major_formatter(plt.FuncFormatter(lambda v, _: f"{v:g}".replace(".", ",").replace("-", "−")))
+        ax.set_xlabel(f"Familia menos F0 en el mismo mes ({unidad})")
+        ax.set_title(titulo, fontsize=11.5, loc="left")
+    ax1.set_yticks(range(len(otras)), [textwrap.fill(NOMBRE_FAMILIA[f], 18) for f in otras], linespacing=1.1)
+    ax1.set_ylim(len(otras) - 0.5, -0.5)
+    fig.text(0.012, 1 - 0.12 / alto, "Ventana móvil: cada familia contra el modelo sin corregir (F0), mes por mes",
+             fontsize=14, color=TINTA, va="top")
+    fig.text(0.012, 1 - 0.5 / alto,
+             f"Cada punto es un mes de test ({', '.join(map(str, G.index))}); la raya negra es la media de los meses.\n"
+             f"Media de {len(SEMILLAS_BARRIDA)} semillas. Sin relleno: las familias que eligen sus variables por el drift "
+             "(F6 a F8), con el color de la familia de la que salen.", fontsize=10, color=TINTA_2, va="top",
+             linespacing=1.4)
+    # márgenes fijos en pulgadas: nombres de las familias a la izquierda y anotaciones a la derecha de cada panel
+    izquierda, derecha, hueco = 2.0 / ancho, 1 - 1.3 / ancho, 1.45
+    panel = ((derecha - izquierda) * ancho - hueco) / 2
+    fig.subplots_adjust(left=izquierda, right=derecha, top=1 - 1.45 / alto, bottom=0.8 / alto, wspace=hueco / panel)
     fig.savefig(OUTPUT_BARRIDA / "movil.png", dpi=160)
     plt.close(fig)
 

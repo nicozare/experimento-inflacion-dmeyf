@@ -1,0 +1,9 @@
+{
+  "familia": "mediana_sin_drift",
+  "semilla": 100151,
+  "auc": 0.9399919909943061,
+  "ganancia_maxima": 200750000,
+  "columnas": 735,
+  "arboles": 1125,
+  "segundos": 251.6
+}

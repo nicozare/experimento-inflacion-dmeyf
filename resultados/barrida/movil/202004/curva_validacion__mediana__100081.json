@@ -1,0 +1,9 @@
+{
+  "familia": "mediana",
+  "semilla": 100081,
+  "auc": 0.9639852306144351,
+  "ganancia_maxima": 55000000,
+  "columnas": 760,
+  "arboles": 1125,
+  "segundos": 160.0
+}

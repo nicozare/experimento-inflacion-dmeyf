@@ -1,0 +1,832 @@
+  201910 F0 nominal curva_validacion: entrena 201903-201906 (506,871 filas, 760 columnas), predice 201908 (datos en 1 s)
+    curva_validacion semilla 100081: máximo $216.7M | 126 s
+  201910 F0 nominal curva: entrena 201903-201908 (768,499 filas, 760 columnas), predice 201910 (datos en 2 s)
+    curva semilla 100081: máximo $294.2M | 200 s
+control: en 201910, F0 con la semilla 100081 reproduce las curvas de 07 y 04
+  202001 F0 nominal curva_validacion: entrena 201906-201909 (523,417 filas, 760 columnas), predice 201911 (datos en 1 s)
+    curva_validacion semilla 100081: máximo $393.2M | 134 s
+    curva_validacion semilla 100103: máximo $390.5M | 134 s
+    curva_validacion semilla 100129: máximo $394.9M | 134 s
+    curva_validacion semilla 100151: máximo $390.5M | 133 s
+    curva_validacion semilla 100169: máximo $387.2M | 134 s
+  202001 F0 nominal curva: entrena 201906-201911 (796,573 filas, 760 columnas), predice 202001 (datos en 2 s)
+    curva semilla 100081: máximo $267.3M | 208 s
+    curva semilla 100103: máximo $265.6M | 208 s
+    curva semilla 100129: máximo $267.9M | 206 s
+    curva semilla 100151: máximo $266.8M | 207 s
+    curva semilla 100169: máximo $269.5M | 208 s
+  202004 F0 nominal curva_validacion: entrena 201909-201912 (546,130 filas, 760 columnas), predice 202002 (datos en 2 s)
+    curva_validacion semilla 100081: máximo $59.4M | 139 s
+    curva_validacion semilla 100103: máximo $60.0M | 138 s
+    curva_validacion semilla 100129: máximo $59.4M | 139 s
+    curva_validacion semilla 100151: máximo $57.2M | 138 s
+    curva_validacion semilla 100169: máximo $59.4M | 138 s
+  202004 F0 nominal curva: entrena 201909-202002 (835,243 filas, 760 columnas), predice 202004 (datos en 3 s)
+    curva semilla 100081: máximo $190.3M | 219 s
+    curva semilla 100103: máximo $185.9M | 219 s
+    curva semilla 100129: máximo $185.9M | 219 s
+    curva semilla 100151: máximo $187.6M | 219 s
+    curva semilla 100169: máximo $183.2M | 219 s
+  202007 F0 nominal curva_validacion: entrena 201912-202003 (576,981 filas, 760 columnas), predice 202005 (datos en 2 s)
+    curva_validacion semilla 100081: máximo $240.9M | 151 s
+    curva_validacion semilla 100103: máximo $242.6M | 151 s
+    curva_validacion semilla 100129: máximo $241.4M | 151 s
+    curva_validacion semilla 100151: máximo $240.9M | 151 s
+    curva_validacion semilla 100169: máximo $238.7M | 151 s
+  202007 F0 nominal curva: entrena 201912-202005 (876,079 filas, 760 columnas), predice 202007 (datos en 3 s)
+    curva semilla 100081: máximo $199.7M | 235 s
+    curva semilla 100103: máximo $201.3M | 234 s
+    curva semilla 100129: máximo $198.0M | 233 s
+    curva semilla 100151: máximo $200.2M | 235 s
+    curva semilla 100169: máximo $198.6M | 234 s
+  202010 F0 nominal curva_validacion: entrena 202003-202006 (600,123 filas, 760 columnas), predice 202008 (datos en 2 s)
+    curva_validacion semilla 100081: máximo $101.8M | 151 s
+    curva_validacion semilla 100103: máximo $100.1M | 152 s
+    curva_validacion semilla 100129: máximo $101.8M | 152 s
+    curva_validacion semilla 100151: máximo $103.4M | 152 s
+    curva_validacion semilla 100169: máximo $102.3M | 151 s
+  202010 F0 nominal curva: entrena 202003-202008 (911,129 filas, 760 columnas), predice 202010 (datos en 3 s)
+    curva semilla 100081: máximo $119.3M | 249 s
+    curva semilla 100103: máximo $122.7M | 298 s
+    curva semilla 100129: máximo $122.1M | 411 s
+    curva semilla 100151: máximo $118.8M | 409 s
+    curva semilla 100169: máximo $124.8M | 409 s
+  202101 F0 nominal curva_validacion: entrena 202006-202009 (621,237 filas, 760 columnas), predice 202011 (datos en 6 s)
+    curva_validacion semilla 100081: máximo $204.1M | 268 s
+    curva_validacion semilla 100103: máximo $208.4M | 382 s
+    curva_validacion semilla 100129: máximo $209.6M | 494 s
+    curva_validacion semilla 100151: máximo $197.4M | 510 s
+    curva_validacion semilla 100169: máximo $206.2M | 256 s
+  202101 F0 nominal curva: entrena 202006-202011 (940,250 filas, 760 columnas), predice 202101 (datos en 3 s)
+    curva semilla 100081: máximo $362.4M | 245 s
+    curva semilla 100103: máximo $360.2M | 244 s
+    curva semilla 100129: máximo $362.4M | 244 s
+    curva semilla 100151: máximo $360.8M | 246 s
+    curva semilla 100169: máximo $364.1M | 245 s
+  202104 F0 nominal curva_validacion: entrena 202009-202012 (637,366 filas, 760 columnas), predice 202102 (datos en 2 s)
+    curva_validacion semilla 100081: máximo $400.4M | 160 s
+    curva_validacion semilla 100103: máximo $402.6M | 161 s
+    curva_validacion semilla 100129: máximo $399.3M | 160 s
+    curva_validacion semilla 100151: máximo $409.2M | 160 s
+    curva_validacion semilla 100169: máximo $400.9M | 159 s
+  202104 F0 nominal curva: entrena 202009-202102 (960,627 filas, 760 columnas), predice 202104 (datos en 3 s)
+    curva semilla 100081: máximo $561.5M | 251 s
+    curva semilla 100103: máximo $559.4M | 251 s
+    curva semilla 100129: máximo $557.1M | 251 s
+    curva semilla 100151: máximo $554.4M | 250 s
+    curva semilla 100169: máximo $559.9M | 251 s
+== F0 nominal: lista en los 7 meses (220 min)
+# Barrida con ventana móvil (generado por scripts/15_barrida_movil.py)
+
+Seguimiento S10 (regla en el README). Para cada mes de test t: entrena t-7 a t-4, elige el corte estable en t-2, reentrena t-7 a t-2 y mide la ganancia en t. Hiperparámetros de la bayesiana de 2019 de cada familia, 5 semillas. Una familia supera a otra si la diferencia media por mes es positiva y el Wilcoxon pareado por mes da p < 0,05; pierde si es negativa con p < 0,05; si no, empata.
+
+## Resultado de la regla
+
+|  |
+|
+
+## Mes a mes: diferencia contra F0 (en cuántas semillas gana)
+
+| mes de test | entrena / valida | BAJA+2 del mes | F0 (corte) |
+|---|---|---|---|
+| 201910 | 201903-201908 / 201908 | 632 | $289,7M (4.000) |
+| 202001 | 201906-201911 / 201911 | 521 | $238,7M (6.400) |
+| 202004 | 201909-202002 / 202002 | 524 | $158,8M (2.000) |
+| 202007 | 201912-202005 / 202005 | 541 | $187,9M (5.600) |
+| 202010 | 202003-202008 / 202008 | 519 | $94,8M (2.800) |
+| 202101 | 202006-202011 / 202011 | 850 | $356,6M (7.600) |
+| 202104 | 202009-202102 / 202102 | 1.139 | $552,0M (9.200) |
+
+## Variables con drift en cada ventana (PSI > 0,25 se sacan; no monetarias con PSI > 0,1 se rankean)
+
+| mes de test | sacadas en F6 | sacadas en F7 | rankeadas de más en F8 | las de más drift (PSI sin corregir) |
+|---|---|---|---|---|
+| 202001 | 14 | 15 | 10 | Visa_fultimo_cierre, Master_fultimo_cierre, cmobile_app_trx, tmobile_app |
+
+-> output/barrida/movil.md y .png, resultados/barrida/movil.csv
+  202001 F1 IPC curva_validacion: entrena 201906-201909 (523,417 filas, 760 columnas), predice 201911 (datos en 1 s)
+    curva_validacion semilla 100081: máximo $388.9M | 122 s
+    curva_validacion semilla 100103: máximo $397.1M | 122 s
+    curva_validacion semilla 100129: máximo $391.1M | 122 s
+    curva_validacion semilla 100151: máximo $388.3M | 123 s
+    curva_validacion semilla 100169: máximo $388.9M | 122 s
+  202001 F1 IPC curva: entrena 201906-201911 (796,573 filas, 760 columnas), predice 202001 (datos en 2 s)
+    curva semilla 100081: máximo $266.2M | 183 s
+    curva semilla 100103: máximo $262.4M | 183 s
+    curva semilla 100129: máximo $264.0M | 183 s
+    curva semilla 100151: máximo $263.4M | 182 s
+    curva semilla 100169: máximo $267.3M | 182 s
+  202004 F1 IPC curva_validacion: entrena 201909-201912 (546,130 filas, 760 columnas), predice 202002 (datos en 2 s)
+    curva_validacion semilla 100081: máximo $56.6M | 126 s
+    curva_validacion semilla 100103: máximo $57.8M | 126 s
+    curva_validacion semilla 100129: máximo $57.8M | 127 s
+    curva_validacion semilla 100151: máximo $56.1M | 126 s
+    curva_validacion semilla 100169: máximo $57.2M | 125 s
+  202004 F1 IPC curva: entrena 201909-202002 (835,243 filas, 760 columnas), predice 202004 (datos en 2 s)
+    curva semilla 100081: máximo $189.2M | 193 s
+    curva semilla 100103: máximo $189.2M | 193 s
+    curva semilla 100129: máximo $189.8M | 193 s
+    curva semilla 100151: máximo $189.8M | 193 s
+    curva semilla 100169: máximo $191.4M | 193 s
+  202007 F1 IPC curva_validacion: entrena 201912-202003 (576,981 filas, 760 columnas), predice 202005 (datos en 2 s)
+    curva_validacion semilla 100081: máximo $243.1M | 137 s
+    curva_validacion semilla 100103: máximo $242.6M | 137 s
+    curva_validacion semilla 100129: máximo $243.1M | 137 s
+    curva_validacion semilla 100151: máximo $246.4M | 137 s
+    curva_validacion semilla 100169: máximo $244.2M | 138 s
+  202007 F1 IPC curva: entrena 201912-202005 (876,079 filas, 760 columnas), predice 202007 (datos en 3 s)
+    curva semilla 100081: máximo $197.4M | 195 s
+    curva semilla 100103: máximo $194.2M | 195 s
+    curva semilla 100129: máximo $199.1M | 195 s
+    curva semilla 100151: máximo $195.2M | 194 s
+    curva semilla 100169: máximo $202.4M | 195 s
+  202010 F1 IPC curva_validacion: entrena 202003-202006 (600,123 filas, 760 columnas), predice 202008 (datos en 2 s)
+    curva_validacion semilla 100081: máximo $102.3M | 135 s
+    curva_validacion semilla 100103: máximo $96.8M | 135 s
+    curva_validacion semilla 100129: máximo $95.2M | 135 s
+    curva_validacion semilla 100151: máximo $95.2M | 136 s
+    curva_validacion semilla 100169: máximo $97.9M | 135 s
+  202010 F1 IPC curva: entrena 202003-202008 (911,129 filas, 760 columnas), predice 202010 (datos en 3 s)
+    curva semilla 100081: máximo $129.2M | 193 s
+    curva semilla 100103: máximo $132.6M | 192 s
+    curva semilla 100129: máximo $130.3M | 192 s
+    curva semilla 100151: máximo $122.1M | 193 s
+    curva semilla 100169: máximo $134.8M | 192 s
+  202101 F1 IPC curva_validacion: entrena 202006-202009 (621,237 filas, 760 columnas), predice 202011 (datos en 2 s)
+    curva_validacion semilla 100081: máximo $196.3M | 139 s
+    curva_validacion semilla 100103: máximo $201.8M | 139 s
+    curva_validacion semilla 100129: máximo $202.4M | 139 s
+    curva_validacion semilla 100151: máximo $199.1M | 139 s
+    curva_validacion semilla 100169: máximo $194.7M | 140 s
+  202101 F1 IPC curva: entrena 202006-202011 (940,250 filas, 760 columnas), predice 202101 (datos en 3 s)
+    curva semilla 100081: máximo $367.4M | 198 s
+    curva semilla 100103: máximo $374.6M | 197 s
+    curva semilla 100129: máximo $366.9M | 198 s
+    curva semilla 100151: máximo $366.9M | 198 s
+    curva semilla 100169: máximo $367.4M | 197 s
+  202104 F1 IPC curva_validacion: entrena 202009-202012 (637,366 filas, 760 columnas), predice 202102 (datos en 2 s)
+    curva_validacion semilla 100081: máximo $405.9M | 141 s
+    curva_validacion semilla 100103: máximo $400.9M | 142 s
+    curva_validacion semilla 100129: máximo $397.1M | 141 s
+    curva_validacion semilla 100151: máximo $410.3M | 142 s
+    curva_validacion semilla 100169: máximo $404.2M | 141 s
+  202104 F1 IPC curva: entrena 202009-202102 (960,627 filas, 760 columnas), predice 202104 (datos en 3 s)
+    curva semilla 100081: máximo $550.0M | 199 s
+    curva semilla 100103: máximo $548.4M | 199 s
+    curva semilla 100129: máximo $552.8M | 199 s
+    curva semilla 100151: máximo $556.0M | 199 s
+    curva semilla 100169: máximo $552.2M | 199 s
+== F1 IPC: lista en los 7 meses (164 min)
+# Barrida con ventana móvil (generado por scripts/15_barrida_movil.py)
+
+Seguimiento S10 (regla en el README). Para cada mes de test t: entrena t-7 a t-4, elige el corte estable en t-2, reentrena t-7 a t-2 y mide la ganancia en t. Hiperparámetros de la bayesiana de 2019 de cada familia, 5 semillas. Una familia supera a otra si la diferencia media por mes es positiva y el Wilcoxon pareado por mes da p < 0,05; pierde si es negativa con p < 0,05; si no, empata.
+
+## Resultado de la regla
+
+| comparación | diferencia media por mes | meses en que gana | Wilcoxon p (por mes) | resultado |
+|---|---|---|---|---|
+| F1 IPC vs F0 nominal | -$6,8M | 2 de 7 | 0,109 | empata |
+
+## Mes a mes: diferencia contra F0 (en cuántas semillas gana)
+
+| mes de test | entrena / valida | BAJA+2 del mes | F0 (corte) | F1 IPC |
+|---|---|---|---|---|
+| 201910 | 201903-201908 / 201908 | 632 | $289,7M (4.000) | -$9,2M (0/5) |
+| 202001 | 201906-201911 / 201911 | 521 | $238,7M (6.400) | -$10,7M (0/5) |
+| 202004 | 201909-202002 / 202002 | 524 | $158,8M (2.000) | -$25,6M (0/5) |
+| 202007 | 201912-202005 / 202005 | 541 | $187,9M (5.600) | $4,0M (5/5) |
+| 202010 | 202003-202008 / 202008 | 519 | $94,8M (2.800) | $0,4M (2/5) |
+| 202101 | 202006-202011 / 202011 | 850 | $356,6M (7.600) | -$1,0M (2/5) |
+| 202104 | 202009-202102 / 202102 | 1.139 | $552,0M (9.200) | -$5,2M (0/5) |
+
+## Variables con drift en cada ventana (PSI > 0,25 se sacan; no monetarias con PSI > 0,1 se rankean)
+
+| mes de test | sacadas en F6 | sacadas en F7 | rankeadas de más en F8 | las de más drift (PSI sin corregir) |
+|---|---|---|---|---|
+| 202001 | 14 | 15 | 10 | Visa_fultimo_cierre, Master_fultimo_cierre, cmobile_app_trx, tmobile_app |
+
+-> output/barrida/movil.md y .png, resultados/barrida/movil.csv
+  202001 F2 mediana curva_validacion: entrena 201906-201909 (523,417 filas, 760 columnas), predice 201911 (datos en 1 s)
+    curva_validacion semilla 100081: máximo $387.8M | 152 s
+    curva_validacion semilla 100103: máximo $388.3M | 151 s
+    curva_validacion semilla 100129: máximo $384.4M | 152 s
+    curva_validacion semilla 100151: máximo $390.5M | 152 s
+    curva_validacion semilla 100169: máximo $389.9M | 152 s
+  202001 F2 mediana curva: entrena 201906-201911 (796,573 filas, 760 columnas), predice 202001 (datos en 2 s)
+    curva semilla 100081: máximo $266.2M | 235 s
+    curva semilla 100103: máximo $267.3M | 234 s
+    curva semilla 100129: máximo $265.1M | 235 s
+    curva semilla 100151: máximo $267.3M | 235 s
+    curva semilla 100169: máximo $266.8M | 234 s
+  202004 F2 mediana curva_validacion: entrena 201909-201912 (546,130 filas, 760 columnas), predice 202002 (datos en 2 s)
+    curva_validacion semilla 100081: máximo $55.0M | 160 s
+    curva_validacion semilla 100103: máximo $55.0M | 160 s
+    curva_validacion semilla 100129: máximo $55.5M | 160 s
+    curva_validacion semilla 100151: máximo $55.5M | 160 s
+    curva_validacion semilla 100169: máximo $54.5M | 160 s
+  202004 F2 mediana curva: entrena 201909-202002 (835,243 filas, 760 columnas), predice 202004 (datos en 2 s)
+    curva semilla 100081: máximo $182.1M | 251 s
+    curva semilla 100103: máximo $182.6M | 251 s
+    curva semilla 100129: máximo $182.6M | 251 s
+    curva semilla 100151: máximo $184.2M | 251 s
+    curva semilla 100169: máximo $184.8M | 251 s
+  202007 F2 mediana curva_validacion: entrena 201912-202003 (576,981 filas, 760 columnas), predice 202005 (datos en 2 s)
+    curva_validacion semilla 100081: máximo $243.1M | 173 s
+    curva_validacion semilla 100103: máximo $243.7M | 173 s
+    curva_validacion semilla 100129: máximo $246.9M | 173 s
+    curva_validacion semilla 100151: máximo $241.4M | 173 s
+    curva_validacion semilla 100169: máximo $240.9M | 173 s
+  202007 F2 mediana curva: entrena 201912-202005 (876,079 filas, 760 columnas), predice 202007 (datos en 2 s)
+    curva semilla 100081: máximo $199.1M | 263 s
+    curva semilla 100103: máximo $198.0M | 262 s
+    curva semilla 100129: máximo $198.6M | 262 s
+    curva semilla 100151: máximo $196.3M | 262 s
+    curva semilla 100169: máximo $198.6M | 262 s
+  202010 F2 mediana curva_validacion: entrena 202003-202006 (600,123 filas, 760 columnas), predice 202008 (datos en 2 s)
+    curva_validacion semilla 100081: máximo $100.7M | 169 s
+    curva_validacion semilla 100103: máximo $99.5M | 169 s
+    curva_validacion semilla 100129: máximo $102.8M | 169 s
+    curva_validacion semilla 100151: máximo $101.8M | 169 s
+    curva_validacion semilla 100169: máximo $97.9M | 169 s
+  202010 F2 mediana curva: entrena 202003-202008 (911,129 filas, 760 columnas), predice 202010 (datos en 3 s)
+    curva semilla 100081: máximo $114.4M | 260 s
+    curva semilla 100103: máximo $114.4M | 259 s
+    curva semilla 100129: máximo $118.2M | 260 s
+    curva semilla 100151: máximo $123.8M | 260 s
+    curva semilla 100169: máximo $119.3M | 260 s
+  202101 F2 mediana curva_validacion: entrena 202006-202009 (621,237 filas, 760 columnas), predice 202011 (datos en 2 s)
+    curva_validacion semilla 100081: máximo $202.4M | 172 s
+    curva_validacion semilla 100103: máximo $204.1M | 172 s
+    curva_validacion semilla 100129: máximo $201.3M | 172 s
+    curva_validacion semilla 100151: máximo $209.6M | 172 s
+    curva_validacion semilla 100169: máximo $204.6M | 172 s
+  202101 F2 mediana curva: entrena 202006-202011 (940,250 filas, 760 columnas), predice 202101 (datos en 3 s)
+    curva semilla 100081: máximo $370.7M | 267 s
+    curva semilla 100103: máximo $373.4M | 266 s
+    curva semilla 100129: máximo $374.6M | 267 s
+    curva semilla 100151: máximo $371.8M | 267 s
+    curva semilla 100169: máximo $375.6M | 267 s
+  202104 F2 mediana curva_validacion: entrena 202009-202012 (637,366 filas, 760 columnas), predice 202102 (datos en 2 s)
+    curva_validacion semilla 100081: máximo $410.9M | 178 s
+    curva_validacion semilla 100103: máximo $409.8M | 178 s
+    curva_validacion semilla 100129: máximo $414.7M | 178 s
+    curva_validacion semilla 100151: máximo $408.1M | 178 s
+    curva_validacion semilla 100169: máximo $413.6M | 178 s
+  202104 F2 mediana curva: entrena 202009-202102 (960,627 filas, 760 columnas), predice 202104 (datos en 3 s)
+    curva semilla 100081: máximo $559.4M | 272 s
+    curva semilla 100103: máximo $561.5M | 270 s
+    curva semilla 100129: máximo $567.0M | 272 s
+    curva semilla 100151: máximo $561.5M | 272 s
+    curva semilla 100169: máximo $561.0M | 271 s
+== F2 mediana: lista en los 7 meses (213 min)
+# Barrida con ventana móvil (generado por scripts/15_barrida_movil.py)
+
+Seguimiento S10 (regla en el README). Para cada mes de test t: entrena t-7 a t-4, elige el corte estable en t-2, reentrena t-7 a t-2 y mide la ganancia en t. Hiperparámetros de la bayesiana de 2019 de cada familia, 5 semillas. Una familia supera a otra si la diferencia media por mes es positiva y el Wilcoxon pareado por mes da p < 0,05; pierde si es negativa con p < 0,05; si no, empata.
+
+## Resultado de la regla
+
+| comparación | diferencia media por mes | meses en que gana | Wilcoxon p (por mes) | resultado |
+|---|---|---|---|---|
+| F1 IPC vs F0 nominal | -$6,8M | 2 de 7 | 0,109 | empata |
+| F2 mediana vs F0 nominal | -$3,0M | 4 de 7 | 1,000 | empata |
+
+## Mes a mes: diferencia contra F0 (en cuántas semillas gana)
+
+| mes de test | entrena / valida | BAJA+2 del mes | F0 (corte) | F1 IPC | F2 mediana |
+|---|---|---|---|---|---|
+| 201910 | 201903-201908 / 201908 | 632 | $289,7M (4.000) | -$9,2M (0/5) | -$3,4M (0/5) |
+| 202001 | 201906-201911 / 201911 | 521 | $238,7M (6.400) | -$10,7M (0/5) | -$19,8M (0/5) |
+| 202004 | 201909-202002 / 202002 | 524 | $158,8M (2.000) | -$25,6M (0/5) | -$25,7M (0/5) |
+| 202007 | 201912-202005 / 202005 | 541 | $187,9M (5.600) | $4,0M (5/5) | $6,4M (5/5) |
+| 202010 | 202003-202008 / 202008 | 519 | $94,8M (2.800) | $0,4M (2/5) | $5,2M (5/5) |
+| 202101 | 202006-202011 / 202011 | 850 | $356,6M (7.600) | -$1,0M (2/5) | $9,9M (5/5) |
+| 202104 | 202009-202102 / 202102 | 1.139 | $552,0M (9.200) | -$5,2M (0/5) | $6,8M (5/5) |
+
+## Variables con drift en cada ventana (PSI > 0,25 se sacan; no monetarias con PSI > 0,1 se rankean)
+
+| mes de test | sacadas en F6 | sacadas en F7 | rankeadas de más en F8 | las de más drift (PSI sin corregir) |
+|---|---|---|---|---|
+| 202001 | 14 | 15 | 10 | Visa_fultimo_cierre, Master_fultimo_cierre, cmobile_app_trx, tmobile_app |
+
+-> output/barrida/movil.md y .png, resultados/barrida/movil.csv
+  202001 F3 ranking curva_validacion: entrena 201906-201909 (523,417 filas, 760 columnas), predice 201911 (datos en 1 s)
+    curva_validacion semilla 100081: máximo $396.6M | 199 s
+    curva_validacion semilla 100103: máximo $393.2M | 200 s
+    curva_validacion semilla 100129: máximo $392.1M | 199 s
+    curva_validacion semilla 100151: máximo $392.7M | 199 s
+    curva_validacion semilla 100169: máximo $393.8M | 199 s
+  202001 F3 ranking curva: entrena 201906-201911 (796,573 filas, 760 columnas), predice 202001 (datos en 2 s)
+    curva semilla 100081: máximo $265.1M | 313 s
+    curva semilla 100103: máximo $264.0M | 314 s
+    curva semilla 100129: máximo $265.1M | 314 s
+    curva semilla 100151: máximo $264.6M | 314 s
+    curva semilla 100169: máximo $262.4M | 314 s
+  202004 F3 ranking curva_validacion: entrena 201909-201912 (546,130 filas, 760 columnas), predice 202002 (datos en 2 s)
+    curva_validacion semilla 100081: máximo $55.5M | 207 s
+    curva_validacion semilla 100103: máximo $53.4M | 206 s
+    curva_validacion semilla 100129: máximo $55.5M | 203 s
+    curva_validacion semilla 100151: máximo $53.9M | 200 s
+    curva_validacion semilla 100169: máximo $54.5M | 207 s
+  202004 F3 ranking curva: entrena 201909-202002 (835,243 filas, 760 columnas), predice 202004 (datos en 2 s)
+    curva semilla 100081: máximo $181.5M | 335 s
+    curva semilla 100103: máximo $183.7M | 335 s
+    curva semilla 100129: máximo $185.3M | 335 s
+    curva semilla 100151: máximo $184.2M | 335 s
+    curva semilla 100169: máximo $182.1M | 335 s
+  202007 F3 ranking curva_validacion: entrena 201912-202003 (576,981 filas, 760 columnas), predice 202005 (datos en 2 s)
+    curva_validacion semilla 100081: máximo $241.4M | 227 s
+    curva_validacion semilla 100103: máximo $244.2M | 228 s
+    curva_validacion semilla 100129: máximo $242.6M | 228 s
+    curva_validacion semilla 100151: máximo $242.0M | 228 s
+    curva_validacion semilla 100169: máximo $243.1M | 228 s
+  202007 F3 ranking curva: entrena 201912-202005 (876,079 filas, 760 columnas), predice 202007 (datos en 3 s)
+    curva semilla 100081: máximo $199.1M | 354 s
+    curva semilla 100103: máximo $198.6M | 354 s
+    curva semilla 100129: máximo $200.2M | 354 s
+    curva semilla 100151: máximo $197.4M | 353 s
+    curva semilla 100169: máximo $196.9M | 354 s
+  202010 F3 ranking curva_validacion: entrena 202003-202006 (600,123 filas, 760 columnas), predice 202008 (datos en 2 s)
+    curva_validacion semilla 100081: máximo $102.8M | 229 s
+    curva_validacion semilla 100103: máximo $105.6M | 228 s
+    curva_validacion semilla 100129: máximo $101.8M | 229 s
+    curva_validacion semilla 100151: máximo $101.2M | 229 s
+    curva_validacion semilla 100169: máximo $103.4M | 229 s
+  202010 F3 ranking curva: entrena 202003-202008 (911,129 filas, 760 columnas), predice 202010 (datos en 3 s)
+    curva semilla 100081: máximo $121.0M | 356 s
+    curva semilla 100103: máximo $121.0M | 355 s
+    curva semilla 100129: máximo $119.3M | 357 s
+    curva semilla 100151: máximo $121.0M | 356 s
+    curva semilla 100169: máximo $119.9M | 356 s
+  202101 F3 ranking curva_validacion: entrena 202006-202009 (621,237 filas, 760 columnas), predice 202011 (datos en 2 s)
+    curva_validacion semilla 100081: máximo $208.4M | 231 s
+    curva_validacion semilla 100103: máximo $207.9M | 231 s
+    curva_validacion semilla 100129: máximo $209.0M | 232 s
+    curva_validacion semilla 100151: máximo $202.9M | 231 s
+    curva_validacion semilla 100169: máximo $207.9M | 231 s
+  202101 F3 ranking curva: entrena 202006-202011 (940,250 filas, 760 columnas), predice 202101 (datos en 3 s)
+    curva semilla 100081: máximo $373.4M | 367 s
+    curva semilla 100103: máximo $374.0M | 367 s
+    curva semilla 100129: máximo $376.8M | 367 s
+    curva semilla 100151: máximo $378.4M | 367 s
+    curva semilla 100169: máximo $377.3M | 367 s
+  202104 F3 ranking curva_validacion: entrena 202009-202012 (637,366 filas, 760 columnas), predice 202102 (datos en 2 s)
+    curva_validacion semilla 100081: máximo $415.2M | 239 s
+    curva_validacion semilla 100103: máximo $416.9M | 240 s
+    curva_validacion semilla 100129: máximo $417.4M | 240 s
+    curva_validacion semilla 100151: máximo $419.1M | 240 s
+    curva_validacion semilla 100169: máximo $413.1M | 240 s
+  202104 F3 ranking curva: entrena 202009-202102 (960,627 filas, 760 columnas), predice 202104 (datos en 3 s)
+    curva semilla 100081: máximo $557.1M | 378 s
+    curva semilla 100103: máximo $562.6M | 379 s
+    curva semilla 100129: máximo $561.0M | 378 s
+    curva semilla 100151: máximo $556.0M | 379 s
+    curva semilla 100169: máximo $556.0M | 381 s
+== F3 ranking: lista en los 7 meses (287 min)
+# Barrida con ventana móvil (generado por scripts/15_barrida_movil.py)
+
+Seguimiento S10 (regla en el README). Para cada mes de test t: entrena t-7 a t-4, elige el corte estable en t-2, reentrena t-7 a t-2 y mide la ganancia en t. Hiperparámetros de la bayesiana de 2019 de cada familia, 5 semillas. Una familia supera a otra si la diferencia media por mes es positiva y el Wilcoxon pareado por mes da p < 0,05; pierde si es negativa con p < 0,05; si no, empata.
+
+## Resultado de la regla
+
+| comparación | diferencia media por mes | meses en que gana | Wilcoxon p (por mes) | resultado |
+|---|---|---|---|---|
+| F1 IPC vs F0 nominal | -$6,8M | 2 de 7 | 0,109 | empata |
+| F2 mediana vs F0 nominal | -$3,0M | 4 de 7 | 1,000 | empata |
+| F3 ranking vs F0 nominal | -$6,9M | 2 de 7 | 0,156 | empata |
+
+## Mes a mes: diferencia contra F0 (en cuántas semillas gana)
+
+| mes de test | entrena / valida | BAJA+2 del mes | F0 (corte) | F1 IPC | F2 mediana | F3 ranking |
+|---|---|---|---|---|---|---|
+| 201910 | 201903-201908 / 201908 | 632 | $289,7M (4.000) | -$9,2M (0/5) | -$3,4M (0/5) | -$8,1M (0/5) |
+| 202001 | 201906-201911 / 201911 | 521 | $238,7M (6.400) | -$10,7M (0/5) | -$19,8M (0/5) | -$4,8M (0/5) |
+| 202004 | 201909-202002 / 202002 | 524 | $158,8M (2.000) | -$25,6M (0/5) | -$25,7M (0/5) | -$25,9M (0/5) |
+| 202007 | 201912-202005 / 202005 | 541 | $187,9M (5.600) | $4,0M (5/5) | $6,4M (5/5) | $4,6M (4/5) |
+| 202010 | 202003-202008 / 202008 | 519 | $94,8M (2.800) | $0,4M (2/5) | $5,2M (5/5) | $4,7M (4/5) |
+| 202101 | 202006-202011 / 202011 | 850 | $356,6M (7.600) | -$1,0M (2/5) | $9,9M (5/5) | -$14,7M (0/5) |
+| 202104 | 202009-202102 / 202102 | 1.139 | $552,0M (9.200) | -$5,2M (0/5) | $6,8M (5/5) | -$4,0M (0/5) |
+
+## Variables con drift en cada ventana (PSI > 0,25 se sacan; no monetarias con PSI > 0,1 se rankean)
+
+| mes de test | sacadas en F6 | sacadas en F7 | rankeadas de más en F8 | las de más drift (PSI sin corregir) |
+|---|---|---|---|---|
+| 202001 | 14 | 15 | 10 | Visa_fultimo_cierre, Master_fultimo_cierre, cmobile_app_trx, tmobile_app |
+
+-> output/barrida/movil.md y .png, resultados/barrida/movil.csv
+  201910 F6 sin las de mucho drift curva_validacion: entrena 201903-201906 (506,871 filas, 660 columnas), predice 201908 (datos en 1 s)
+    curva_validacion semilla 100081: máximo $209.0M | 111 s
+    curva_validacion semilla 100103: máximo $207.3M | 110 s
+    curva_validacion semilla 100129: máximo $204.6M | 111 s
+    curva_validacion semilla 100151: máximo $208.4M | 111 s
+    curva_validacion semilla 100169: máximo $202.9M | 115 s
+  201910 F6 sin las de mucho drift curva: entrena 201903-201908 (768,499 filas, 660 columnas), predice 201910 (datos en 1 s)
+    curva semilla 100081: máximo $293.7M | 179 s
+    curva semilla 100103: máximo $292.1M | 175 s
+    curva semilla 100129: máximo $292.6M | 175 s
+    curva semilla 100151: máximo $295.4M | 175 s
+    curva semilla 100169: máximo $294.2M | 175 s
+  202001 F6 sin las de mucho drift curva_validacion: entrena 201906-201909 (523,417 filas, 690 columnas), predice 201911 (datos en 1 s)
+    curva_validacion semilla 100081: máximo $383.4M | 119 s
+    curva_validacion semilla 100103: máximo $384.4M | 118 s
+    curva_validacion semilla 100129: máximo $387.2M | 118 s
+    curva_validacion semilla 100151: máximo $386.1M | 118 s
+    curva_validacion semilla 100169: máximo $386.1M | 119 s
+  202001 F6 sin las de mucho drift curva: entrena 201906-201911 (796,573 filas, 690 columnas), predice 202001 (datos en 2 s)
+    curva semilla 100081: máximo $267.3M | 183 s
+    curva semilla 100103: máximo $265.1M | 183 s
+    curva semilla 100129: máximo $268.9M | 183 s
+    curva semilla 100151: máximo $265.1M | 183 s
+    curva semilla 100169: máximo $267.3M | 184 s
+  202004 F6 sin las de mucho drift curva_validacion: entrena 201909-201912 (546,130 filas, 700 columnas), predice 202002 (datos en 2 s)
+    curva_validacion semilla 100081: máximo $57.2M | 129 s
+    curva_validacion semilla 100103: máximo $58.3M | 128 s
+    curva_validacion semilla 100129: máximo $58.3M | 128 s
+    curva_validacion semilla 100151: máximo $57.8M | 127 s
+    curva_validacion semilla 100169: máximo $58.9M | 127 s
+  202004 F6 sin las de mucho drift curva: entrena 201909-202002 (835,243 filas, 700 columnas), predice 202004 (datos en 2 s)
+    curva semilla 100081: máximo $182.6M | 202 s
+    curva semilla 100103: máximo $181.5M | 203 s
+    curva semilla 100129: máximo $187.0M | 202 s
+    curva semilla 100151: máximo $185.3M | 202 s
+    curva semilla 100169: máximo $184.8M | 202 s
+  202007 F6 sin las de mucho drift curva_validacion: entrena 201912-202003 (576,981 filas, 735 columnas), predice 202005 (datos en 2 s)
+    curva_validacion semilla 100081: máximo $241.4M | 149 s
+    curva_validacion semilla 100103: máximo $243.1M | 149 s
+    curva_validacion semilla 100129: máximo $240.3M | 149 s
+    curva_validacion semilla 100151: máximo $238.2M | 150 s
+    curva_validacion semilla 100169: máximo $239.2M | 150 s
+  202007 F6 sin las de mucho drift curva: entrena 201912-202005 (876,079 filas, 735 columnas), predice 202007 (datos en 3 s)
+    curva semilla 100081: máximo $198.0M | 231 s
+    curva semilla 100103: máximo $197.4M | 230 s
+    curva semilla 100129: máximo $198.0M | 229 s
+    curva semilla 100151: máximo $198.6M | 230 s
+    curva semilla 100169: máximo $197.4M | 230 s
+  202010 F6 sin las de mucho drift curva_validacion: entrena 202003-202006 (600,123 filas, 660 columnas), predice 202008 (datos en 2 s)
+    curva_validacion semilla 100081: máximo $102.8M | 130 s
+    curva_validacion semilla 100103: máximo $98.5M | 130 s
+    curva_validacion semilla 100129: máximo $98.5M | 130 s
+    curva_validacion semilla 100151: máximo $104.0M | 130 s
+    curva_validacion semilla 100169: máximo $102.3M | 130 s
+  202010 F6 sin las de mucho drift curva: entrena 202003-202008 (911,129 filas, 660 columnas), predice 202010 (datos en 2 s)
+    curva semilla 100081: máximo $121.5M | 203 s
+    curva semilla 100103: máximo $117.7M | 207 s
+    curva semilla 100129: máximo $120.5M | 204 s
+    curva semilla 100151: máximo $121.5M | 204 s
+    curva semilla 100169: máximo $120.5M | 204 s
+  202101 F6 sin las de mucho drift curva_validacion: entrena 202006-202009 (621,237 filas, 675 columnas), predice 202011 (datos en 2 s)
+    curva_validacion semilla 100081: máximo $207.3M | 136 s
+    curva_validacion semilla 100103: máximo $210.1M | 135 s
+    curva_validacion semilla 100129: máximo $210.7M | 136 s
+    curva_validacion semilla 100151: máximo $210.1M | 136 s
+    curva_validacion semilla 100169: máximo $207.3M | 138 s
+  202101 F6 sin las de mucho drift curva: entrena 202006-202011 (940,250 filas, 675 columnas), predice 202101 (datos en 2 s)
+    curva semilla 100081: máximo $372.9M | 212 s
+    curva semilla 100103: máximo $369.1M | 212 s
+    curva semilla 100129: máximo $363.6M | 212 s
+    curva semilla 100151: máximo $365.8M | 211 s
+    curva semilla 100169: máximo $370.1M | 212 s
+  202104 F6 sin las de mucho drift curva_validacion: entrena 202009-202012 (637,366 filas, 740 columnas), predice 202102 (datos en 2 s)
+    curva_validacion semilla 100081: máximo $402.6M | 157 s
+    curva_validacion semilla 100103: máximo $404.8M | 157 s
+    curva_validacion semilla 100129: máximo $399.9M | 157 s
+    curva_validacion semilla 100151: máximo $399.9M | 157 s
+    curva_validacion semilla 100169: máximo $398.2M | 157 s
+  202104 F6 sin las de mucho drift curva: entrena 202009-202102 (960,627 filas, 740 columnas), predice 202104 (datos en 3 s)
+    curva semilla 100081: máximo $560.5M | 245 s
+    curva semilla 100103: máximo $562.6M | 245 s
+    curva semilla 100129: máximo $553.3M | 244 s
+    curva semilla 100151: máximo $555.5M | 241 s
+    curva semilla 100169: máximo $561.5M | 245 s
+== F6 sin las de mucho drift: lista en los 7 meses (200 min)
+# Barrida con ventana móvil (generado por scripts/15_barrida_movil.py)
+
+Seguimiento S10 (regla en el README). Para cada mes de test t: entrena t-7 a t-4, elige el corte estable en t-2, reentrena t-7 a t-2 y mide la ganancia en t. Hiperparámetros de la bayesiana de 2019 de cada familia, 5 semillas. Una familia supera a otra si la diferencia media por mes es positiva y el Wilcoxon pareado por mes da p < 0,05; pierde si es negativa con p < 0,05; si no, empata.
+
+## Resultado de la regla
+
+| comparación | diferencia media por mes | meses en que gana | Wilcoxon p (por mes) | resultado |
+|---|---|---|---|---|
+| F1 IPC vs F0 nominal | -$6,8M | 2 de 7 | 0,109 | empata |
+| F2 mediana vs F0 nominal | -$3,0M | 4 de 7 | 1,000 | empata |
+| F3 ranking vs F0 nominal | -$6,9M | 2 de 7 | 0,156 | empata |
+| F6 sin las de mucho drift vs F0 nominal | $1,1M | 5 de 7 | 0,312 | empata |
+
+## Mes a mes: diferencia contra F0 (en cuántas semillas gana)
+
+| mes de test | entrena / valida | BAJA+2 del mes | F0 (corte) | F1 IPC | F2 mediana | F3 ranking | F6 sin las de mucho drift |
+|---|---|---|---|---|---|---|---|
+| 201910 | 201903-201908 / 201908 | 632 | $289,7M (4.000) | -$9,2M (0/5) | -$3,4M (0/5) | -$8,1M (0/5) | $0,1M (3/5) |
+| 202001 | 201906-201911 / 201911 | 521 | $238,7M (6.400) | -$10,7M (0/5) | -$19,8M (0/5) | -$4,8M (0/5) | $0,9M (2/5) |
+| 202004 | 201909-202002 / 202002 | 524 | $158,8M (2.000) | -$25,6M (0/5) | -$25,7M (0/5) | -$25,9M (0/5) | -$6,9M (0/5) |
+| 202007 | 201912-202005 / 202005 | 541 | $187,9M (5.600) | $4,0M (5/5) | $6,4M (5/5) | $4,6M (4/5) | -$0,1M (2/5) |
+| 202010 | 202003-202008 / 202008 | 519 | $94,8M (2.800) | $0,4M (2/5) | $5,2M (5/5) | $4,7M (4/5) | $10,0M (5/5) |
+| 202101 | 202006-202011 / 202011 | 850 | $356,6M (7.600) | -$1,0M (2/5) | $9,9M (5/5) | -$14,7M (0/5) | $1,0M (2/5) |
+| 202104 | 202009-202102 / 202102 | 1.139 | $552,0M (9.200) | -$5,2M (0/5) | $6,8M (5/5) | -$4,0M (0/5) | $3,1M (4/5) |
+
+## Variables con drift en cada ventana (PSI > 0,25 se sacan; no monetarias con PSI > 0,1 se rankean)
+
+| mes de test | sacadas en F6 | sacadas en F7 | rankeadas de más en F8 | las de más drift (PSI sin corregir) |
+|---|---|---|---|---|
+| 201910 | 20 | 20 | 13 | mrentabilidad_annual, mrentabilidad, mpasivos_margen, ccomisiones_otras |
+| 202001 | 14 | 15 | 10 | Visa_fultimo_cierre, Master_fultimo_cierre, cmobile_app_trx, tmobile_app |
+| 202004 | 12 | 12 | 13 | Visa_fultimo_cierre, Master_fultimo_cierre, mrentabilidad_annual, mrentabilidad |
+| 202007 | 5 | 5 | 7 | Master_fultimo_cierre, Visa_fultimo_cierre, mforex_sell, cforex_sell |
+| 202010 | 20 | 19 | 14 | Visa_fultimo_cierre, Master_fultimo_cierre, cmobile_app_trx, internet |
+| 202101 | 17 | 17 | 11 | Visa_fultimo_cierre, Master_fultimo_cierre, cmobile_app_trx, internet |
+| 202104 | 4 | 3 | 8 | Visa_fultimo_cierre, Master_fultimo_cierre, cmobile_app_trx, mcomisiones_mantenimiento |
+
+-> output/barrida/movil.md y .png, resultados/barrida/movil.csv
+  201910 F7 mediana sin las de mucho drift curva_validacion: entrena 201903-201906 (506,871 filas, 660 columnas), predice 201908 (datos en 1 s)
+    curva_validacion semilla 100081: máximo $205.2M | 129 s
+    curva_validacion semilla 100103: máximo $206.8M | 129 s
+    curva_validacion semilla 100129: máximo $205.2M | 129 s
+    curva_validacion semilla 100151: máximo $206.2M | 129 s
+    curva_validacion semilla 100169: máximo $205.7M | 129 s
+  201910 F7 mediana sin las de mucho drift curva: entrena 201903-201908 (768,499 filas, 660 columnas), predice 201910 (datos en 1 s)
+    curva semilla 100081: máximo $292.6M | 194 s
+    curva semilla 100103: máximo $293.1M | 195 s
+    curva semilla 100129: máximo $293.1M | 195 s
+    curva semilla 100151: máximo $294.8M | 195 s
+    curva semilla 100169: máximo $291.5M | 195 s
+  202001 F7 mediana sin las de mucho drift curva_validacion: entrena 201906-201909 (523,417 filas, 685 columnas), predice 201911 (datos en 1 s)
+    curva_validacion semilla 100081: máximo $389.4M | 135 s
+    curva_validacion semilla 100103: máximo $391.6M | 134 s
+    curva_validacion semilla 100129: máximo $386.1M | 134 s
+    curva_validacion semilla 100151: máximo $389.4M | 134 s
+    curva_validacion semilla 100169: máximo $392.1M | 135 s
+  202001 F7 mediana sin las de mucho drift curva: entrena 201906-201911 (796,573 filas, 685 columnas), predice 202001 (datos en 2 s)
+    curva semilla 100081: máximo $265.6M | 205 s
+    curva semilla 100103: máximo $268.9M | 206 s
+    curva semilla 100129: máximo $265.1M | 207 s
+    curva semilla 100151: máximo $268.9M | 206 s
+    curva semilla 100169: máximo $268.4M | 206 s
+  202004 F7 mediana sin las de mucho drift curva_validacion: entrena 201909-201912 (546,130 filas, 700 columnas), predice 202002 (datos en 1 s)
+    curva_validacion semilla 100081: máximo $55.0M | 147 s
+    curva_validacion semilla 100103: máximo $54.5M | 148 s
+    curva_validacion semilla 100129: máximo $53.9M | 147 s
+    curva_validacion semilla 100151: máximo $53.9M | 147 s
+    curva_validacion semilla 100169: máximo $55.0M | 147 s
+  202004 F7 mediana sin las de mucho drift curva: entrena 201909-202002 (835,243 filas, 700 columnas), predice 202004 (datos en 2 s)
+    curva semilla 100081: máximo $185.3M | 229 s
+    curva semilla 100103: máximo $184.8M | 229 s
+    curva semilla 100129: máximo $185.3M | 229 s
+    curva semilla 100151: máximo $184.8M | 229 s
+    curva semilla 100169: máximo $184.2M | 229 s
+  202007 F7 mediana sin las de mucho drift curva_validacion: entrena 201912-202003 (576,981 filas, 735 columnas), predice 202005 (datos en 2 s)
+    curva_validacion semilla 100081: máximo $243.1M | 165 s
+    curva_validacion semilla 100103: máximo $240.9M | 165 s
+    curva_validacion semilla 100129: máximo $238.7M | 165 s
+    curva_validacion semilla 100151: máximo $243.1M | 165 s
+    curva_validacion semilla 100169: máximo $239.8M | 165 s
+  202007 F7 mediana sin las de mucho drift curva: entrena 201912-202005 (876,079 filas, 735 columnas), predice 202007 (datos en 2 s)
+    curva semilla 100081: máximo $195.2M | 251 s
+    curva semilla 100103: máximo $200.2M | 252 s
+    curva semilla 100129: máximo $198.6M | 252 s
+    curva semilla 100151: máximo $200.8M | 252 s
+    curva semilla 100169: máximo $199.7M | 251 s
+  202010 F7 mediana sin las de mucho drift curva_validacion: entrena 202003-202006 (600,123 filas, 665 columnas), predice 202008 (datos en 2 s)
+    curva_validacion semilla 100081: máximo $99.5M | 148 s
+    curva_validacion semilla 100103: máximo $102.8M | 148 s
+    curva_validacion semilla 100129: máximo $99.0M | 148 s
+    curva_validacion semilla 100151: máximo $99.5M | 148 s
+    curva_validacion semilla 100169: máximo $99.5M | 147 s
+  202010 F7 mediana sin las de mucho drift curva: entrena 202003-202008 (911,129 filas, 665 columnas), predice 202010 (datos en 2 s)
+    curva semilla 100081: máximo $116.0M | 227 s
+    curva semilla 100103: máximo $117.2M | 228 s
+    curva semilla 100129: máximo $117.2M | 227 s
+    curva semilla 100151: máximo $115.0M | 229 s
+    curva semilla 100169: máximo $112.8M | 228 s
+  202101 F7 mediana sin las de mucho drift curva_validacion: entrena 202006-202009 (621,237 filas, 675 columnas), predice 202011 (datos en 2 s)
+    curva_validacion semilla 100081: máximo $208.4M | 151 s
+    curva_validacion semilla 100103: máximo $205.2M | 151 s
+    curva_validacion semilla 100129: máximo $205.2M | 151 s
+    curva_validacion semilla 100151: máximo $205.2M | 151 s
+    curva_validacion semilla 100169: máximo $203.5M | 152 s
+  202101 F7 mediana sin las de mucho drift curva: entrena 202006-202011 (940,250 filas, 675 columnas), predice 202101 (datos en 3 s)
+    curva semilla 100081: máximo $363.6M | 233 s
+    curva semilla 100103: máximo $369.1M | 233 s
+    curva semilla 100129: máximo $364.1M | 233 s
+    curva semilla 100151: máximo $366.9M | 233 s
+    curva semilla 100169: máximo $369.1M | 232 s
+  202104 F7 mediana sin las de mucho drift curva_validacion: entrena 202009-202012 (637,366 filas, 745 columnas), predice 202102 (datos en 2 s)
+    curva_validacion semilla 100081: máximo $414.7M | 174 s
+    curva_validacion semilla 100103: máximo $412.5M | 174 s
+    curva_validacion semilla 100129: máximo $410.9M | 174 s
+    curva_validacion semilla 100151: máximo $407.0M | 174 s
+    curva_validacion semilla 100169: máximo $411.4M | 174 s
+  202104 F7 mediana sin las de mucho drift curva: entrena 202009-202102 (960,627 filas, 745 columnas), predice 202104 (datos en 3 s)
+    curva semilla 100081: máximo $562.1M | 267 s
+    curva semilla 100103: máximo $556.0M | 267 s
+    curva semilla 100129: máximo $569.2M | 267 s
+    curva semilla 100151: máximo $558.2M | 267 s
+    curva semilla 100169: máximo $566.5M | 267 s
+== F7 mediana sin las de mucho drift: lista en los 7 meses (222 min)
+# Barrida con ventana móvil (generado por scripts/15_barrida_movil.py)
+
+Seguimiento S10 (regla en el README). Para cada mes de test t: entrena t-7 a t-4, elige el corte estable en t-2, reentrena t-7 a t-2 y mide la ganancia en t. Hiperparámetros de la bayesiana de 2019 de cada familia, 5 semillas. Una familia supera a otra si la diferencia media por mes es positiva y el Wilcoxon pareado por mes da p < 0,05; pierde si es negativa con p < 0,05; si no, empata.
+
+## Resultado de la regla
+
+| comparación | diferencia media por mes | meses en que gana | Wilcoxon p (por mes) | resultado |
+|---|---|---|---|---|
+| F1 IPC vs F0 nominal | -$6,8M | 2 de 7 | 0,109 | empata |
+| F2 mediana vs F0 nominal | -$3,0M | 4 de 7 | 1,000 | empata |
+| F3 ranking vs F0 nominal | -$6,9M | 2 de 7 | 0,156 | empata |
+| F6 sin las de mucho drift vs F0 nominal | $1,1M | 5 de 7 | 0,312 | empata |
+| F7 mediana sin las de mucho drift vs F0 nominal | -$2,4M | 3 de 7 | 0,938 | empata |
+| F7 mediana sin las de mucho drift vs F2 mediana | $0,6M | 5 de 7 | 0,438 | empata |
+
+## Mes a mes: diferencia contra F0 (en cuántas semillas gana)
+
+| mes de test | entrena / valida | BAJA+2 del mes | F0 (corte) | F1 IPC | F2 mediana | F3 ranking | F6 sin las de mucho drift | F7 mediana sin las de mucho drift |
+|---|---|---|---|---|---|---|---|---|
+| 201910 | 201903-201908 / 201908 | 632 | $289,7M (4.000) | -$9,2M (0/5) | -$3,4M (0/5) | -$8,1M (0/5) | $0,1M (3/5) | -$0,8M (3/5) |
+| 202001 | 201906-201911 / 201911 | 521 | $238,7M (6.400) | -$10,7M (0/5) | -$19,8M (0/5) | -$4,8M (0/5) | $0,9M (2/5) | -$7,0M (0/5) |
+| 202004 | 201909-202002 / 202002 | 524 | $158,8M (2.000) | -$25,6M (0/5) | -$25,7M (0/5) | -$25,9M (0/5) | -$6,9M (0/5) | -$24,1M (0/5) |
+| 202007 | 201912-202005 / 202005 | 541 | $187,9M (5.600) | $4,0M (5/5) | $6,4M (5/5) | $4,6M (4/5) | -$0,1M (2/5) | $7,3M (5/5) |
+| 202010 | 202003-202008 / 202008 | 519 | $94,8M (2.800) | $0,4M (2/5) | $5,2M (5/5) | $4,7M (4/5) | $10,0M (5/5) | $6,9M (5/5) |
+| 202101 | 202006-202011 / 202011 | 850 | $356,6M (7.600) | -$1,0M (2/5) | $9,9M (5/5) | -$14,7M (0/5) | $1,0M (2/5) | -$5,8M (1/5) |
+| 202104 | 202009-202102 / 202102 | 1.139 | $552,0M (9.200) | -$5,2M (0/5) | $6,8M (5/5) | -$4,0M (0/5) | $3,1M (4/5) | $6,8M (4/5) |
+
+## Variables con drift en cada ventana (PSI > 0,25 se sacan; no monetarias con PSI > 0,1 se rankean)
+
+| mes de test | sacadas en F6 | sacadas en F7 | rankeadas de más en F8 | las de más drift (PSI sin corregir) |
+|---|---|---|---|---|
+| 201910 | 20 | 20 | 13 | mrentabilidad_annual, mrentabilidad, mpasivos_margen, ccomisiones_otras |
+| 202001 | 14 | 15 | 10 | Visa_fultimo_cierre, Master_fultimo_cierre, cmobile_app_trx, tmobile_app |
+| 202004 | 12 | 12 | 13 | Visa_fultimo_cierre, Master_fultimo_cierre, mrentabilidad_annual, mrentabilidad |
+| 202007 | 5 | 5 | 7 | Master_fultimo_cierre, Visa_fultimo_cierre, mforex_sell, cforex_sell |
+| 202010 | 20 | 19 | 14 | Visa_fultimo_cierre, Master_fultimo_cierre, cmobile_app_trx, internet |
+| 202101 | 17 | 17 | 11 | Visa_fultimo_cierre, Master_fultimo_cierre, cmobile_app_trx, internet |
+| 202104 | 4 | 3 | 8 | Visa_fultimo_cierre, Master_fultimo_cierre, cmobile_app_trx, mcomisiones_mantenimiento |
+
+-> output/barrida/movil.md y .png, resultados/barrida/movil.csv
+  201910 F8 ranking de todo lo que drifta curva_validacion: entrena 201903-201906 (506,871 filas, 760 columnas, 65 de ranking_todo), predice 201908 (datos en 2 s)
+    curva_validacion semilla 100081: máximo $211.8M | 193 s
+    curva_validacion semilla 100103: máximo $212.8M | 193 s
+    curva_validacion semilla 100129: máximo $210.7M | 192 s
+    curva_validacion semilla 100151: máximo $212.3M | 192 s
+    curva_validacion semilla 100169: máximo $209.6M | 191 s
+  201910 F8 ranking de todo lo que drifta curva: entrena 201903-201908 (768,499 filas, 760 columnas, 65 de ranking_todo), predice 201910 (datos en 2 s)
+    curva semilla 100081: máximo $292.1M | 306 s
+    curva semilla 100103: máximo $289.3M | 307 s
+    curva semilla 100129: máximo $287.1M | 307 s
+    curva semilla 100151: máximo $289.9M | 304 s
+    curva semilla 100169: máximo $287.6M | 305 s
+  202001 F8 ranking de todo lo que drifta curva_validacion: entrena 201906-201909 (523,417 filas, 760 columnas, 50 de ranking_todo), predice 201911 (datos en 2 s)
+    curva_validacion semilla 100081: máximo $394.9M | 202 s
+    curva_validacion semilla 100103: máximo $395.4M | 203 s
+    curva_validacion semilla 100129: máximo $392.7M | 204 s
+    curva_validacion semilla 100151: máximo $392.1M | 204 s
+    curva_validacion semilla 100169: máximo $391.6M | 203 s
+  202001 F8 ranking de todo lo que drifta curva: entrena 201906-201911 (796,573 filas, 760 columnas, 50 de ranking_todo), predice 202001 (datos en 3 s)
+    curva semilla 100081: máximo $263.4M | 320 s
+    curva semilla 100103: máximo $265.1M | 320 s
+    curva semilla 100129: máximo $264.0M | 320 s
+    curva semilla 100151: máximo $264.0M | 320 s
+    curva semilla 100169: máximo $262.9M | 320 s
+  202004 F8 ranking de todo lo que drifta curva_validacion: entrena 201909-201912 (546,130 filas, 760 columnas, 65 de ranking_todo), predice 202002 (datos en 2 s)
+    curva_validacion semilla 100081: máximo $57.2M | 212 s
+    curva_validacion semilla 100103: máximo $56.1M | 213 s
+    curva_validacion semilla 100129: máximo $55.5M | 211 s
+    curva_validacion semilla 100151: máximo $53.9M | 212 s
+    curva_validacion semilla 100169: máximo $54.5M | 213 s
+  202004 F8 ranking de todo lo que drifta curva: entrena 201909-202002 (835,243 filas, 760 columnas, 65 de ranking_todo), predice 202004 (datos en 3 s)
+    curva semilla 100081: máximo $183.2M | 346 s
+    curva semilla 100103: máximo $183.7M | 346 s
+    curva semilla 100129: máximo $189.8M | 346 s
+    curva semilla 100151: máximo $182.6M | 346 s
+    curva semilla 100169: máximo $185.3M | 346 s
+  202007 F8 ranking de todo lo que drifta curva_validacion: entrena 201912-202003 (576,981 filas, 760 columnas, 35 de ranking_todo), predice 202005 (datos en 2 s)
+    curva_validacion semilla 100081: máximo $248.6M | 229 s
+    curva_validacion semilla 100103: máximo $248.6M | 230 s
+    curva_validacion semilla 100129: máximo $248.1M | 230 s
+    curva_validacion semilla 100151: máximo $249.7M | 230 s
+    curva_validacion semilla 100169: máximo $251.9M | 229 s
+  202007 F8 ranking de todo lo que drifta curva: entrena 201912-202005 (876,079 filas, 760 columnas, 35 de ranking_todo), predice 202007 (datos en 3 s)
+    curva semilla 100081: máximo $201.3M | 360 s
+    curva semilla 100103: máximo $195.8M | 361 s
+    curva semilla 100129: máximo $200.2M | 361 s
+    curva semilla 100151: máximo $199.7M | 361 s
+    curva semilla 100169: máximo $198.6M | 361 s
+  202010 F8 ranking de todo lo que drifta curva_validacion: entrena 202003-202006 (600,123 filas, 760 columnas, 70 de ranking_todo), predice 202008 (datos en 3 s)
+    curva_validacion semilla 100081: máximo $102.3M | 231 s
+    curva_validacion semilla 100103: máximo $104.0M | 231 s
+    curva_validacion semilla 100129: máximo $101.8M | 231 s
+    curva_validacion semilla 100151: máximo $101.8M | 231 s
+    curva_validacion semilla 100169: máximo $103.4M | 231 s
+  202010 F8 ranking de todo lo que drifta curva: entrena 202003-202008 (911,129 filas, 760 columnas, 70 de ranking_todo), predice 202010 (datos en 4 s)
+    curva semilla 100081: máximo $118.2M | 361 s
+    curva semilla 100103: máximo $120.5M | 361 s
+    curva semilla 100129: máximo $123.2M | 359 s
+    curva semilla 100151: máximo $116.6M | 361 s
+    curva semilla 100169: máximo $119.3M | 361 s
+  202101 F8 ranking de todo lo que drifta curva_validacion: entrena 202006-202009 (621,237 filas, 760 columnas, 55 de ranking_todo), predice 202011 (datos en 3 s)
+    curva_validacion semilla 100081: máximo $205.2M | 232 s
+    curva_validacion semilla 100103: máximo $205.2M | 232 s
+    curva_validacion semilla 100129: máximo $210.7M | 232 s
+    curva_validacion semilla 100151: máximo $206.2M | 233 s
+    curva_validacion semilla 100169: máximo $207.3M | 232 s
+  202101 F8 ranking de todo lo que drifta curva: entrena 202006-202011 (940,250 filas, 760 columnas, 55 de ranking_todo), predice 202101 (datos en 4 s)
+    curva semilla 100081: máximo $365.8M | 372 s
+    curva semilla 100103: máximo $366.3M | 372 s
+    curva semilla 100129: máximo $367.9M | 372 s
+    curva semilla 100151: máximo $366.9M | 371 s
+    curva semilla 100169: máximo $370.1M | 372 s
+  202104 F8 ranking de todo lo que drifta curva_validacion: entrena 202009-202012 (637,366 filas, 760 columnas, 40 de ranking_todo), predice 202102 (datos en 2 s)
+    curva_validacion semilla 100081: máximo $418.6M | 244 s
+    curva_validacion semilla 100103: máximo $415.8M | 244 s
+    curva_validacion semilla 100129: máximo $416.4M | 244 s
+    curva_validacion semilla 100151: máximo $415.8M | 244 s
+    curva_validacion semilla 100169: máximo $413.1M | 244 s
+  202104 F8 ranking de todo lo que drifta curva: entrena 202009-202102 (960,627 filas, 760 columnas, 40 de ranking_todo), predice 202104 (datos en 4 s)
+    curva semilla 100081: máximo $558.8M | 382 s
+    curva semilla 100103: máximo $559.9M | 380 s
+    curva semilla 100129: máximo $560.5M | 381 s
+    curva semilla 100151: máximo $557.1M | 381 s
+    curva semilla 100169: máximo $557.1M | 381 s
+== F8 ranking de todo lo que drifta: lista en los 7 meses (334 min)
+# Barrida con ventana móvil (generado por scripts/15_barrida_movil.py)
+
+Seguimiento S10 (regla en el README). Para cada mes de test t: entrena t-7 a t-4, elige el corte estable en t-2, reentrena t-7 a t-2 y mide la ganancia en t. Hiperparámetros de la bayesiana de 2019 de cada familia, 5 semillas. Una familia supera a otra si la diferencia media por mes es positiva y el Wilcoxon pareado por mes da p < 0,05; pierde si es negativa con p < 0,05; si no, empata.
+
+## Resultado de la regla
+
+| comparación | diferencia media por mes | meses en que gana | Wilcoxon p (por mes) | resultado |
+|---|---|---|---|---|
+| F1 IPC vs F0 nominal | -$6,8M | 2 de 7 | 0,109 | empata |
+| F2 mediana vs F0 nominal | -$3,0M | 4 de 7 | 1,000 | empata |
+| F3 ranking vs F0 nominal | -$6,9M | 2 de 7 | 0,156 | empata |
+| F6 sin las de mucho drift vs F0 nominal | $1,1M | 5 de 7 | 0,312 | empata |
+| F7 mediana sin las de mucho drift vs F0 nominal | -$2,4M | 3 de 7 | 0,938 | empata |
+| F8 ranking de todo lo que drifta vs F0 nominal | -$6,4M | 2 de 7 | 0,297 | empata |
+| F7 mediana sin las de mucho drift vs F2 mediana | $0,6M | 5 de 7 | 0,438 | empata |
+| F8 ranking de todo lo que drifta vs F3 ranking | $0,5M | 3 de 7 | 1,000 | empata |
+
+## Mes a mes: diferencia contra F0 (en cuántas semillas gana)
+
+| mes de test | entrena / valida | BAJA+2 del mes | F0 (corte) | F1 IPC | F2 mediana | F3 ranking | F6 sin las de mucho drift | F7 mediana sin las de mucho drift | F8 ranking de todo lo que drifta |
+|---|---|---|---|---|---|---|---|---|---|
+| 201910 | 201903-201908 / 201908 | 632 | $289,7M (4.000) | -$9,2M (0/5) | -$3,4M (0/5) | -$8,1M (0/5) | $0,1M (3/5) | -$0,8M (3/5) | -$3,3M (0/5) |
+| 202001 | 201906-201911 / 201911 | 521 | $238,7M (6.400) | -$10,7M (0/5) | -$19,8M (0/5) | -$4,8M (0/5) | $0,9M (2/5) | -$7,0M (0/5) | -$12,1M (0/5) |
+| 202004 | 201909-202002 / 202002 | 524 | $158,8M (2.000) | -$25,6M (0/5) | -$25,7M (0/5) | -$25,9M (0/5) | -$6,9M (0/5) | -$24,1M (0/5) | -$14,7M (0/5) |
+| 202007 | 201912-202005 / 202005 | 541 | $187,9M (5.600) | $4,0M (5/5) | $6,4M (5/5) | $4,6M (4/5) | -$0,1M (2/5) | $7,3M (5/5) | $4,3M (5/5) |
+| 202010 | 202003-202008 / 202008 | 519 | $94,8M (2.800) | $0,4M (2/5) | $5,2M (5/5) | $4,7M (4/5) | $10,0M (5/5) | $6,9M (5/5) | $4,3M (5/5) |
+| 202101 | 202006-202011 / 202011 | 850 | $356,6M (7.600) | -$1,0M (2/5) | $9,9M (5/5) | -$14,7M (0/5) | $1,0M (2/5) | -$5,8M (1/5) | -$19,9M (0/5) |
+| 202104 | 202009-202102 / 202102 | 1.139 | $552,0M (9.200) | -$5,2M (0/5) | $6,8M (5/5) | -$4,0M (0/5) | $3,1M (4/5) | $6,8M (4/5) | -$3,2M (1/5) |
+
+## Variables con drift en cada ventana (PSI > 0,25 se sacan; no monetarias con PSI > 0,1 se rankean)
+
+| mes de test | sacadas en F6 | sacadas en F7 | rankeadas de más en F8 | las de más drift (PSI sin corregir) |
+|---|---|---|---|---|
+| 201910 | 20 | 20 | 13 | mrentabilidad_annual, mrentabilidad, mpasivos_margen, ccomisiones_otras |
+| 202001 | 14 | 15 | 10 | Visa_fultimo_cierre, Master_fultimo_cierre, cmobile_app_trx, tmobile_app |
+| 202004 | 12 | 12 | 13 | Visa_fultimo_cierre, Master_fultimo_cierre, mrentabilidad_annual, mrentabilidad |
+| 202007 | 5 | 5 | 7 | Master_fultimo_cierre, Visa_fultimo_cierre, mforex_sell, cforex_sell |
+| 202010 | 20 | 19 | 14 | Visa_fultimo_cierre, Master_fultimo_cierre, cmobile_app_trx, internet |
+| 202101 | 17 | 17 | 11 | Visa_fultimo_cierre, Master_fultimo_cierre, cmobile_app_trx, internet |
+| 202104 | 4 | 3 | 8 | Visa_fultimo_cierre, Master_fultimo_cierre, cmobile_app_trx, mcomisiones_mantenimiento |
+
+-> output/barrida/movil.md y .png, resultados/barrida/movil.csv
+# Barrida con ventana móvil (generado por scripts/15_barrida_movil.py)
+
+Seguimiento S10 (regla en el README). Para cada mes de test t: entrena t-7 a t-4, elige el corte estable en t-2, reentrena t-7 a t-2 y mide la ganancia en t. Hiperparámetros de la bayesiana de 2019 de cada familia, 5 semillas. Una familia supera a otra si la diferencia media por mes es positiva y el Wilcoxon pareado por mes da p < 0,05; pierde si es negativa con p < 0,05; si no, empata.
+
+## Resultado de la regla
+
+| comparación | diferencia media por mes | meses en que gana | Wilcoxon p (por mes) | resultado |
+|---|---|---|---|---|
+| F1 IPC vs F0 nominal | -$6,8M | 2 de 7 | 0,109 | empata |
+| F2 mediana vs F0 nominal | -$3,0M | 4 de 7 | 1,000 | empata |
+| F3 ranking vs F0 nominal | -$6,9M | 2 de 7 | 0,156 | empata |
+| F6 sin las de mucho drift vs F0 nominal | $1,1M | 5 de 7 | 0,312 | empata |
+| F7 mediana sin las de mucho drift vs F0 nominal | -$2,4M | 3 de 7 | 0,938 | empata |
+| F8 ranking de todo lo que drifta vs F0 nominal | -$6,4M | 2 de 7 | 0,297 | empata |
+| F7 mediana sin las de mucho drift vs F2 mediana | $0,6M | 5 de 7 | 0,438 | empata |
+| F8 ranking de todo lo que drifta vs F3 ranking | $0,5M | 3 de 7 | 1,000 | empata |
+
+## Mes a mes: diferencia contra F0 (en cuántas semillas gana)
+
+| mes de test | entrena / valida | BAJA+2 del mes | F0 (corte) | F1 IPC | F2 mediana | F3 ranking | F6 sin las de mucho drift | F7 mediana sin las de mucho drift | F8 ranking de todo lo que drifta |
+|---|---|---|---|---|---|---|---|---|---|
+| 201910 | 201903-201908 / 201908 | 632 | $289,7M (4.000) | -$9,2M (0/5) | -$3,4M (0/5) | -$8,1M (0/5) | $0,1M (3/5) | -$0,8M (3/5) | -$3,3M (0/5) |
+| 202001 | 201906-201911 / 201911 | 521 | $238,7M (6.400) | -$10,7M (0/5) | -$19,8M (0/5) | -$4,8M (0/5) | $0,9M (2/5) | -$7,0M (0/5) | -$12,1M (0/5) |
+| 202004 | 201909-202002 / 202002 | 524 | $158,8M (2.000) | -$25,6M (0/5) | -$25,7M (0/5) | -$25,9M (0/5) | -$6,9M (0/5) | -$24,1M (0/5) | -$14,7M (0/5) |
+| 202007 | 201912-202005 / 202005 | 541 | $187,9M (5.600) | $4,0M (5/5) | $6,4M (5/5) | $4,6M (4/5) | -$0,1M (2/5) | $7,3M (5/5) | $4,3M (5/5) |
+| 202010 | 202003-202008 / 202008 | 519 | $94,8M (2.800) | $0,4M (2/5) | $5,2M (5/5) | $4,7M (4/5) | $10,0M (5/5) | $6,9M (5/5) | $4,3M (5/5) |
+| 202101 | 202006-202011 / 202011 | 850 | $356,6M (7.600) | -$1,0M (2/5) | $9,9M (5/5) | -$14,7M (0/5) | $1,0M (2/5) | -$5,8M (1/5) | -$19,9M (0/5) |
+| 202104 | 202009-202102 / 202102 | 1.139 | $552,0M (9.200) | -$5,2M (0/5) | $6,8M (5/5) | -$4,0M (0/5) | $3,1M (4/5) | $6,8M (4/5) | -$3,2M (1/5) |
+
+## Variables con drift en cada ventana (PSI > 0,25 se sacan; no monetarias con PSI > 0,1 se rankean)
+
+| mes de test | sacadas en F6 | sacadas en F7 | rankeadas de más en F8 | las de más drift (PSI sin corregir) |
+|---|---|---|---|---|
+| 201910 | 20 | 20 | 13 | mrentabilidad_annual, mrentabilidad, mpasivos_margen, ccomisiones_otras |
+| 202001 | 14 | 15 | 10 | Visa_fultimo_cierre, Master_fultimo_cierre, cmobile_app_trx, tmobile_app |
+| 202004 | 12 | 12 | 13 | Visa_fultimo_cierre, Master_fultimo_cierre, mrentabilidad_annual, mrentabilidad |
+| 202007 | 5 | 5 | 7 | Master_fultimo_cierre, Visa_fultimo_cierre, mforex_sell, cforex_sell |
+| 202010 | 20 | 19 | 14 | Visa_fultimo_cierre, Master_fultimo_cierre, cmobile_app_trx, internet |
+| 202101 | 17 | 17 | 11 | Visa_fultimo_cierre, Master_fultimo_cierre, cmobile_app_trx, internet |
+| 202104 | 4 | 3 | 8 | Visa_fultimo_cierre, Master_fultimo_cierre, cmobile_app_trx, mcomisiones_mantenimiento |
+
+-> output/barrida/movil.md y .png, resultados/barrida/movil.csv

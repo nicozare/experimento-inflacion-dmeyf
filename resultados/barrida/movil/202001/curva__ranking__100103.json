@@ -1,0 +1,9 @@
+{
+  "familia": "ranking",
+  "semilla": 100103,
+  "auc": 0.9546727011059877,
+  "ganancia_maxima": 264000000,
+  "columnas": 760,
+  "arboles": 1223,
+  "segundos": 314.0
+}
