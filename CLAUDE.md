@@ -218,11 +218,44 @@ drifta (F8). Reglas en el README antes de correr (commit 055da5d).
   deflactar al predecir. Deflactar cada monto con el IPC de su mes (deltas
   reales) da lo mismo en 2021, pero en 2019 pierde -$14,9M (como en S4). Los
   modelos `ipc__hiperparametros_de_ninguna__*.txt` quedan en `data/modelos/`.
-- Pendiente cuando termine S10: reescribir el README como un paper (resumen,
-  hipótesis, métodos, resultados con gráficos, conclusiones; organizado por
-  pregunta y no por seguimiento), sin referencias a conversaciones ni a
-  comentarios del tutor. Lo pidió el usuario el 19/11.
-- S10 (15) corre desde el 19/11 a las 15:21 (cadena `barrida.sh` del
-  scratchpad); termina el viernes 20/11 a la noche. Antes de ver S10 se
-  escribió en el README la predicción que sale de S9: con +9% a +19% entre el
-  reentreno y el test, "corregir no ayuda" debería confirmarse.
+- S10 (15, del 19/11 15:21 al 20/11 18:48, ~27 h sin cortes, con un update
+  por hora que pidió el usuario): 45 combinaciones familia x mes con 5
+  semillas (6 meses nuevos para F0-F3, porque 201910 se copia de 04 y 07, y 7
+  para F6-F8). Con la regla, las 8 comparaciones empatan: F1 -$6,8M (gana 2
+  de 7 meses), F2 -$3,0M (4 de 7), F3 -$6,9M (2 de 7), F6 +$1,1M (5 de 7,
+  p = 0,312), F7 -$2,4M (3 de 7), F8 -$6,4M (2 de 7), F7 contra F2 +$0,6M y
+  F8 contra F3 +$0,5M. Se cumplió la predicción escrita antes de verla
+  (commit 6980a27): con +9% a +19% entre el reentreno y el test, corregir no
+  ayuda. Con 7 meses, el Wilcoxon solo da p < 0,05 si una familia gana (o
+  pierde) en al menos 6.
+- Exploratorio de S10 (agregado al ver los resultados, como en S9): lo que
+  pierden las correcciones viene sobre todo del corte. Con el corte de F0: F2
+  -$0,3M, F1 -$3,5M, F3 -$2,4M; con el mejor corte de cada una, todas a menos
+  de $1M de F0. AUC contra F0 de +0,3 a +0,9 milésimas, más de diez veces
+  menos que S9 en 2021. F3 y F8 ordenan mejor los 7 meses (+0,7 y +0,8) pero
+  con el corte de F0 pierden en 6 de 7: la mejora queda fuera de la punta de
+  la lista. F6 ordena apenas peor (-0,7). El peor mes, 202004, es por el
+  corte: la validación (202002) tuvo 213 BAJA+2 contra 524 en el test, todas
+  cortan corto (F0 2.000, correcciones 1.200 a 1.300, mejor corte ~6.300) y
+  las correcciones pierden ~$26M.
+- Variables con drift en S10: F6 saca de 4 a 20 por ventana, F7 de 3 a 20 y
+  F8 rankea de 7 a 14 no monetarias de más. Las de más drift casi nunca son
+  precios: `Visa_fultimo_cierre` y `Master_fultimo_cierre` (días desde el
+  último cierre, dependen del calendario) encabezan 6 de las 7 ventanas,
+  seguidas de `cmobile_app_trx` e `internet`.
+- Código cambiado con 15 corriendo (la corrida usó el código viejo; el
+  resumen se rehízo al final con `15 --solo-resumen`): sección exploratoria
+  sin depender del corte, tabla del corte de cada familia y gráfico de dos
+  paneles (ganancia con la regla y AUC). Las curvas de 201910 de F0-F3 se
+  copian de 04 y 07 sin el AUC, así que 15 lo toma de
+  `resultados/final__{familia}__{semilla}.json` (`auc_test`). Los títulos de
+  `movil.png` y `envejece.png` ya no usan códigos solos (`14 --solo-resumen`
+  rehízo solo el gráfico; `envejece.md` no cambió).
+- README reescrito como paper el 20/11, al terminar S10 (lo pidió el usuario
+  el 19/11): resumen, introducción con la hipótesis principal y las cuatro
+  secundarias, métodos con la tabla de reglas y el commit de cada una,
+  resultados por pregunta, sesgos, limitaciones, conclusiones y anexos
+  (comandos, y el mapa de análisis, código S, scripts y salidas). Sin
+  referencias a conversaciones ni a comentarios del tutor: esa historia queda
+  acá. La versión anterior, organizada por seguimiento, queda enlazada desde
+  el anexo B (README en 1dcd479).

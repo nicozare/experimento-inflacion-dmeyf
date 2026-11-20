@@ -1,344 +1,258 @@
-# Experimento colaborativo: inflación (grupo Inflacion_2)
+# ¿Conviene corregir la inflación antes de entrenar un modelo de churn?
 
-DMEyF 2026. Ana Dominguez, Nicolás Zarewsky y Valentín Turri. Tutor: Joaquín I. Aramendía.
-Entrega: video grupal (máximo 10 minutos) antes del mediodía del lunes 23/11; discusión en clase el martes 24/11.
+Ana Dominguez, Nicolás Zarewsky y Valentín Turri (grupo Inflacion_2). DMEyF 2026, experimento colaborativo sobre inflación. Tutor: Joaquín I. Aramendía.
 
-## En un minuto
+## Resumen
 
-**La pregunta.** El modelo aprende umbrales en pesos con datos de marzo a agosto de 2019 (por ejemplo, "saldo menor a $50.000") y los aplica en octubre, cuando los precios ya subieron. ¿Conviene corregir la inflación de las variables en pesos antes de entrenar?
+Un modelo de churn aprende umbrales en pesos, como "saldo menor a $50.000", y los aplica meses después, cuando los precios ya subieron. Probamos si corregir la inflación de las variables en pesos antes de entrenar sube la ganancia de una campaña de retención. Con el baseline de la cátedra (LightGBM, una optimización bayesiana por familia, 20 semillas) y reglas de decisión escritas antes de mirar el test, comparamos el modelo sin corregir (F0) con tres correcciones: deflactar por IPC (F1), dividir por la mediana del mes (F2) y pasar a ranking del mes (F3). En el mes de test del baseline (201910) ninguna corrección le gana al modelo sin corregir: la mediana casi empata (-$1,4M sobre $289M), el ranking pierde $6,2M y el IPC, $9,5M. En siete meses de test entre 2019 y 2021, con la misma ventana corrida en el tiempo, las tres correcciones empatan con el modelo sin corregir, y lo que pierden viene sobre todo de dónde cortan. Corregir baja el drift de la variable típica, pero los árboles cortan los montos sobre todo en "no tiene" o en montos bajos, que la inflación casi no mueve, y entre el entrenamiento y el test los precios suben menos de 20%. Si el modelo no se reentrena, la respuesta cambia: aplicados sin reentrenar hasta 2021, los modelos corregidos ordenan mejor a los clientes desde unos +35% de inflación acumulada, y en 2021 ganan entre $12M y $19M más por mes (exploratorio). La misma ventaja se obtiene dividiendo los montos por la inflación acumulada al predecir, sin entrenar otro modelo. Agregar proporciones del propio cliente, que no tienen inflación, mejoró en un mes pero no se confirmó en otro. Sacar las variables con mucho drift, o pasar a ranking también las no monetarias que cambian, tampoco sube la ganancia en los siete meses de test. Con reentreno frecuente, corregir la inflación no hace falta; si el modelo se usa muchos meses sin reentrenar, conviene deflactar los montos al predecir.
 
-**La hipótesis.** Corregir con datos del propio mes (dividir por la mediana del mes o pasar a ranking) da más ganancia que no corregir, y al menos la misma que deflactar por IPC, sin depender del INDEC.
+## 1. Introducción
 
-**La respuesta: no.** Con el baseline de la cátedra y una regla de decisión fijada antes de mirar el test:
-
-- **Ninguna corrección le gana al modelo sin corregir.** La mediana casi empata (-$1,4M sobre $289M), el ranking pierde $6,2M y el IPC, $9,5M.
-- **La mediana y el ranking sí le ganan al IPC**, pero esa diferencia no resiste el azar de qué clientes caen en el mes.
-
-**Pero si el modelo envejece sin reentrenar, sí (exploratorio).** Con los modelos de 2019 aplicados hasta 202106 (S9), desde unos +35% de inflación acumulada las tres correcciones ordenan mejor a los clientes que el modelo sin corregir. En 2021 (+81% a +117%) le ganan todos los meses: entre $12M y $19M más por mes, cada una con su mejor corte. La regla escrita antes no lo confirma, porque usaba el corte fijo de 2019 y en 2021 las bajas casi se duplican.
-
-**Por qué corregir no ayuda.** Tres hallazgos que apuntan a lo mismo:
-
-1. **Los modelos casi no miran el nivel de precios.** En todas las familias, corrijan o no, entre el 60% y el 70% de la ganancia de los cortes sobre montos pregunta si el cliente tiene poco o nada, y la inflación casi no mueve esos umbrales bajos. Corregir cambia la escala, pero no esa pregunta.
-2. **El cambio grande de octubre de 2019 no es de precios**: es el comportamiento en dólares después de las PASO. Las correcciones bajan el drift de la variable típica, pero octubre sigue igual de distinguible.
-3. **Entre el entrenamiento y el test pasan pocos meses**: los precios suben 18%, aunque 2019 cerró con 54% anual. Con el modelo de 2019 aplicado sin reentrenar a 2020-2021, corregir empieza a convenir recién desde unos +35% (S9, abajo).
-
-**Lo único que mejoró algo no corrige: agrega.** Sumar 11 proporciones del propio cliente (saldo / sueldo, uso del límite, dolarización), que no tienen inflación, sin sacar los montos. En octubre gana con una regla de corte y empata con la otra; en septiembre no se confirma; y con la regla tampoco supera a su control, que resta los mismos pares en vez de dividirlos.
-
-**Lección de método.** Con un solo mes de test, el azar de qué clientes caen en el mes pesa de 2 a 7 veces más que el de las semillas, y elegir cuántos clientes estimular mueve la ganancia tanto como cambiar de familia. Fijar la regla y el corte antes de mirar el test nos evitó declarar ganadores que no lo eran.
-
-## Por qué pensábamos que iba a funcionar
-
-Entre marzo y octubre de 2019 el IPC subió 27%. Un árbol que aprendió "saldo menor a $50.000" en marzo aplica el mismo umbral en octubre, cuando $50.000 ya valen otra cosa. Y cada variable tiene su propia inflación (`scripts/00_diagnostico_inflacion.py`):
+Entre marzo y octubre de 2019 el IPC subió 27%. Un árbol que aprendió "saldo menor a $50.000" en marzo aplica el mismo umbral en octubre, cuando $50.000 ya valen otra cosa. Además, cada variable tiene su propia inflación (`scripts/00_diagnostico_inflacion.py`):
 
 - el sueldo acreditado sigue al IPC (+26%), con un salto de +52% en junio por el aguinaldo;
 - el saldo en cuentas sube apenas 8%, y el consumo con Visa, 42%;
 - los límites de las tarjetas no se mueven mes a mes: el banco los sube por escalones (+40% de golpe en mayo);
 - las variables en dólares expresadas en pesos saltan con la devaluación de agosto.
 
-Un único índice externo no puede corregirlas a todas. La mediana del mes corrige cada variable con su propio movimiento, y además absorbe el aguinaldo.
-
 ![Mediana mensual de 4 variables contra el IPC](output/diagnostico_medianas_ipc.png)
 
-## Las familias
+Un único índice externo no puede corregirlas a todas. La mediana del mes corrige cada variable con su propio movimiento, y además absorbe el aguinaldo. El otro grupo del tema (Inflacion_1) estudia deflactores externos por tipo de variable; este trabajo va por el lado opuesto: corregir con los datos del propio mes.
 
-Cada familia trata distinto las 73 variables en pesos: las que el diccionario de datos marca en pesos, que son las que empiezan con `m`, `Visa_m` o `Master_m` (incluye las de dólares expresadas en pesos). Cantidades, flags, edad y antigüedad quedan igual en todas. La transformación se hace antes de calcular lags y deltas.
+**Hipótesis principal.** Corregir la inflación con datos del propio mes (dividir por la mediana del mes o pasar a ranking) da más ganancia que no corregir, y al menos la misma que deflactar por IPC, sin depender del INDEC. El argumento tiene dos pasos, que se miden por separado: (a) la corrección baja el drift de las variables en pesos, y (b) eso sube la ganancia.
+
+**Hipótesis secundarias**, planteadas después de ver el resultado principal, cada una con su regla escrita antes de correrla:
+
+1. **Más meses.** El resultado principal se repite en otros meses de test.
+2. **Más inflación.** Corregir conviene a partir de cierta inflación entre el entrenamiento y el test.
+3. **Información sin inflación.** Agregar proporciones del propio cliente, en las que la inflación se cancela, sube la ganancia.
+4. **Drift en general.** Sacar las variables con mucho drift, o pasar a ranking también las no monetarias que cambian, sube la ganancia.
+
+## 2. Métodos
+
+### 2.1 Datos y ventanas
+
+- **Datos**: el dataset de la Segunda Competencia (201901 a 202108), con la clase ternaria calculada con todos los meses. El target junta BAJA+1 y BAJA+2. Las features son las 152 originales con lags y deltas de orden 1 y 2 (760 columnas).
+- **Variables en pesos**: las 73 que el diccionario de datos marca en pesos (las que empiezan con `m`, `Visa_m` o `Master_m`, incluidas las de dólares expresadas en pesos). La corrección se aplica antes de calcular lags y deltas; cantidades, flags, edad y antigüedad quedan igual en todas las familias.
+- **Ventana del baseline** (consigna de Alejandro Bolaños): entrena con 201903-201906, valida en 201908 (AUC y corte) y testea en 201910 (ganancia). El modelo final reentrena con 201903-201908.
+- **Ventana móvil**: la misma ventana corrida en el tiempo, para 7 meses de test (201910, 202001, 202004, 202007, 202010, 202101 y 202104). Para el mes de test t, entrena de t-7 a t-4, valida en t-2 y reentrena de t-7 a t-2. Entre el reentreno y el test los precios suben de 9% a 19%.
+- **Modelo que envejece**: los modelos finales de 2019 (entrenados con 201903-201908) aplicados sin reentrenar a cada mes de 201910 a 202106. La inflación acumulada contra el entrenamiento va de +18% a +117%.
+
+### 2.2 Familias
 
 Ejemplo con números redondos: en octubre, un cliente tiene $60.000 de saldo y cobra $80.000 de sueldo; entre los clientes que tienen saldo, la mediana es $40.000.
 
-| Familia | Qué hace con cada variable en pesos | El saldo del ejemplo queda | ¿Datos externos? |
+| Familia | Qué hace con las variables en pesos | El saldo del ejemplo queda | ¿Datos externos? |
 |---|---|---|---|
 | **Sin corregir (F0)** | nada: es el baseline | 60.000 | no |
 | **IPC (F1)** | lleva todo a pesos de octubre con el IPC del INDEC | 60.000 (un saldo de $50.000 en marzo pasa a 63.500) | sí |
 | **Mediana del mes (F2)** | divide por la mediana del mes entre los clientes que tienen el producto | 1,5 (una vez y media el saldo típico) | no |
 | **Ranking del mes (F3)** | la posición del cliente en el mes, con el cero fijo (positivos entre 0 y 1, negativos entre -1 y 0) | 0,80 (más saldo que el 80% de los que tienen) | no |
-| **Proporciones (F4)** | deja los montos como el modelo sin corregir y **agrega** 11 cocientes del propio cliente | 60.000, y además saldo / sueldo = 0,75 | no |
-| **Diferencias (F5)** | control de las proporciones: los mismos 11 pares, restados en vez de divididos | 60.000, y además saldo - sueldo = -20.000 | no |
+| **Proporciones (F4)** | deja los montos como F0 y **agrega** 11 cocientes del propio cliente | 60.000, y además saldo / sueldo = 0,75 | no |
+| **Diferencias (F5)** | control de F4: los mismos 11 pares, restados en vez de divididos | 60.000, y además saldo - sueldo = -20.000 | no |
+| **Sin las de mucho drift (F6)** | F0 sin las variables con PSI > 0,25 (ni sus lags y deltas) | 60.000, o se saca | no |
+| **Mediana sin las de mucho drift (F7)** | F2 sin las variables con PSI > 0,25, medido después de dividir por la mediana | 1,5, o se saca | no |
+| **Ranking de todo lo que drifta (F8)** | F3, más el ranking de las variables no monetarias con PSI > 0,1 | 0,80 | no |
 
-- **Las correcciones (F1 a F3) reemplazan, no agregan.** Las cuatro primeras familias tienen las mismas 760 columnas: si una gana, es por la corrección y no por tener más variables.
-- **Las proporciones (F4) y su control (F5) se agregaron después de ver los resultados.** En un cociente, la inflación se cancela, porque mueve igual al numerador y al denominador; en una resta, no. Si las proporciones le ganan a las diferencias, lo que ayuda es sacar la escala (la inflación o el tamaño del cliente); si empatan, lo que ayuda es la información nueva.
+- **F0 a F3 tienen las mismas 760 columnas**: si una corrección gana, es por la corrección y no por tener más variables.
+- **F5 es el control de F4.** En un cociente la inflación se cancela, porque mueve igual al numerador y al denominador; en una resta, no. Si las proporciones le ganan a las diferencias, lo que ayuda es sacar la escala (la inflación o el tamaño del cliente); si empatan, es la información nueva.
+- **F6 a F8 eligen sus variables en cada ventana**, con el PSI entre los meses del reentreno y el de test. El PSI no usa la clase, así que se puede calcular en producción. Los umbrales son los de la convención usual: 0,1 es un cambio moderado y 0,25, uno fuerte.
 
 <details>
 <summary>Las 11 proporciones y otras decisiones de diseño</summary>
 
-- **Las 11 proporciones** (`config.PROPORCIONES`): saldo, consumo con tarjetas, préstamos, débitos y extracciones, cada uno dividido por el sueldo; uso del límite y pago del saldo, de Visa y de Master; consumo en dólares sobre consumo total (Visa); y dolarización (ahorros en dólares sobre el total). Quedaron afuera las transferencias (rotas de 201901 a 201905) y los débitos de Visa (rotos en 201904). Tienen poco drift: PSI de 0,001 a 0,043.
-- **Mediana sin ceros**: muchas variables tienen mediana 0 (la mayoría no tiene plazo fijo ni préstamos). Todas se dividen por la mediana de los clientes que tienen el producto, en valor absoluto: es una sola regla, respeta el signo de saldos negativos y no se mueve si cambia cuántos clientes no tienen el producto. El modelo nunca ve la mediana.
+- **Las 11 proporciones** (`config.PROPORCIONES`): saldo, consumo con tarjetas, préstamos, débitos y extracciones, cada uno dividido por el sueldo; uso del límite y pago del saldo, de Visa y de Master; consumo en dólares sobre consumo total (Visa); y dolarización (ahorros en dólares sobre el total). Quedaron afuera las transferencias (rotas de 201901 a 201905) y los débitos de Visa (rotos en 201904).
+- **Mediana sin ceros**: muchas variables tienen mediana 0 (la mayoría no tiene plazo fijo ni préstamos). Todas se dividen por la mediana de los clientes que tienen el producto, en valor absoluto: es una sola regla, respeta el signo de los saldos negativos y no se mueve si cambia cuántos clientes no tienen el producto. El modelo nunca ve la mediana.
 - **Empates en el ranking**: los clientes con el mismo monto comparten el valor (la fracción de clientes con un monto menor o igual).
 - **Mes de referencia del IPC**: multiplicar todo por una constante no cambia los árboles, así que pesos de octubre o de marzo dan el mismo modelo. Serie del INDEC: IPC nacional, nivel general (`148.3_INIVELNAL_DICI_M_26` de datos.gob.ar).
-- **Variables en dólares expresadas en pesos**: la mediana y el ranking las corrigen con su propio movimiento; el IPC se les aplica igual. Corregirlas con el tipo de cambio es lo que estudia el otro grupo del tema (Inflacion_1).
-- **Celdas rotas**: no se corrigen, igual que en el baseline.
+- **Variables en dólares expresadas en pesos**: la mediana y el ranking las corrigen con su propio movimiento; el IPC se les aplica igual.
+- **Celdas rotas**: no se corrigen, igual que en el baseline. 201910 tiene 14 variables en 0 para todos los clientes, y 201905 tiene 9 (`output/celdas_rotas.csv`).
 
 </details>
 
-## Diseño experimental
+### 2.3 Entrenamiento, ganancia y corte
 
-Baseline de la cátedra (consigna de Ale Bolaños, con sus aclaraciones en Zulip):
+- **Modelo**: LightGBM, con una optimización bayesiana por familia (`scripts/03_optimizar.py`): 50 intentos sobre 5 hiperparámetros (`num_leaves`, `learning_rate`, `min_data_in_leaf`, `feature_fraction` y `bagging_fraction`), el resto en el default, y la cantidad de árboles del early stopping en validación. Misma semilla y mismos rangos en todas las familias. F6 a F8 usan los hiperparámetros de la familia de la que salen, y la ventana móvil, los de la bayesiana de 2019.
+- **Ganancia**: +$1.072.500 por cada BAJA+2 estimulado y -$27.500 por cada estímulo a otro cliente. Se estimula a los N clientes con más probabilidad: N es el corte.
+- **El corte se elige en validación, nunca en el test.** Hay dos reglas: el de la bayesiana (el N que maximiza la ganancia del mejor intento en validación) y el corte estable (el máximo de la curva de ganancia promedio de todas las semillas en validación).
+- **Semillas**: 20 en el experimento principal y 5 en la ventana móvil y en el modelo que envejece. Son las mismas en todas las familias, para comparar de a pares.
 
-| | |
-|---|---|
-| Datos | solo 2019 |
-| Features | las 152 originales, con lags y deltas de orden 1 y 2 (760 columnas) |
-| Target | BAJA+1 y BAJA+2 juntas |
-| Meses | entrena con 201903-201906, valida en 201908 (AUC y corte) y testea en 201910 (ganancia); el modelo final reentrena con 201903-201908 |
-| Hiperparámetros | optimización bayesiana por familia: 50 intentos sobre 5 hiperparámetros, el resto en el default de LightGBM |
-| Ganancia | +$1.072.500 por cada BAJA+2 estimulado, -$27.500 por cada estímulo a otro cliente |
+### 2.4 Reglas de decisión
 
-Protocolo, igual para todas las familias:
+Cada regla quedó escrita en el repositorio antes de correr su prueba; la última columna es el commit.
 
-1. **Una optimización bayesiana por familia** (`scripts/03_optimizar.py`), con la misma semilla y los mismos rangos. Su mejor intento también fija **cuántos clientes estimular (el corte)**: el que maximiza la ganancia en 201908. El corte no se elige mirando el test.
-2. **Modelo final con 20 semillas**, las mismas en todas las familias (`scripts/04_entrenar_final.py`). Cada semilla de una familia se compara con la misma semilla del modelo sin corregir.
-3. **Regla de decisión, fijada antes de mirar el test** (`scripts/06_resumen.py`): una familia supera al modelo sin corregir si gana en promedio por más que el desvío entre semillas del modelo sin corregir **y** el test de Wilcoxon pareado por semilla da p < 0,05.
-4. **El drift se mide aparte**, sin el modelo de churn (`scripts/05_drift.py`): PSI por variable y AUC adversarial, que mide qué tan bien un modelo distingue filas de octubre de filas del entrenamiento (0,5 = no las distingue).
-
-Así la hipótesis se separa en dos preguntas que pueden dar distinto: (a) ¿la corrección baja el drift?, y (b) ¿sube la ganancia?
-
-## Resultados del experimento principal
-
-### (a) El drift baja para la variable típica, pero octubre sigue siendo distinguible
-
-| Familia | PSI mediano: saldos, consumos y pagos | PSI mediano: límites y comisión | AUC adversarial |
+| Pregunta | Prueba | Regla | Escrita en |
 |---|---|---|---|
-| Sin corregir (F0) | 0,006 | 0,031 | 0,810 |
-| IPC (F1) | 0,003 | 1,014 | 0,874 |
-| Mediana (F2) | 0,002 | 0,039 | 0,854 |
-| Ranking (F3) | 0,001 | 0,330 | 0,867 |
+| ¿Corregir sube la ganancia? | 201910, 20 semillas, corte de la bayesiana | una familia supera a F0 si gana en promedio por más que el desvío entre semillas de F0 y el Wilcoxon pareado por semilla da p < 0,05 | [6ae70a0](https://github.com/nicozare/experimento-inflacion-dmeyf/commit/6ae70a0) |
+| ¿Se repite en otros meses? | ventana móvil: 7 meses, 5 semillas, corte estable | supera a F0 si la diferencia media por mes es positiva y el Wilcoxon pareado por mes da p < 0,05; pierde si es negativa con p < 0,05; si no, empata | [055da5d](https://github.com/nicozare/experimento-inflacion-dmeyf/commit/055da5d) |
+| ¿Desde cuánta inflación conviene corregir? | modelo que envejece, con el corte de la bayesiana de cada familia | la predicción de la prueba de estrés (la mediana desde +26%, el ranking desde +99%) se cumple si la corrección le gana a F0 en al menos 2 de cada 3 meses por encima de su umbral | [055da5d](https://github.com/nicozare/experimento-inflacion-dmeyf/commit/055da5d) |
+| ¿La ventaja viene de la corrección o de los hiperparámetros? | el IPC con los hiperparámetros de F0, y los modelos de F0 con los montos deflactados al predecir | viene de la corrección (o alcanza con deflactar al predecir) si la variante gana en 2021 al menos la mitad del AUC que gana el IPC | [1cee062](https://github.com/nicozare/experimento-inflacion-dmeyf/commit/1cee062) |
+| ¿Ayuda agregar proporciones? | F4 en 201910, y otra vez con todo el protocolo un mes antes (test 201909) | la regla de la primera fila; se confirma si en 201909 supera a F0 con los dos cortes | [75c4c4a](https://github.com/nicozare/experimento-inflacion-dmeyf/commit/75c4c4a), [73adc13](https://github.com/nicozare/experimento-inflacion-dmeyf/commit/73adc13) |
+| ¿Es por sacar la inflación? | F4 contra F5 en 201910 | la regla de la primera fila, con el desvío de F5, con los dos cortes | [73adc13](https://github.com/nicozare/experimento-inflacion-dmeyf/commit/73adc13) |
+| ¿Ayuda sacar o rankear lo que drifta? | F6 a F8 en la ventana móvil | la regla de la ventana móvil, contra F0 y contra su familia de origen (F7 contra F2, F8 contra F3) | [055da5d](https://github.com/nicozare/experimento-inflacion-dmeyf/commit/055da5d) |
 
-- **Saldos, consumos y pagos**: las tres correcciones bajan el drift. El ranking es el que más lo baja, y el IPC, el que menos.
-- **Límites de tarjeta y comisión de mantenimiento**: el banco los ajusta por escalones. El IPC les inventa una caída real todos los meses hasta el próximo escalón, y el ranking también los empeora. Solo la mediana los deja como estaban.
-- **El AUC adversarial no baja con ninguna corrección**: octubre sigue siendo distinguible por el comportamiento en dólares después de las PASO (devaluación de agosto, cepo de septiembre), que no es inflación.
+Lo que sale de aplicar estas reglas es confirmatorio. Lo demás es exploratorio y se marca así: mirar la curva del test a igual cantidad de clientes, el AUC del modelo que envejece o los tramos de inflación. Las hipótesis secundarias se plantearon después de mirar octubre, así que aun con la regla escrita antes, sus ideas salieron del test.
 
-El AUC adversarial de la tabla usa solo variables continuas: con todas, el IPC y el ranking llegan a 1,000 por un artefacto (en los límites, cada mes queda con valores exactos propios). Detalle en `output/drift_resumen.csv` y `output/drift_psi.png`.
+Además, cinco análisis explican los resultados sin decidir nada:
 
-### (b) La ganancia no sube: ninguna corrección le gana al modelo sin corregir
+- **Drift** (`scripts/05_drift.py`): el PSI de cada variable y el AUC adversarial, que mide qué tan bien un modelo distingue filas del test de filas del entrenamiento (0,5 es que no las distingue).
+- **Dónde cortan los árboles** (`scripts/09_donde_corta.py` y `13_donde_cortan_las_familias.py`): para cada corte sobre un monto, en qué parte de la distribución del mes cae el umbral, pesado por la ganancia del corte.
+- **Prueba de estrés** (`scripts/11_estres_inflacion.py`): los montos de 201910 multiplicados por un factor, como si el test estuviera más lejos del entrenamiento.
+- **Azar de los clientes** (`scripts/10_bootstrap_clientes.py`): 1.000 remuestreos de los clientes del mes de test, los mismos para todas las familias.
+- **Corte estable y ensambles** (`scripts/07_validacion_semillas.py` y `08_corte_estable_y_ensamble.py`): cada familia con el corte estable, y F0 promediado con otra familia contra F0 promediado con otra semilla de sí mismo.
 
-| Familia | Ganancia en 201910 (20 semillas) | Contra el modelo sin corregir | Semillas en que gana | Wilcoxon p | ¿Lo supera? |
+## 3. Resultados
+
+### 3.1 Corregir no sube la ganancia
+
+| Familia | Ganancia en 201910 (20 semillas) | Contra F0 | Semillas en que gana | Wilcoxon p | ¿Supera a F0? |
 |---|---|---|---|---|---|
 | Sin corregir (F0) | $289,0M ± $2,2M | | | | |
 | IPC (F1) | $279,6M ± $3,4M | -$9,5M | 0 de 20 | < 0,001 | no |
-| Mediana (F2) | $287,6M ± $2,1M | -$1,4M | 7 de 20 | 0,034 | no |
-| Ranking (F3) | $282,9M ± $3,0M | -$6,2M | 2 de 20 | < 0,001 | no |
+| Mediana del mes (F2) | $287,6M ± $2,1M | -$1,4M | 7 de 20 | 0,034 | no |
+| Ranking del mes (F3) | $282,9M ± $3,0M | -$6,2M | 2 de 20 | < 0,001 | no |
 
 El ± es el desvío entre semillas. Cada familia usa el corte que eligió en 201908.
 
 ![Curvas de ganancia en 201910](output/curvas_ganancia_201910.png)
 
-- **El IPC es la peor opción**: pierde en las 20 semillas. Coincide con el drift: un solo índice para variables que se mueven distinto, y caídas inventadas en los límites.
-- **La mediana casi empata**: pierde por menos que el desvío entre semillas.
-- **El ranking pierde por el corte más que por cómo ordena**: en 201908 eligió estimular 3.500 clientes, pero en octubre su curva es la más alta desde los ~4.100. Elegir el corte mirando el test es justamente lo que la regla prohíbe, así que no cuenta como resultado.
-- **La mediana y el ranking le ganan al IPC**: +$8,1M en las 20 semillas y +$3,3M en 15 de 20.
+- **Ninguna corrección supera al modelo sin corregir.** La mediana casi empata (pierde por menos que el desvío entre semillas), y el IPC pierde en las 20 semillas.
+- **La mediana y el ranking le ganan al IPC** (+$8,1M en las 20 semillas y +$3,3M en 15 de 20): la segunda parte de la hipótesis se cumple, pero no resiste el azar de los clientes (sección 3.6).
+- **El ranking pierde por el corte más que por cómo ordena**: en 201908 eligió 3.500 clientes, y en octubre su curva es la más alta desde los ~4.100 (exploratorio, porque mira el test).
 
-Tablas completas en `output/resumen.md`; cada semilla, en `output/resultados_por_semilla.csv`.
+**En siete meses de test.** Con la ventana móvil, ninguna corrección supera al modelo sin corregir: las tres empatan por la regla. Es lo que predijimos antes de correrla ([6980a27](https://github.com/nicozare/experimento-inflacion-dmeyf/commit/6980a27)): entre el reentreno y el test hay de +9% a +19% de inflación, el rango en que, en el modelo que envejece, ninguna corrección ganaba.
 
-## Los seguimientos, en una tabla
+| Corrección | Diferencia media por mes contra F0 | Meses en que gana | Wilcoxon p (por mes) | Resultado |
+|---|---|---|---|---|
+| IPC (F1) | -$6,8M | 2 de 7 | 0,109 | empata |
+| Mediana del mes (F2) | -$3,0M | 4 de 7 | 1,000 | empata |
+| Ranking del mes (F3) | -$6,9M | 2 de 7 | 0,156 | empata |
 
-Se decidieron después de ver el resultado principal. Las reglas de cada uno se escribieron antes de correrlo, pero las ideas salieron de mirar octubre: una mejora que aparezca acá es una hipótesis a confirmar, no un resultado del experimento principal. Ninguno repite lo que estudia Inflacion_1 (deflactores externos por tipo de variable).
+![Ventana móvil: cada familia contra el modelo sin corregir, mes por mes](output/barrida/movil.png)
 
-| Seguimiento | Pregunta | Respuesta corta | Detalle |
+- **Lo que pierden es sobre todo por el corte** (exploratorio). Si estimulan la misma cantidad de clientes que el modelo sin corregir, la mediana empata (-$0,3M por mes) y el IPC y el ranking pierden menos (-$3,5M y -$2,4M). Con el mejor corte de cada una, las tres quedan a menos de $1M por mes.
+- **El peor mes es 202004, y es por el corte.** Su corte se elige en 202002, que tuvo 213 BAJA+2 contra 524 del test, así que todas cortan corto: el modelo sin corregir estimula 2.000 clientes y las correcciones, entre 1.200 y 1.300, cuando el mejor corte rondaba los 6.300. Ahí las tres pierden unos $26M.
+- **Ordenan apenas mejor.** El AUC de las correcciones supera al del modelo sin corregir por +0,3 a +0,9 milésimas en promedio: más de diez veces menos que en el modelo que envejece en 2021 (sección 3.3).
+
+### 3.2 Por qué: el drift baja, pero el modelo casi no mira el nivel de precios
+
+| Familia | PSI mediano: saldos, consumos y pagos | PSI mediano: límites y comisión | AUC adversarial |
 |---|---|---|---|
-| Corte estable (S1) | ¿Las correcciones pierden por un corte mal elegido? | No: con el corte del promedio de 20 semillas siguen sin ganar | `output/corte_estable_y_ensamble.md` |
-| Ensamble (S2) | ¿Sirven para complementar al modelo sin corregir? | No: sumar una corrección rinde menos que sumar otra semilla del mismo modelo | `output/corte_estable_y_ensamble.md` |
-| Proporciones (S3, familia F4) | ¿Ayuda agregar información sin inflación? | En octubre, depende del corte: gana con uno y empata con el otro | `output/resumen.md` |
-| Dónde cortan los árboles (S4) | ¿Por qué el modelo sin corregir no sufre la inflación? | Corta sobre todo en "no tiene" y en montos bajos, como todas las familias | `output/donde_corta.md`, `output/donde_cortan_las_familias.md` |
-| Otro mes de test (S5) | ¿Se confirma lo de las proporciones en septiembre? | No: no supera con ninguna de las dos reglas de corte | `output/test_201909/` |
-| Azar de los clientes (S6) | ¿Las diferencias resisten que el mes tenga otros clientes? | Casi ninguna: solo que el IPC pierde | `output/bootstrap_clientes.md` |
-| Estrés de inflación (S7) | ¿Con cuánta inflación convendría corregir? | La mediana desde ~+26% entre el entrenamiento y el test; el ranking desde ~+99% | `output/estres_inflacion.md` |
-| Modelo que envejece (S9) | ¿Corregir ayuda si el modelo no se reentrena? | Con la regla (el corte fijo de 2019), no se cumple lo predicho. Sin depender del corte, las tres correcciones le ganan al modelo sin corregir desde unos +35% de inflación acumulada, y todos los meses de 2021 | `output/barrida/envejece.md` |
-| Por qué ayudan las proporciones (S8) | ¿Qué aportan, y es por sacar la inflación? | Ayudan con los que no cobran el sueldo en el banco; el control con diferencias no separa si es por la inflación | `output/por_que_f4.md` |
+| Sin corregir (F0) | 0,006 | 0,031 | 0,810 |
+| IPC (F1) | 0,003 | 1,014 | 0,874 |
+| Mediana del mes (F2) | 0,002 | 0,039 | 0,854 |
+| Ranking del mes (F3) | 0,001 | 0,330 | 0,867 |
 
-## ¿Por qué corregir no ayuda?
-
-### Los modelos casi no miran el nivel de precios (dónde cortan los árboles, S4)
-
-Para cada corte de un árbol sobre un monto en pesos, se mide dónde cae el umbral entre los clientes que tienen ese producto (`scripts/09_donde_corta.py` en el modelo sin corregir, y `scripts/13_donde_cortan_las_familias.py` en el modelo final de cada familia, semilla 100081).
+- **El primer paso de la hipótesis se cumple a medias.** Las tres correcciones bajan el drift de saldos, consumos y pagos. Pero los límites de tarjeta y la comisión de mantenimiento el banco los ajusta por escalones: el IPC les inventa una caída real todos los meses hasta el próximo escalón, y el ranking también los empeora. Solo la mediana los deja como estaban.
+- **Octubre sigue siendo distinguible.** El AUC adversarial no baja con ninguna corrección, porque el cambio que pesa en octubre es el comportamiento en dólares después de las PASO (devaluación de agosto, cepo de septiembre), que no es inflación. El AUC de la tabla usa solo variables continuas: con todas, el IPC y el ranking llegan a 1,000 por un artefacto de los límites.
+- **Los árboles cortan los montos donde la inflación casi no llega.** En el modelo sin corregir, el 65% de la ganancia de los cortes sobre montos pregunta si el cliente tiene o no el producto, o si está entre el 25% que tiene menos. Con la inflación de 2019, cada uno de esos cortes cambiaría de rama, en promedio, al 1,4% de los clientes. Corregir cambia la escala, pero no la pregunta: con el IPC, la mediana o el ranking, entre el 65% y el 70% de esa ganancia sigue en "no tiene" o en montos bajos.
+- **El modelo aprendió con la inflación adentro.** Si al modelo sin corregir se le da octubre llevado a pesos del entrenamiento, elige el 96% de los mismos clientes y gana menos ($287,1M contra $293,7M, en una semilla). En el entrenamiento, un saldo nominal quieto ya era una caída real.
 
 ![Dónde cortan los árboles en cada familia](output/donde_cortan_las_familias.png)
 
-- **En el modelo sin corregir, el 65% de la ganancia de esos cortes pregunta si el cliente tiene o no tiene el producto, o si está entre el 25% que tiene menos.** Son umbrales bajos, y la inflación casi no los mueve: con la de 2019 (+18% del mes promedio del entrenamiento a octubre), cada corte cambiaría de rama, en promedio, al 1,4% de los clientes.
-- **Corregir cambia la escala de los montos, pero no la pregunta que el modelo les hace**: con el IPC, la mediana o el ranking, entre el 65% y el 70% de la ganancia de esos cortes sigue en "no tiene" o en montos bajos. Como esa pregunta la inflación casi no la afecta, corregir tiene poco para arreglar.
-- **Prueba directa**: al modelo sin corregir se le da octubre llevado a pesos del entrenamiento. Elige el 96% de los mismos clientes y gana menos: $287,1M contra $293,7M, y $267,3M si además se deflactan los deltas. El modelo aprendió con la inflación adentro (en el entrenamiento, un saldo nominal quieto ya era una caída real), y corregirla al predecir empeora.
-- **Los cocientes de las proporciones son la excepción**: casi la mitad de la ganancia de sus cortes está en valores altos (mucha dolarización, mucho uso del límite). Hacen una pregunta que los montos no hacen. Las restas de las diferencias quedan en el medio, y se cortan más en el cero (11%): "¿el saldo supera al sueldo?" es la única parte de una resta que no depende de la escala.
+### 3.3 Sin reentrenar, corregir ayuda desde unos +35% de inflación acumulada
 
-### Hizo falta más inflación (prueba de estrés, S7)
+**Prueba de estrés.** Con los montos de octubre multiplicados por un factor, el modelo sin corregir pierde de a poco: con los montos multiplicados por 3, $12,7M (4%). Según el punto en que queda debajo de cada corrección, la mediana convendría desde ~+26% de inflación entre el entrenamiento y el test, el ranking desde ~+99% y el IPC desde ~+183%.
 
-Se infló octubre a mano: todos los montos en pesos (nivel, lags y deltas) multiplicados por un factor, como si el test estuviera más lejos del entrenamiento (`scripts/11_estres_inflacion.py`, 5 semillas). Con una inflación pareja, la mediana y el ranking no cambian por construcción (el IPC tampoco, si la mide bien), así que el punto en que el modelo sin corregir cae por debajo de cada una dice desde cuánta inflación conviene corregir.
+**Modelo que envejece.** Con la regla, esa predicción no se cumple: la mediana le gana al modelo sin corregir en 11 de los 19 meses por encima de +26% (hacían falta 13), y el ranking en 1 de los 3 por encima de +99%. Pero la regla quedó confundida por el corte fijo. Cada familia estimula siempre la cantidad de clientes que eligió en 2019 (de 3.500 a 5.000), y en 2021 hay casi el doble de BAJA+2: el mejor corte del modelo sin corregir pasa de 4.000 a unos 9.800 clientes. Con un corte fijo gana sola la familia que más estimula (el IPC, +$46M por mes en 2021) y pierde sola la que menos (el ranking), corrijan o no.
 
-| Inflación total entre el entrenamiento y el test | +18% (la de 2019) | +30% | +47% | +77% | +136% | +254% |
-|---|---|---|---|---|---|---|
-| Sin corregir (F0) | $289,0M | $287,0M | $285,5M | $283,5M | $281,8M | $276,3M |
-| Proporciones (F4) | $288,6M | $287,3M | $286,6M | $286,4M | $287,3M | $279,6M |
-
-- **El modelo sin corregir pierde de a poco**: con los montos multiplicados por 3, pierde $12,7M (4%), y el 83% de los clientes que elige siguen siendo los mismos.
-- **Desde cuánta inflación conviene corregir**: con la mediana, desde ~+26%; con el ranking, desde ~+99%; con el IPC, desde ~+183%. Con una inflación como la de 2023 (unos 10% por mes) y esta misma ventana, entre el entrenamiento y el test habría más de +50%: ahí la mediana ya convendría.
-- **Las proporciones aguantan más**: hasta +136% casi no pierden.
-- Es orientativo: supone la misma inflación en todas las variables, y las pérdidas son del orden del azar de los clientes del mes.
-
-![¿Desde cuánta inflación conviene corregir?](output/estres_inflacion.png)
-
-### Con un solo mes de test, casi ninguna diferencia es robusta (azar de los clientes, S6)
-
-Las 20 semillas miden el azar del modelo, con los clientes de octubre fijos. Pero qué clientes caen en el mes también es azar: se remuestrearon 1.000 veces los clientes de octubre, los mismos para todas las familias (`scripts/10_bootstrap_clientes.py`).
-
-- **El azar de los clientes pesa de 2 a 7 veces más que el de las semillas.**
-- **Lo único que resiste es que el IPC pierde contra el modelo sin corregir** (con el corte de la bayesiana; intervalo del 95%: -$17,8M a -$0,4M). Que la mediana le gane al IPC no resiste por poco (96% de los remuestreos a favor).
-- El Wilcoxon por semillas responde otra pregunta: si, con estos clientes, la diferencia es más que ruido de semilla. Para decir que una familia es mejor en general, la vara es la de los clientes, y con un solo mes casi nada la pasa.
-
-![Diferencia contra el modelo sin corregir con el azar de los clientes](output/bootstrap_clientes.png)
-
-## Lo único que mejoró algo: agregar proporciones del cliente (F4)
-
-Las proporciones dejan los montos como están y agregan 11 cocientes del propio cliente, que no tienen inflación. Se probaron con el mismo protocolo y con dos reglas de corte: la de la bayesiana y el corte estable (el máximo de la curva promedio de 20 semillas en validación, S1). Después, en otro mes.
-
-| Mes de test | Regla de corte | Proporciones menos sin corregir | Gana en | Wilcoxon p | ¿Supera? |
-|---|---|---|---|---|---|
-| Octubre (201910) | de la bayesiana | -$0,4M | 11 de 20 | 0,626 | no |
-| Octubre (201910) | estable | +$2,8M | 17 de 20 | 0,002 | **sí** |
-| Septiembre (201909) | de la bayesiana | -$0,8M | 8 de 20 | 0,268 | no |
-| Septiembre (201909) | estable | +$2,7M | 14 de 20 | 0,027 | no, por poco: el desvío del modelo sin corregir es $2,8M |
-
-**Resultado: la mejora no se confirma.** La regla del seguimiento en septiembre (S5), escrita antes de correrlo, pedía superar al modelo sin corregir con las dos reglas de corte, y no lo supera con ninguna. Septiembre repite el protocolo un mes antes: entrena 201903-201905, valida en 201907 y testea en 201909, con bayesiana nueva y una inflación parecida entre el entrenamiento y el test (+16%, contra +18% en octubre).
-
-Lo que sí se repite en los dos meses:
-
-- **A igual cantidad de clientes, entre 3.800 y 5.000, la curva de las proporciones queda arriba**: en octubre, por $1,9M a $4,0M según el corte (gana en 13 a 19 de las 20 semillas); en septiembre, por $1,6M a $2,6M (en 11 a 16 de 20). Es exploratorio, porque mira el test. Lo que decide es el corte que se elige en validación, y no siempre cae ahí.
-- **Ninguna diferencia resiste el azar de los clientes**, en ninguno de los dos meses.
-- Fuera de la regla: en septiembre, el ensamble del modelo sin corregir con el de proporciones le gana al ensamble de dos semillas sin corregir (+$2,5M, 15 de 20, p = 0,001). En octubre empataban.
-
-### ¿Es por sacar la inflación o por la información nueva? (control con diferencias, F5)
-
-Las diferencias usan los mismos 11 pares, restados en vez de divididos: arrastran la inflación y el tamaño del cliente. Regla, fijada antes de correr: las proporciones superan a las diferencias si ganan por más que el desvío de las diferencias y con p < 0,05, con las dos reglas de corte.
-
-| Regla de corte (octubre) | Diferencias menos sin corregir | Proporciones menos diferencias | Gana en | Wilcoxon p | ¿Las proporciones superan a las diferencias? |
-|---|---|---|---|---|---|
-| de la bayesiana | -$1,0M | +$0,6M | 13 de 20 | 0,561 | no |
-| estable | $0,0M | +$2,8M | 16 de 20 | 0,005 | no, por poco: el desvío de las diferencias es $2,8M |
-
-**Resultado: el control no lo separa.** Por la regla, las proporciones no superan a las diferencias. Pero la lectura que habíamos escrito para ese caso ("la mejora es información nueva, no sacar la inflación") suponía que las diferencias iban a mejorar como las proporciones, y no mejoraron: con los cortes elegidos empatan con el modelo sin corregir. A igual cantidad de clientes (exploratorio), las diferencias no suman nada justo donde el modelo sin corregir tiene su mejor corte (de 3.900 a 4.400 clientes: entre -$0,8M y +$0,8M), y las proporciones sí (+$1,9M a +$2,9M). Lo más que se puede decir: cerca del mejor corte, dividir parece mejor que restar, sin llegar a probarlo.
-
-![Proporciones y diferencias contra el modelo sin corregir en 201910](output/curvas_f5_201910.png)
-
-### ¿Qué aportan las proporciones? (S8)
-
-- **Pesan poco, pero el modelo las usa**: las 11 juntas son el 8,9% de la ganancia de los cortes. La que más usa es la dolarización (puesto 11 de 163 variables), seguida de saldo / sueldo y pago del saldo de Visa.
-- **La ventaja viene de los clientes que no cobran el sueldo en el banco** (+$1,7M de +$2,2M, con 4.000 clientes). Ahí las proporciones contra el sueldo no existen: lo que suma son las de tarjetas y la dolarización. Los que se van casi no cobran el sueldo en el banco: de los 4.000 elegidos, solo ~137 lo cobran ahí, aunque es la mitad de los clientes del mes.
-
-Detalle en `output/por_que_f4.md`.
-
-## Otros seguimientos: corte estable y ensambles (S1 y S2)
-
-- **Corte estable (S1)**: en vez del corte de un solo modelo, el máximo de la curva promedio de 20 semillas en 201908 (`scripts/07_validacion_semillas.py` y `08_corte_estable_y_ensamble.py`). Ninguna corrección supera al modelo sin corregir. El ranking vuelve a elegir 3.500: no fue mala suerte de un modelo, sino que el mejor corte cambia de agosto a octubre.
-- **Ensambles (S2)**: promediar el modelo sin corregir con otra familia, contra el control de promediarlo con otra semilla de sí mismo. Las tres correcciones pierden contra el control en las 20 semillas (de -$5,2M a -$6,4M), y las proporciones y las diferencias tampoco lo superan (-$0,4M y -$1,3M): sumar otra familia rinde menos, o lo mismo, que sumar otra semilla.
-
-Detalle en `output/corte_estable_y_ensamble.md`.
-
-## Barrida de meses (19/11, pedida por el tutor)
-
-> **Estado (19/11, 16 h)**: el modelo que envejece (S9) terminó; sus resultados están abajo. La barrida con ventana móvil (S10) corre hasta el viernes 20/11 a la noche. Las reglas de las dos se escribieron antes de correr.
-
-El tutor nos respondió que "el que no mejore es también un resultado válido", pero que para concluirlo hay que mostrarlo en más de un mes. También sugirió probar sacar las variables con mucho drift, y corregir también las variables no monetarias que tienen drift. Para tener más meses de test se usa el dataset completo (201901 a 202108, con la clase calculada con todos los meses). 2020-2021 no traen más inflación por mes que 2019, pero sí más meses y la pandemia. Los meses de 2019 tienen que salir idénticos a los del experimento principal (es un control).
-
-### El modelo de 2019 que envejece (S9)
-
-Los modelos finales de las cuatro familias se aplican sin reentrenar a cada mes de 201910 a 202106. Son los del experimento principal (entrenados con 201903-201908), con 5 semillas. La inflación acumulada contra el entrenamiento va de +18% a +117%: es la prueba de estrés con datos reales. En el medio también cambian otras cosas (la pandemia), pero les pasan a todas las familias por igual (`scripts/14_modelo_que_envejece.py`).
-
-**Regla**: la prueba de estrés predijo que la mediana le gana al modelo sin corregir desde ~+26% de inflación acumulada, y el ranking desde ~+99%. La predicción se cumple para cada una si, con el corte de la bayesiana de cada familia y la media de las 5 semillas, le gana al modelo sin corregir en al menos 2 de cada 3 meses por encima de su umbral (son 19 meses para la mediana y 3 para el ranking). El IPC, que recién convendría desde +183%, no debería ganarle en este rango.
-
-**Resultado (19/11)**. Los dos controles dan bien: los meses de 2019 de los datos extendidos son idénticos a los del experimento principal, y en 201910 cada modelo recupera la ganancia del experimento principal.
-
-![¿Envejece mejor un modelo corregido?](output/barrida/envejece.png)
-
-- **Con la regla, las predicciones de la prueba de estrés no se cumplen.** La mediana le gana al modelo sin corregir en 11 de los 19 meses por encima de +26% (hacían falta 13), y el ranking en 1 de los 3 por encima de +99%. El IPC, que no debería ganarle, le gana en 13 de los 21 meses, y en todos desde 202009 (+56%).
-- **Pero la regla quedó mal planteada para este caso.** Cada familia estimula siempre la cantidad de clientes que eligió su bayesiana en 2019: 4.000 el modelo sin corregir, 5.000 el IPC, 3.900 la mediana y 3.500 el ranking. En 2021 hay casi el doble de BAJA+2, y el mejor corte del modelo sin corregir pasa de 4.000 a unos 9.800 clientes. Con un corte fijo, la familia que más estimula gana sola en 2021 (el IPC, +$46M por mes) y la que menos estimula pierde sola (el ranking), corrijan o no.
-- **Sin depender del corte, las tres correcciones envejecen mejor que el modelo sin corregir** (exploratorio). Diferencia de cada corrección contra el modelo sin corregir:
+Sin depender del corte (exploratorio), las tres correcciones envejecen mejor que el modelo sin corregir. Diferencia contra F0:
 
 | Inflación acumulada | hasta +30% (201910 a 202001) | +33% a +74% (resto de 2020) | +81% a +117% (2021) |
 |---|---|---|---|
 | AUC (no depende del corte) | 0,0 a +0,8 milésimas | +3,5 a +5,0 milésimas; las tres ganan en 10 de 11 meses | +10,0 a +11,0 milésimas; las tres ganan los 6 meses |
 | Ganancia con el mejor corte de cada una (mira el test) | -$5,5M a -$3,2M; pierden en 11 de 12 casos | +$3,8M a +$5,8M; ganan en 7 a 10 de 11 meses | +$12,2M a +$19,0M; las tres ganan los 6 meses |
 
-- **Lo común a las tres es sacar el nivel de precios.** Tienen hiperparámetros distintos y aun así ganan casi lo mismo en AUC mes a mes (en 202104: +9,8, +9,6 y +9,8 milésimas). Y el IPC no saca otra cosa: no toca los cambios reales, como los de la pandemia.
-- **Lectura.** Con la inflación de 2019 entre el entrenamiento y el test (hasta +30%), corregir no ayuda, como en el experimento principal. Si el modelo no se reentrena, corregir empieza a ayudar desde unos +35%, con cualquiera de las tres, y la ventaja crece con la inflación acumulada (correlación de Spearman del AUC entre 0,80 y 0,87). La prueba de estrés anticipó la idea pero no los umbrales: multiplicar los montos de octubre por un factor parejo no reproduce 18 meses reales.
-- **Cuidado.** Es exploratorio: la regla escrita antes no se cumplió, y el AUC y los tramos se agregaron al ver los resultados. Son 5 semillas. Y la inflación acumulada avanza junto con el tiempo y con la pandemia, así que esto no separa "más inflación" de "más meses sin reentrenar".
+![¿Envejece mejor un modelo corregido?](output/barrida/envejece.png)
 
-**Control de hiperparámetros** (pedido el 19/11 al ver S9; criterio escrito antes de correr). Las familias no difieren solo en la corrección: cada una tiene los hiperparámetros de su bayesiana. Para separar las dos cosas se suman tres variantes, con las mismas 5 semillas y el corte del modelo sin corregir (4.000 clientes):
+- **La ventaja crece con la inflación acumulada** (correlación de Spearman del AUC entre 0,80 y 0,87) y es casi igual en las tres correcciones, aunque tienen hiperparámetros distintos (en 202104: +9,8, +9,6 y +9,8 milésimas). Lo común a las tres es sacar el nivel de precios.
+- **La ventaja es de la corrección, no de los hiperparámetros** (control con regla). El IPC entrenado con los hiperparámetros del modelo sin corregir gana +10,1 milésimas de AUC en 2021, lo mismo que con los suyos (+10,0).
+- **Alcanza con deflactar al predecir.** Los mismos modelos sin corregir, con cada mes llevado a precios del entrenamiento con un solo factor, ganan +10,6 milésimas de AUC en 2021 sin entrenar nada: +$18,9M por mes con el mejor corte y +$13,6M con el mismo corte de 4.000 clientes. Con la inflación de 2019 (hasta +30%), en cambio, deflactar al predecir no ayuda (-$4,3M con el mejor corte), como en la sección 3.2.
+- **La prueba de estrés anticipó la idea, pero no los umbrales**: multiplicar los montos de un mes por un factor parejo no reproduce 18 meses reales. Y la inflación acumulada avanza junto con el tiempo y la pandemia, así que esto no separa "más inflación" de "más meses sin reentrenar"; lo que el control sí muestra es que sacar el nivel de precios alcanza para recuperar la ventaja.
 
-1. **El IPC con los hiperparámetros del modelo sin corregir**: mismos hiperparámetros, árboles, semillas y meses de entrenamiento. Solo cambian los montos, deflactados.
-2. **Los mismos modelos sin corregir, con cada mes llevado a precios del entrenamiento**: todos los montos (nivel, lags y deltas) divididos por la inflación acumulada, con un solo factor por mes. Es la inversa de la prueba de estrés y no entrena nada.
-3. **Lo mismo, pero deflactando cada monto con el IPC de su mes**: los deltas quedan en términos reales, como en la prueba directa de S4.
+### 3.4 Agregar proporciones del cliente: mejora en un mes, no se confirma
 
-Criterio, con el AUC medio de 2021 contra el modelo sin corregir. Si la variante 1 gana al menos la mitad de lo que gana el IPC con sus propios hiperparámetros (+10,0 milésimas), la ventaja viene de la corrección y no de los hiperparámetros. Si la variante 2 gana al menos la mitad, alcanza con deflactar al predecir, sin reentrenar.
+| Comparación | Mes de test | Corte | Diferencia media | Gana en | Wilcoxon p | ¿Supera? |
+|---|---|---|---|---|---|---|
+| Proporciones (F4) contra F0 | 201910 | de la bayesiana | -$0,4M | 11 de 20 | 0,626 | no |
+| Proporciones (F4) contra F0 | 201910 | estable | +$2,8M | 17 de 20 | 0,002 | **sí** |
+| Proporciones (F4) contra F0 | 201909 | de la bayesiana | -$0,8M | 8 de 20 | 0,268 | no |
+| Proporciones (F4) contra F0 | 201909 | estable | +$2,7M | 14 de 20 | 0,027 | no, por poco: el desvío de F0 es $2,8M |
+| Proporciones (F4) contra diferencias (F5) | 201910 | de la bayesiana | +$0,6M | 13 de 20 | 0,561 | no |
+| Proporciones (F4) contra diferencias (F5) | 201910 | estable | +$2,8M | 16 de 20 | 0,005 | no, por poco: el desvío de F5 es $2,8M |
 
-**Resultado del control: la ventaja es de la corrección, no de los hiperparámetros.**
-- En 2021, el IPC entrenado con los hiperparámetros del modelo sin corregir le gana +10,1 milésimas de AUC, lo mismo que con los suyos (+10,0).
-- Alcanza con deflactar al predecir. Los mismos modelos sin corregir, con cada mes llevado a precios del entrenamiento con un solo factor, ganan +10,6 milésimas en 2021, sin entrenar nada. En ganancia son +$18,9M por mes con el mejor corte y +$13,6M con el mismo corte de 4.000 clientes. Con la inflación de 2019 (hasta +30%), en cambio, no ayuda: -$4,3M con el mejor corte.
-- Deflactar cada monto con el IPC de su mes da lo mismo en 2021, pero en 2019 pierde mucho más (-$14,9M), como en la prueba directa de S4: el modelo aprendió los deltas con la inflación adentro.
+- **La mejora no se confirma**: en 201909 las proporciones no superan al modelo sin corregir con ninguna de las dos reglas de corte. Lo que sí se repite en los dos meses es exploratorio: a igual cantidad de clientes, entre 3.800 y 5.000, su curva queda arriba ($1,6M a $4,0M).
+- **El control no separa las explicaciones.** Las diferencias (F5) empatan con el modelo sin corregir (-$1,0M y $0,0M), así que las proporciones no ganan por la información nueva sola; y tampoco superan a las diferencias con la regla. Cerca del mejor corte, dividir parece mejor que restar, sin llegar a probarlo.
+- **Qué aportan**: las 11 proporciones son el 8,9% de la ganancia de los cortes, y la ventaja viene de los clientes que no cobran el sueldo en el banco (+$1,7M de +$2,2M con 4.000 clientes). A diferencia de los montos, sus cortes caen en valores altos: casi la mitad de su ganancia está en el 25% más alto (mucha dolarización, mucho uso del límite).
 
-Detalle mes a mes en `output/barrida/envejece.md`.
+### 3.5 Sacar o rankear lo que drifta tampoco ayuda
 
-### La barrida con ventana móvil (S10)
+Con la ventana móvil y su regla (siete meses de test, 5 semillas, corte estable). Son los puntos sin relleno del gráfico de la sección 3.1.
 
-Para cada mes de test t (201910, 202001, 202004, 202007, 202010, 202101 y 202104) se usa la ventana del baseline corrida en el tiempo:
-- entrena de t-7 a t-4;
-- elige el corte en t-2, con el corte estable de 5 semillas (como S1);
-- reentrena de t-7 a t-2 y mide la ganancia en t.
+| Familia | Contra | Diferencia media por mes | Meses en que gana | Wilcoxon p (por mes) | Resultado |
+|---|---|---|---|---|---|
+| Sin las de mucho drift (F6) | sin corregir (F0) | +$1,1M | 5 de 7 | 0,312 | empata |
+| Mediana sin las de mucho drift (F7) | sin corregir (F0) | -$2,4M | 3 de 7 | 0,938 | empata |
+| Mediana sin las de mucho drift (F7) | mediana del mes (F2) | +$0,6M | 5 de 7 | 0,438 | empata |
+| Ranking de todo lo que drifta (F8) | sin corregir (F0) | -$6,4M | 2 de 7 | 0,297 | empata |
+| Ranking de todo lo que drifta (F8) | ranking del mes (F3) | +$0,5M | 3 de 7 | 1,000 | empata |
 
-Con t = 201910 es exactamente la ventana principal. Los hiperparámetros y la cantidad de árboles son los de la bayesiana de 2019 de cada familia: rehacer la bayesiana en cada mes no entra en el tiempo que queda (`scripts/15_barrida_movil.py`).
+- **Ninguna supera a su referencia.** Sacar las variables de mucho drift (F6) es la única con el promedio a favor del modelo sin corregir, pero gana en 5 de los 7 meses y la regla pide 6. Rankear todo lo que drifta (F8) pierde en 5 de los 7, igual que el ranking del mes (F3) del que sale.
+- **Lo que se saca casi no es inflación.** Cada ventana saca entre 3 y 20 variables (con sus lags y deltas) y rankea entre 7 y 14 no monetarias más. En 6 de las 7 ventanas, las dos de más drift son los días desde el último cierre de Visa y de Master, que dependen del calendario de cierres; después suelen venir el uso de la app y de internet, que crece con los meses.
+- **Sin depender del corte (exploratorio).** Sacar las de mucho drift ordena apenas peor que el modelo sin corregir (AUC -0,7 milésimas, gana en 1 de 7 meses), y estimulando la misma cantidad de clientes gana $0,4M por mes. Rankear todo lo que drifta ordena mejor en los 7 meses, pero por 0,8 milésimas, y con el mismo corte que el modelo sin corregir pierde $2,7M por mes: la mejora del orden queda fuera de la punta de la lista, que es la que se estimula. Al ranking del mes (F3) le pasa lo mismo.
 
-Además de las cuatro familias, se suman tres nuevas con las hipótesis del tutor. Cada una usa los hiperparámetros de la familia de la que sale. Sus variables se eligen una vez por ventana, con el PSI entre los meses del reentreno y el de test. El PSI no usa la clase, así que se puede calcular en producción.
+La hipótesis del drift en general no se sostiene: con el modelo reentrenado cerca del mes de test, el drift de estas variables no es lo que lo limita.
 
-- **Sin las variables con mucho drift (F6)**: el modelo sin corregir, sin las variables con PSI > 0,25 (ni sus lags y deltas).
-- **Mediana sin las variables con mucho drift (F7)**: lo mismo sobre la mediana, con el PSI medido después de dividir por la mediana.
-- **Ranking de todo lo que drifta (F8)**: el ranking del mes (F3), más el ranking de las variables no monetarias con PSI > 0,1.
+### 3.6 El azar del mes y el corte pesan tanto como la familia
 
-Los umbrales son los de la convención usual del PSI: 0,1 es un cambio moderado y 0,25, uno fuerte.
+- **El azar de los clientes pesa de 2 a 7 veces más que el de las semillas.** Con 1.000 remuestreos de los clientes de octubre, lo único que resiste es que el IPC pierde contra el modelo sin corregir (intervalo del 95%: -$17,8M a -$0,4M). Que la mediana le gane al IPC no resiste por poco (96% de los remuestreos a favor), y el "sí" de las proporciones con el corte estable, tampoco.
+- **El mejor corte cambia de un mes a otro.** Con el corte estable de 20 semillas, ninguna corrección supera al modelo sin corregir, y el ranking vuelve a elegir 3.500 clientes: no es ruido de un modelo, sino que el mejor corte de agosto no es el de octubre. Y cuando cambia la cantidad de bajas, un corte fijo favorece a la familia que más estimula (sección 3.3).
+- **Las correcciones tampoco sirven como complemento.** Promediar el modelo sin corregir con una corrección rinde menos que promediarlo con otra semilla de sí mismo (de -$5,2M a -$6,4M, en las 20 semillas), y con las proporciones o las diferencias tampoco lo supera (-$0,4M y -$1,3M).
 
-**Regla**: para cada mes se calcula la diferencia de la ganancia media de las 5 semillas contra el modelo sin corregir, con el corte estable de cada familia.
-- Una familia **supera** al modelo sin corregir si la diferencia media entre los 7 meses es positiva y el Wilcoxon pareado por mes da p < 0,05.
-- **Pierde** si la diferencia es negativa con p < 0,05.
-- Si no, **empata**.
+![Diferencia contra el modelo sin corregir con el azar de los clientes](output/bootstrap_clientes.png)
 
-"Corregir no ayuda" queda confirmado si ni el IPC, ni la mediana, ni el ranking superan al modelo sin corregir. Con la misma regla se comparan también la mediana sin drift contra la mediana, y el ranking de todo lo que drifta contra el ranking.
+## 4. Discusión: lo que el diseño nos cuidó de creer
 
-**Predicción escrita después de S9 y antes de ver S10 (19/11, 16 h).** En esta ventana, entre el reentreno y el test hay de +9% a +19% de inflación: el rango en que, en S9, ninguna corrección le ganaba al modelo sin corregir. Esperamos que se confirme "corregir no ayuda". Acá el corte se elige en cada ventana, así que no tiene el problema del corte fijo de S9.
-
-## Limitaciones
-
-- **Un mes de test** (201910, y 201909 solo para las proporciones) **y una bayesiana por familia.** El desvío entre semillas no incluye la variabilidad de la optimización ni la de los clientes del mes, que pesa más.
-- **Los seguimientos se decidieron después de mirar octubre.** Sus reglas se escribieron antes de correrlos, pero las ideas salieron de las curvas de octubre.
-- **2019 es un año particular**: devaluación después de las PASO y sin pandemia. Y la ventana es corta: entre el entrenamiento y el test los precios suben 18%, aunque el año cerró con 54%.
-- **Celdas rotas**: 201910 tiene 14 variables en 0 para todos los clientes, y 201905 tiene 9. Afectan a todas las familias por igual (`output/celdas_rotas.csv`).
-- **El IPC (F1) usa el de octubre como si estuviera disponible**: en producción se publica a mitad del mes siguiente. Es una ventaja a su favor, y aun así pierde.
-- **La mediana y el ranking borran también los cambios reales**: si todo el banco se empobrece en un mes, no lo ven.
-- **El reentreno usa la cantidad de árboles** que encontró el early stopping con 4 meses, aunque entrena con 6.
-- **Los análisis de dónde cortan los árboles miran un solo modelo por familia** (una semilla), y la prueba de estrés, 5 semillas.
-
-## Conclusiones
-
-- **En 2019, con el baseline de la cátedra, corregir la inflación de las variables en pesos no sube la ganancia.** La hipótesis principal no se sostiene.
-- **Si se corrige, que no sea con el IPC**: es la peor en ganancia, la única pérdida que resiste el azar de los clientes y la que más distorsiona las variables que el banco ajusta por escalones. La mediana del mes es la que menos pierde, y no depende del INDEC.
-- **Bajar el drift no alcanza**: las correcciones bajan el PSI de la variable típica, pero los modelos casi no usan el nivel de precios, y el cambio de octubre que pesa no es de precios.
-- **Con más inflación entre el entrenamiento y el test, la respuesta podría cambiar**: según la prueba de estrés, desde ~+26% la mediana ya convendría. Eso pasaría con el test más lejos del entrenamiento, o con una inflación mensual más alta que la de 2019.
-- **Agregar información sin inflación es lo único que ayudó, y no se confirmó**: no superó al modelo sin corregir en septiembre, ni, con la regla, a su control con diferencias en octubre.
-- **El corte pesa tanto como la familia, y un mes de test no alcanza**: las diferencias entre familias son del tamaño de lo que se pierde por elegir el corte en otro mes, y más chicas que el azar de los clientes del mes.
-
-## Lo que el diseño nos cuidó de creer
-
-- **Sesgo de confirmación**: esperábamos que corregir ayudara, y mirando la curva de octubre es fácil encontrar un corte en el que el ranking "gana". La regla y el corte fijados antes de mirar el test evitaron declararlo.
-- **Quedarse con la regla que conviene**: con las proporciones, una regla de corte decía que sí y la otra que no. Reportamos las dos, y antes de festejar fijamos una prueba en otro mes y un control, que no lo confirmaron.
-- **Confundir ruido de semilla con evidencia**: un Wilcoxon con p = 0,002 sobre 20 semillas parecía contundente; el remuestreo de clientes mostró que el azar del mes es mucho más grande.
+- **Sesgo de confirmación**: esperábamos que corregir ayudara, y en la curva de octubre es fácil encontrar un corte en el que el ranking "gana". La regla y el corte fijados antes de mirar el test evitaron declararlo.
+- **Quedarse con la regla que conviene**: con las proporciones, una regla de corte decía que sí y la otra que no. Reportamos las dos, y antes de festejar las probamos en otro mes y contra un control, que no lo confirmaron.
+- **Confundir ruido de semilla con evidencia**: un Wilcoxon con p = 0,002 sobre 20 semillas parecía contundente; el azar de los clientes del mes es mucho más grande.
 - **Creer que menos drift es mejor modelo**: medir el drift aparte de la ganancia mostró que pueden ir por caminos distintos.
+- **Leer una regla confundida como evidencia**: en el modelo que envejece, la regla con el corte fijo daba ganadora a la familia que más estimula. La reportamos como no cumplida y separamos lo exploratorio.
 
-## Qué seguiríamos probando
+## 5. Limitaciones
 
-1. **2020-2021**, el resto del dataset: más meses de test (para el azar de los clientes) y la pandemia. Ojo: no trae más inflación por mes que 2019 (36% anual en 2020 y 51% en 2021, contra 54% en 2019). Para tener más inflación entre el entrenamiento y el test, el test tiene que quedar más lejos del entrenamiento.
+- **Un mes de test en el experimento principal y una bayesiana por familia.** El desvío entre semillas no incluye la variabilidad de la optimización ni la de los clientes del mes, que pesa más.
+- **La ventana móvil y el modelo que envejece usan los hiperparámetros de 2019** y 5 semillas. Rehacer la bayesiana en cada ventana no entraba en el tiempo disponible.
+- **Con 7 meses, la regla de la ventana móvil es exigente**: el Wilcoxon da p < 0,05 solo si una familia gana (o pierde) en al menos 6 de los 7 meses. Un empate ahí dice que no hay una diferencia consistente, no que las familias sean iguales.
+- **2019 es un año particular**: devaluación después de las PASO, y en 2020-2021, la pandemia. Les pasa a todas las familias por igual, pero cambia qué distingue a un mes de otro.
+- **El IPC del mes se usa como si estuviera disponible**: en producción se publica a mitad del mes siguiente. Vale para el IPC (F1) y para deflactar al predecir; es una ventaja a su favor.
+- **La mediana y el ranking borran también los cambios reales**: si todo el banco se empobrece en un mes, no lo ven.
+- **El reentreno usa la cantidad de árboles del early stopping con 4 meses**, aunque entrena con 6.
+- **Los análisis de dónde cortan los árboles miran un modelo por familia** (una semilla), y la prueba de estrés, 5 semillas.
+
+## 6. Conclusiones
+
+1. **Con reentreno frecuente, corregir la inflación de las variables en pesos no sube la ganancia.** En 201910 ninguna corrección le gana al modelo sin corregir, y en siete meses de test entre 2019 y 2021 las tres empatan con él. La hipótesis principal no se sostiene.
+2. **Bajar el drift no alcanza.** Las correcciones bajan el PSI de la variable típica, pero los árboles cortan los montos en "no tiene" o en montos bajos, que la inflación casi no mueve, y el cambio de octubre que pesa no es de precios.
+3. **Sin reentrenar, la inflación sí pesa.** Desde unos +35% de inflación acumulada, las tres correcciones ordenan mejor que el modelo sin corregir, y en 2021 suman de $12M a $19M por mes con su mejor corte (exploratorio). Lo que ayuda es sacar el nivel de precios, y para eso alcanza con dividir los montos por la inflación acumulada al predecir.
+4. **Si se corrige antes de entrenar, mejor la mediana del mes que el IPC**: en 201910 es la que menos pierde, no depende del INDEC y no distorsiona las variables que el banco ajusta por escalones. El IPC es la única pérdida que resiste el azar de los clientes.
+5. **Ni agregar información sin inflación ni sacar lo que drifta suben la ganancia.** Las proporciones no superaron al modelo sin corregir en otro mes, ni a su control con diferencias. Sacar las variables con mucho drift, o pasar a ranking también las no monetarias que cambian, empata con el modelo sin corregir en los siete meses de test.
+6. **Con un mes de test, el azar del mes y el corte pesan tanto como la familia.** Fijar la regla y el corte antes de mirar el test nos evitó declarar ganadores que no lo eran.
+
+## 7. Qué seguiríamos probando
+
+1. **Deflactar al predecir con un factor de los propios datos** (por ejemplo, la mediana de los montos del mes), sin esperar al IPC, que se publica con un mes de rezago.
 2. **Corregir solo las variables de mercado** y dejar en nominal las que el banco ajusta por escalones (límites y comisión de mantenimiento).
-3. **Elegir el corte con varios meses de validación**, porque el mejor corte cambia de un mes a otro.
-4. **El IPC con un mes de rezago**, que es el que estaría disponible en producción (lo estudia Inflacion_1).
+3. **Elegir el corte como proporción de clientes, o con varios meses de validación**, porque el mejor corte cambia con la cantidad de bajas.
+4. **Rehacer la bayesiana en cada ventana** y usar más semillas en el modelo que envejece.
 
-## Anexo: cómo correrlo
+## Anexo A. Cómo reproducirlo
 
 Requiere [uv](https://docs.astral.sh/uv/) y el dataset `competencia_02_crudo.csv.gz` en `data/` (o la variable de entorno `CRUDO` apuntando a él).
 
 ```bash
 uv sync
+# experimento principal (2019)
 uv run python scripts/01_preparar_base.py              # 2019 + clase_ternaria                   (~1 min)
 uv run python scripts/02_corregir_y_fe.py              # F0 a F3: corrección, lags y deltas      (~1,5 min)
 uv run python scripts/02b_proporciones.py              # F4: proporciones                        (~20 s)
@@ -349,47 +263,64 @@ uv run python scripts/03_optimizar.py                  # bayesiana, 50 intentos 
 uv run python scripts/04_entrenar_final.py             # 20 semillas por familia, test 201910    (40 min a 1,5 h por familia)
 uv run python scripts/07_validacion_semillas.py        # 20 semillas por familia en 201908       (30 min a 1 h por familia)
 uv run python scripts/06_resumen.py                    # tablas, tests y gráficos principales    (segundos)
-uv run python scripts/08_corte_estable_y_ensamble.py   # corte estable y ensambles (S1 y S2)     (segundos)
-uv run python scripts/09_donde_corta.py                # dónde corta el modelo sin corregir (S4) (~4 min)
-uv run python scripts/10_bootstrap_clientes.py         # azar de los clientes (S6)               (~15 s)
-uv run python scripts/11_estres_inflacion.py           # prueba de estrés (S7)                   (~40 min)
-uv run python scripts/12_por_que_f4.py                 # qué aportan las proporciones (S8)       (segundos, usa los modelos de 11)
+uv run python scripts/08_corte_estable_y_ensamble.py   # corte estable y ensambles               (segundos)
+uv run python scripts/09_donde_corta.py                # dónde corta el modelo sin corregir      (~4 min)
+uv run python scripts/10_bootstrap_clientes.py         # azar de los clientes                    (~15 s)
+uv run python scripts/11_estres_inflacion.py           # prueba de estrés                        (~40 min)
+uv run python scripts/12_por_que_f4.py                 # qué aportan las proporciones            (segundos, usa los modelos de 11)
 uv run python scripts/13_donde_cortan_las_familias.py  # dónde cortan todas las familias         (~15 min)
 
-# Otro mes de test (S5): el mismo protocolo un mes antes, solo F0 y F4
+# las proporciones con otro mes de test (201909): el mismo protocolo un mes antes, solo F0 y F4
 VENTANA=201909 uv run python scripts/03_optimizar.py --metodos ninguna proporciones
 VENTANA=201909 uv run python scripts/04_entrenar_final.py --metodos ninguna proporciones
 VENTANA=201909 uv run python scripts/07_validacion_semillas.py --metodos ninguna proporciones
 VENTANA=201909 uv run python scripts/08_corte_estable_y_ensamble.py
 VENTANA=201909 uv run python scripts/06_resumen.py
 VENTANA=201909 uv run python scripts/10_bootstrap_clientes.py
+
+# más meses (201901 a 202106, en data/extendido/; necesita los modelos y las bayesianas de arriba)
+DATOS=extendido uv run python scripts/01_preparar_base.py                                    # (~1,5 min)
+DATOS=extendido uv run python scripts/02_corregir_y_fe.py --metodos ninguna ipc mediana ranking ranking_todo   # (~6 min, 20 GB)
+DATOS=extendido uv run python scripts/14_modelo_que_envejece.py                              # modelo que envejece (~1 h 15 min)
+DATOS=extendido uv run python scripts/14_modelo_que_envejece.py --control-hiperparametros    # control de hiperparámetros (~50 min)
+DATOS=extendido uv run python scripts/15_barrida_movil.py                                    # ventana móvil, F0 a F3 y F6 a F8 (~27 h)
 ```
 
 Tiempos medidos en una MacBook Pro M3 Pro (12 núcleos, 36 GB). La bayesiana ocupa ~7 GB de memoria: entra en una máquina de 16 GB cerrando lo demás. Opciones útiles:
 
-- `--metodos mediana ranking` para correr solo algunas familias.
-- `--semillas 100081 100103` en 04 y 07 para correr solo algunas semillas; las que ya tienen resultado se saltean (`--forzar` para rehacerlas).
+- `--metodos mediana ranking` (o `--familias` en 15) para correr solo algunas familias.
+- `--semillas 100081 100103` en 04 y 07 para correr solo algunas semillas; las que ya tienen resultado se saltean (`--forzar` para rehacerlas). 14 y 15 también retoman solos.
 - 03 retoma solo si se corta (el estudio de Optuna queda en `data/optuna.db`) y saltea las familias que ya tienen su bayesiana completa.
 - `HILOS=6` limita los núcleos que usa LightGBM.
 
-Para comparar familias, el reentreno final conviene correrlo en una sola máquina: así las diferencias no vienen de diferencias numéricas entre computadoras.
+Para comparar familias, el reentreno conviene correrlo en una sola máquina: así las diferencias no vienen de diferencias numéricas entre computadoras.
 
-### Qué hay en cada carpeta
+## Anexo B. Qué hay en cada carpeta
+
+| Análisis | Código interno | Scripts | Salida |
+|---|---|---|---|
+| Experimento principal | | 03, 04, 06 | `output/resumen.md`, `output/resultados_por_semilla.csv` |
+| Drift | | 05 | `output/drift_resumen.csv`, `output/drift_psi.png` |
+| Corte estable y ensambles | S1, S2 | 07, 08 | `output/corte_estable_y_ensamble.md` |
+| Proporciones (F4) | S3 | 02b, 03, 04, 07 | `output/resumen.md`, `output/curvas_f4_201910.png` |
+| Dónde cortan los árboles | S4 | 09, 13 | `output/donde_corta.md`, `output/donde_cortan_las_familias.md` |
+| Otro mes de test (201909) | S5 | 03 a 10 con `VENTANA=201909` | `output/test_201909/` |
+| Azar de los clientes | S6 | 10 | `output/bootstrap_clientes.md` |
+| Prueba de estrés | S7 | 11 | `output/estres_inflacion.md` |
+| Qué aportan las proporciones y control con diferencias (F5) | S8 | 12, 02b | `output/por_que_f4.md`, `output/curvas_f5_201910.png` |
+| Modelo que envejece y control de hiperparámetros | S9 | 14 | `output/barrida/envejece.md` |
+| Ventana móvil y familias por drift (F6 a F8) | S10 | 15 | `output/barrida/movil.md` |
 
 ```
-scripts/      00 a 13 (ver arriba), config.py (todas las constantes) y comun.py
+scripts/      00 a 15, config.py (todas las constantes) y comun.py
 data/         crudo, base por mes, features por familia, estudio de Optuna y modelos guardados (no se versiona)
-resultados/   bayesiana (bo__<familia>.json e intentos), modelo final por semilla en 201910 (final__ y curva__),
-              validación por semilla en 201908 (validacion__ y curva_validacion__), corte_estable_y_ensamble.csv,
-              bootstrap_clientes.csv, estres_inflacion.csv y test_201909/ (la misma estructura, con 201909 como test)
-output/       tablas (resumen.md, corte_estable_y_ensamble.md, donde_corta.md, donde_cortan_las_familias.md,
-              bootstrap_clientes.md, estres_inflacion.md, por_que_f4.md, resultados_por_semilla.csv, drift_*.csv,
-              proporciones_psi.csv, diferencias_psi.csv, celdas_rotas.csv), gráficos, test_201909/ y logs/ de cada corrida
+resultados/   bayesiana por familia, curvas y ganancias por semilla, y barrida/ (más meses)
+output/       tablas, gráficos, test_201909/, barrida/ y logs/ de cada corrida
 ```
 
-La versión anterior de este README, con todas las tablas de cada seguimiento, queda en el historial: [README del 18/11](https://github.com/nicozare/experimento-inflacion-dmeyf/blob/348abdc/README.md).
+El detalle de cada análisis, con todas sus tablas, está en su salida y en la [versión anterior de este README](https://github.com/nicozare/experimento-inflacion-dmeyf/blob/1dcd479/README.md), organizada por análisis.
 
 ### Qué se reutilizó
 
 - La consulta de `clase_ternaria` y la lógica de lags y deltas vienen del pipeline de la Primera Competencia (porteo de `dmeyf2026/monday/z101_target_sql.ipynb` y `z402_Feature_Engineering_en_SQL.ipynb`). Sin corrección, las features de 202106 coinciden celda por celda con las de ese pipeline.
-- Antecedente: en la Primera Competencia, el ranking con cero fijo en todas las columnas subió la ganancia del holdout local (~$370M contra ~$360M) pero bajó la pública (75,9 contra 80,0). Allá la distancia entre el entrenamiento y el mes predicho era corta; acá es mayor, y en el medio hubo una devaluación.
+- Antecedente: en la Primera Competencia, el ranking con cero fijo en todas las columnas subió la ganancia del holdout local (~$370M contra ~$360M) pero bajó la pública (75,9 contra 80,0).
